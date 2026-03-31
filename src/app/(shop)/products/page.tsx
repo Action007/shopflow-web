@@ -55,8 +55,7 @@ async function ProductList({ params }: { params: ProductSearchParams }) {
     const queryString = buildQueryString(params);
 
     const result = await apiGet<PaginatedResult<Product>>(
-        `/products${queryString}`,
-        { revalidate: 300 },
+        `/products${queryString}`
     );
 
     if (result.items.length === 0) {

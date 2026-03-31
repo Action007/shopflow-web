@@ -36,12 +36,6 @@ export async function generateMetadata({
     }
 }
 
-// Pre-generate top products at build time.
-// With revalidate: 300, these pages are cached for 5 minutes.
-// generateStaticParams means the FIRST request for these products
-// doesn't need to wait for the API — the page is already built.
-// On-demand products (not in this list) are generated on first request,
-// then cached for 5 minutes like everything else.
 export async function generateStaticParams() {
     try {
         const result =
