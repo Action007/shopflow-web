@@ -6,6 +6,8 @@ import { apiPost } from "@/lib/api";
 import { ApiClientError } from "@/lib/api";
 import { setAuthCookies, clearAuthCookies } from "@/lib/auth";
 import { loginSchema, registerSchema } from "@/lib/validations/auth";
+import { ERRORS } from "@/lib/constants/errors";
+import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import type { AuthResponse } from "@/types/user";
 
 export interface ActionResult {
@@ -35,7 +37,7 @@ export async function loginAction(
     }
 
     try {
-        const result = await apiPost<AuthResponse>("/auth/login", parsed.data);
+        const result = await apiPost<AuthResponse>(API_ROUTES.AUTH.LOGIN, parsed.data);
         await setAuthCookies(result.accessToken, result.refreshToken);
     } catch (error) {
         if (error instanceof ApiClientError) {
@@ -43,17 +45,16 @@ export async function loginAction(
                 success: false,
                 message:
                     error.statusCode === 401
-                        ? "Invalid email or password"
+                        ? ERRORS.AUTH.INVALID_CREDENTIALS
                         : error.message,
             };
         }
         return {
             success: false,
-            message: "Something went wrong. Please try again.",
+            message: ERRORS.AUTH.GENERIC,
         };
     }
 
-    // redirect() outside try/catch — it throws internally
     revalidatePath("/", "layout");
     redirect("/");
 }
@@ -84,7 +85,7 @@ export async function registerAction(
     try {
         const { confirmPassword: _, ...registerData } = parsed.data;
         const result = await apiPost<AuthResponse>(
-            "/auth/register",
+            API_ROUTES.AUTH.REGISTER,
             registerData,
         );
         await setAuthCookies(result.accessToken, result.refreshToken);
@@ -94,14 +95,14 @@ export async function registerAction(
                 success: false,
                 message:
                     error.statusCode === 409
-                        ? "An account with this email already exists"
+                        ? ERRORS.AUTH.EMAIL_ALREADY_EXISTS
                         : error.message,
                 fieldErrors: error.fieldErrors,
             };
         }
         return {
             success: false,
-            message: "Something went wrong. Please try again.",
+            message: ERRORS.AUTH.GENERIC,
         };
     }
 
@@ -112,5 +113,5 @@ export async function registerAction(
 export async function logoutAction() {
     await clearAuthCookies();
     revalidatePath("/", "layout");
-    redirect("/login");
+    redirect(ROUTES.LOGIN);
 }

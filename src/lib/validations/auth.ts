@@ -1,20 +1,21 @@
 import { z } from "zod";
+import { ERRORS } from "@/lib/constants/errors";
 
 export const loginSchema = z.object({
-    email: z.email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    email: z.email(ERRORS.VALIDATION.EMAIL.INVALID),
+    password: z.string().min(6, ERRORS.VALIDATION.PASSWORD.MIN_6),
 });
 
 export const registerSchema = z
     .object({
-        firstName: z.string().min(1, "First name is required"),
-        lastName: z.string().min(1, "Last name is required"),
-        email: z.email("Invalid email address"),
-        password: z.string().min(8, "Password must be at least 8 characters"),
+        firstName: z.string().min(1, ERRORS.VALIDATION.FIRST_NAME.REQUIRED),
+        lastName: z.string().min(1, ERRORS.VALIDATION.LAST_NAME.REQUIRED),
+        email: z.email(ERRORS.VALIDATION.EMAIL.INVALID),
+        password: z.string().min(8, ERRORS.VALIDATION.PASSWORD.MIN_8),
         confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords do not match",
+        message: ERRORS.VALIDATION.PASSWORD.MISMATCH,
         path: ["confirmPassword"],
     });
 

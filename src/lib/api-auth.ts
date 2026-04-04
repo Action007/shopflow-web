@@ -1,9 +1,10 @@
 import { cookies } from "next/headers";
 import { api, type FetchOptions } from "./api";
+import { COOKIE_NAMES, HEADER_NAMES } from "@/lib/constants/auth";
 
 async function getToken(): Promise<string | undefined> {
     const cookieStore = await cookies();
-    return cookieStore.get("access_token")?.value;
+    return cookieStore.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
 }
 
 async function withAuth(options: FetchOptions = {}): Promise<FetchOptions> {
@@ -12,7 +13,7 @@ async function withAuth(options: FetchOptions = {}): Promise<FetchOptions> {
         ...options,
         headers: {
             ...options.headers,
-            ...(token && { Authorization: `Bearer ${token}` }),
+            ...(token && { [HEADER_NAMES.AUTHORIZATION]: `Bearer ${token}` }),
         },
         cache: "no-store", // Authenticated data is always dynamic
     };

@@ -1,46 +1,43 @@
 import { cookies } from "next/headers";
 import { apiGet } from "./api";
+import { COOKIE_NAMES, COOKIE_CONFIG, TOKEN_EXPIRY } from "@/lib/constants/auth";
 import type { User } from "@/types/user";
-
-const ACCESS_TOKEN_KEY = "access_token";
-const REFRESH_TOKEN_KEY = "refresh_token";
-
-const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-};
 
 export async function setAuthCookies(
     accessToken: string,
     refreshToken: string,
 ) {
     const cookieStore = await cookies();
-    cookieStore.set(ACCESS_TOKEN_KEY, accessToken, {
-        ...cookieOptions,
-        maxAge: 60 * 15, // 15 minutes
+    cookieStore.set(COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
+        httpOnly: COOKIE_CONFIG.HTTPONLY,
+        secure: COOKIE_CONFIG.SECURE,
+        sameSite: COOKIE_CONFIG.SAME_SITE,
+        path: COOKIE_CONFIG.PATH_ROOT,
+        maxAge: TOKEN_EXPIRY.ACCESS_TOKEN,
     });
-    cookieStore.set(REFRESH_TOKEN_KEY, refreshToken, {
-        ...cookieOptions,
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+    cookieStore.set(COOKIE_NAMES.REFRESH_TOKEN, refreshToken, {
+        httpOnly: COOKIE_CONFIG.HTTPONLY,
+        secure: COOKIE_CONFIG.SECURE,
+        sameSite: COOKIE_CONFIG.SAME_SITE,
+        path: COOKIE_CONFIG.PATH_ROOT,
+        maxAge: TOKEN_EXPIRY.REFRESH_TOKEN,
     });
 }
 
 export async function clearAuthCookies() {
     const cookieStore = await cookies();
-    cookieStore.delete(ACCESS_TOKEN_KEY);
-    cookieStore.delete(REFRESH_TOKEN_KEY);
+    cookieStore.delete(COOKIE_NAMES.ACCESS_TOKEN);
+    cookieStore.delete(COOKIE_NAMES.REFRESH_TOKEN);
 }
 
 export async function getAccessToken(): Promise<string | undefined> {
     const cookieStore = await cookies();
-    return cookieStore.get(ACCESS_TOKEN_KEY)?.value;
+    return cookieStore.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
 }
 
 export async function getRefreshToken(): Promise<string | undefined> {
     const cookieStore = await cookies();
-    return cookieStore.get(REFRESH_TOKEN_KEY)?.value;
+    return cookieStore.get(COOKIE_NAMES.REFRESH_TOKEN)?.value;
 }
 
 export async function getCurrentUser(): Promise<User | null> {
@@ -48,7 +45,7 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!token) return null;
 
     try {
-        return await apiGet<User>("/auth/profile", {
+        return await apiGet<User>("/users/me", {
             headers: { Authorization: `Bearer ${token}` },
             cache: "no-store",
         });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { apiGet } from "@/lib/api";
+import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import type { PaginatedResult, Product, Category } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
 
@@ -27,7 +28,7 @@ export default async function HomePage() {
                         Router and NestJS.
                     </p>
                     <Button asChild size="lg" className="mt-8">
-                        <Link href="/products">Browse products</Link>
+                        <Link href={ROUTES.PRODUCTS}>Browse products</Link>
                     </Button>
                 </div>
             </section>
@@ -55,7 +56,7 @@ export default async function HomePage() {
                 <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold">Latest products</h2>
                     <Button variant="ghost" asChild>
-                        <Link href="/products">View all</Link>
+                        <Link href={ROUTES.PRODUCTS}>View all</Link>
                     </Button>
                 </div>
                 <div className="mt-6">

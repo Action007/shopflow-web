@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 
 interface ProductFiltersProps {
-    currentCategory?: string;
     currentSort?: string;
     currentOrder?: string;
 }

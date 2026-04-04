@@ -12,6 +12,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { logoutAction } from "@/actions/auth";
+import { ROUTES } from "@/lib/constants/routes";
 import type { User } from "@/types/user";
 
 interface MobileNavProps {
@@ -35,14 +36,14 @@ export function MobileNav({ user }: MobileNavProps) {
                 </SheetHeader>
                 <nav className="mt-8 flex flex-col gap-4">
                     <Link
-                        href="/products"
+                        href={ROUTES.PRODUCTS}
                         onClick={() => setOpen(false)}
                         className="flex items-center gap-3 text-sm font-medium"
                     >
                         Products
                     </Link>
                     <Link
-                        href="/cart"
+                        href={ROUTES.CART}
                         onClick={() => setOpen(false)}
                         className="flex items-center gap-3 text-sm font-medium"
                     >
@@ -51,7 +52,7 @@ export function MobileNav({ user }: MobileNavProps) {
                     </Link>
                     {user && (
                         <Link
-                            href="/orders"
+                            href={ROUTES.ORDERS}
                             onClick={() => setOpen(false)}
                             className="flex items-center gap-3 text-sm font-medium"
                         >

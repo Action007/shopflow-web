@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { registerAction, type ActionResult } from "@/actions/auth";
+import { ROUTES } from "@/lib/constants/routes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -114,7 +115,7 @@ export function RegisterForm() {
                     <p className="text-sm text-muted-foreground">
                         Already have an account?{" "}
                         <Link
-                            href="/login"
+                            href={ROUTES.LOGIN}
                             className="text-primary hover:underline"
                         >
                             Login
