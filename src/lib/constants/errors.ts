@@ -8,7 +8,7 @@ export const ERRORS = {
         GENERIC: "Something went wrong. Please try again.",
     },
 
-    // Validation errors - Email
+    // Validation errors
     VALIDATION: {
         EMAIL: {
             INVALID: "Invalid email address",
@@ -26,6 +26,14 @@ export const ERRORS = {
         },
     },
 
+    // Cart errors
+    CART: {
+        ADD_FAILED: "Failed to add item",
+        UPDATE_FAILED: "Could not update quantity",
+        REMOVE_FAILED: "Could not remove item",
+        GENERIC: "Cart operation failed",
+    },
+
     // Page-level errors
     PAGES: {
         AUTH: "Something went wrong with authentication.",
@@ -37,5 +45,6 @@ export const ERRORS = {
     GENERIC: {
         SOMETHING_WRONG: "Something went wrong",
         UNEXPECTED: "An unexpected error occurred",
+        TRY_AGAIN: "Please try again.",
     },
 } as const;

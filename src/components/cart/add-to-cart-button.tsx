@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { addToCartAction } from "@/actions/cart";
+import { useCartStore } from "@/stores/cart-store";
+import { CartItem } from "@/types/cart";
+import { toast } from "sonner";
+import { ERRORS } from "@/lib/constants/errors";
+import { APP_CONFIG } from "@/lib/constants/app-config";
 
 interface AddToCartButtonProps {
     productId: string;
@@ -11,13 +17,35 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
     const [isAdding, setIsAdding] = useState(false);
+    const [justAdded, setJustAdded] = useState(false);
+    const { setCart, optimisticAdd, optimisticRemove } = useCartStore();
 
     const handleAdd = async () => {
         setIsAdding(true);
-        // TODO: Day 3 — call Server Action to add to cart
-        console.log("Adding product to cart:", productId);
-        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Optimistic update — badge reflects the add immediately
+        const optimisticItem = {
+            productId,
+            quantity: 1,
+            priceAtAdd: "0",
+            product: { name: "", imageUrl: null },
+        } as CartItem;
+        optimisticAdd(optimisticItem);
+
+        const result = await addToCartAction(productId, 1);
         setIsAdding(false);
+
+        if (result.success && result.cart) {
+            setCart(result.cart); // reconcile with real data
+            setJustAdded(true);
+            setTimeout(() => setJustAdded(false), APP_CONFIG.CART.OPTIMISTIC_FEEDBACK_DURATION_MS);
+        } else {
+            // rollback
+            optimisticRemove(productId);
+            toast.error(ERRORS.CART.ADD_FAILED, {
+                description: result.message || ERRORS.GENERIC.TRY_AGAIN,
+            });
+        }
     };
 
     return (
@@ -26,9 +54,19 @@ export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
             disabled={disabled || isAdding}
             size="lg"
             className="w-full md:w-auto"
+            variant={justAdded ? "secondary" : "default"}
         >
-            <ShoppingCart className="mr-2 h-5 w-5" />
-            {isAdding ? "Adding..." : "Add to cart"}
+            {justAdded ? (
+                <>
+                    <Check className="mr-2 h-5 w-5" />
+                    Added!
+                </>
+            ) : (
+                <>
+                    <ShoppingCart className="mr-2 h-5 w-5" />
+                    {isAdding ? "Adding..." : "Add to cart"}
+                </>
+            )}
         </Button>
     );
 }
