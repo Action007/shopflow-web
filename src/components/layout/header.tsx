@@ -50,7 +50,7 @@ export async function Header() {
                         <Button variant="ghost" size="icon" asChild>
                             <Link href="/login">
                                 <User className="h-5 w-5" />
-                                <button className="sr-only">Login</button>
+                                <span className="sr-only">Login</span>
                             </Link>
                         </Button>
                     )}

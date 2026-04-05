@@ -9,7 +9,7 @@ export function LogoutButton() {
         <form action={logoutAction}>
             <Button variant="ghost" size="icon" type="submit">
                 <LogOut className="h-5 w-5" />
-                <button className="sr-only">Logout</button>
+                <span className="sr-only">Logout</span>
             </Button>
         </form>
     );

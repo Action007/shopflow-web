@@ -23,6 +23,9 @@ export const API_ROUTES = {
         LIST: "/products",
         DETAIL: (id: string) => `/products/${id}`,
     },
+    USER: {
+        ME: "/users/me",
+    },
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",

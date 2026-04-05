@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { ROUTES, PROTECTED_ROUTES, AUTH_ROUTES, API_ROUTES } from "@/lib/constants/routes";
-import { COOKIE_NAMES, COOKIE_CONFIG, TOKEN_EXPIRY, ENV_VARS } from "@/lib/constants/auth";
+import {
+    ROUTES,
+    PROTECTED_ROUTES,
+    AUTH_ROUTES,
+    API_ROUTES,
+} from "@/lib/constants/routes";
+import {
+    COOKIE_NAMES,
+    COOKIE_CONFIG,
+    TOKEN_EXPIRY,
+    ENV_VARS,
+} from "@/lib/constants/auth";
 
 const protectedRoutes = PROTECTED_ROUTES;
 const authRoutes = AUTH_ROUTES;
@@ -97,20 +107,24 @@ export async function middleware(request: NextRequest) {
 
     // Authenticated user hitting an auth route
     if (isAuthRoute && isAuthenticated) {
-        const response = NextResponse.redirect(new URL(ROUTES.HOME, request.url));
-        if (newTokens)
+        const response = NextResponse.redirect(
+            new URL(ROUTES.HOME, request.url),
+        );
+        if (newTokens) {
             setAuthCookies(
                 response,
                 newTokens.accessToken,
                 newTokens.refreshToken,
             );
+        }
         return response;
     }
 
     // Default: allow request through, attach refreshed cookies if needed
     const response = NextResponse.next();
-    if (newTokens)
+    if (newTokens) {
         setAuthCookies(response, newTokens.accessToken, newTokens.refreshToken);
+    }
     return response;
 }
 

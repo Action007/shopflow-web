@@ -1,7 +1,12 @@
 import { cookies } from "next/headers";
-import { apiGet } from "./api";
-import { COOKIE_NAMES, COOKIE_CONFIG, TOKEN_EXPIRY } from "@/lib/constants/auth";
+import { apiAuthGet } from "./api-auth";
+import {
+    COOKIE_NAMES,
+    COOKIE_CONFIG,
+    TOKEN_EXPIRY,
+} from "@/lib/constants/auth";
 import type { User } from "@/types/user";
+import { API_ROUTES } from "./constants/routes";
 
 export async function setAuthCookies(
     accessToken: string,
@@ -19,7 +24,7 @@ export async function setAuthCookies(
         httpOnly: COOKIE_CONFIG.HTTPONLY,
         secure: COOKIE_CONFIG.SECURE,
         sameSite: COOKIE_CONFIG.SAME_SITE,
-        path: COOKIE_CONFIG.PATH_ROOT,
+        path: COOKIE_CONFIG.PATH_AUTH,
         maxAge: TOKEN_EXPIRY.REFRESH_TOKEN,
     });
 }
@@ -45,10 +50,11 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!token) return null;
 
     try {
-        return await apiGet<User>("/users/me", {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: "no-store",
-        });
+        // apiAuthGet automatically:
+        // - Adds Authorization header
+        // - Sets redirectOn401: true → redirects to /login on invalid token
+        // - Sets cache: "no-store" for fresh data
+        return await apiAuthGet<User>(API_ROUTES.USER.ME);
     } catch {
         return null;
     }

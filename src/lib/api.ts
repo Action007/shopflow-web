@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+import { ROUTES } from "@/lib/constants/routes";
+
 const API_URL = process.env.API_URL;
 
 if (!API_URL) {
@@ -23,6 +26,7 @@ export interface FetchOptions extends Omit<RequestInit, "headers"> {
     headers?: Record<string, string>;
     tags?: string[];
     revalidate?: number | false;
+    redirectOn401?: boolean; // Redirect to login on 401 (only for authenticated requests)
 }
 
 export class ApiClientError extends Error {
@@ -40,7 +44,7 @@ export async function api<T>(
     endpoint: string,
     options: FetchOptions = {},
 ): Promise<T> {
-    const { tags, revalidate, headers = {}, ...fetchOptions } = options;
+    const { tags, revalidate, redirectOn401, headers = {}, ...fetchOptions } = options;
 
     const url = `${API_URL}${endpoint}`;
 
@@ -66,6 +70,12 @@ export async function api<T>(
             timestamp: new Date().toISOString(),
             path: endpoint,
         }));
+
+        // Handle 401 Unauthorized — redirect only if this was an authenticated request
+        // Public routes (like /auth/login) don't set redirectOn401, so they handle 401s themselves
+        if (errorBody.statusCode === 401 && redirectOn401) {
+            redirect(ROUTES.LOGIN);
+        }
 
         throw new ApiClientError(
             errorBody.message,

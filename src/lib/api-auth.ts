@@ -11,6 +11,7 @@ async function withAuth(options: FetchOptions = {}): Promise<FetchOptions> {
     const token = await getToken();
     return {
         ...options,
+        redirectOn401: true, // Authenticated requests always redirect on 401
         headers: {
             ...options.headers,
             ...(token && { [HEADER_NAMES.AUTHORIZATION]: `Bearer ${token}` }),
