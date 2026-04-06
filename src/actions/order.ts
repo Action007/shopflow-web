@@ -6,6 +6,8 @@ import { apiAuthPost } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import * as v from "valibot";
 import { checkoutSchema } from "@/lib/validations/checkout";
+import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
+import { ERRORS } from "@/lib/constants/errors";
 import type { Order } from "@/types/order";
 
 export interface PlaceOrderResult {
@@ -36,7 +38,7 @@ export async function placeOrderAction(formData: {
     let orderId: string;
     try {
         const fullAddress = `${parsed.output.shippingAddress}, ${parsed.output.city}, ${parsed.output.state} ${parsed.output.zipCode}`;
-        const order = await apiAuthPost<Order>("/orders", {
+        const order = await apiAuthPost<Order>(API_ROUTES.ORDERS, {
             shippingAddress: fullAddress,
         });
         orderId = order.id;
@@ -48,9 +50,9 @@ export async function placeOrderAction(formData: {
         }
         return {
             success: false,
-            message: "Failed to place order. Please try again.",
+            message: ERRORS.ORDER.PLACE_FAILED,
         };
     }
 
-    redirect(`/orders/${orderId}`);
+    redirect(`${ROUTES.ORDERS}/${orderId}`);
 }

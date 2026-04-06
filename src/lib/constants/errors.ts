@@ -34,6 +34,21 @@ export const ERRORS = {
         GENERIC: "Cart operation failed",
     },
 
+    // Checkout errors
+    CHECKOUT: {
+        SHIPPING_ADDRESS_INVALID: "Please enter a full shipping address",
+        CITY_REQUIRED: "City is required",
+        STATE_REQUIRED: "State is required",
+        ZIP_CODE_INVALID: "Zip code is required",
+        PHONE_INVALID: "Phone number is required",
+    },
+
+    // Order errors
+    ORDER: {
+        PLACE_FAILED: "Failed to place order. Please try again.",
+        NOT_FOUND: "Order not found",
+    },
+
     // Page-level errors
     PAGES: {
         AUTH: "Something went wrong with authentication.",

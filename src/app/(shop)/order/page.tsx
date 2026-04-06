@@ -8,6 +8,8 @@ import type { PaginatedResult } from "@/types/product";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
+import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
+import { APP_CONFIG } from "@/lib/constants/app-config";
 
 export const metadata: Metadata = {
     title: "Orders",
@@ -26,9 +28,9 @@ const statusVariant: Record<
 
 export default async function OrdersPage() {
     const user = await getCurrentUser();
-    if (!user) redirect("/login?callbackUrl=/orders");
+    if (!user) redirect(`${ROUTES.LOGIN}?callbackUrl=${ROUTES.ORDERS}`);
 
-    const result = await apiAuthGet<PaginatedResult<Order>>("/orders", {
+    const result = await apiAuthGet<PaginatedResult<Order>>(API_ROUTES.ORDERS, {
         tags: ["orders"],
     });
 
@@ -48,7 +50,7 @@ export default async function OrdersPage() {
             <h1 className="mb-8 text-3xl font-bold">Order History</h1>
             <div className="space-y-4">
                 {result.items.map((order) => (
-                    <Link key={order.id} href={`/orders/${order.id}`}>
+                    <Link key={order.id} href={`${ROUTES.ORDERS}/${order.id}`}>
                         <Card className="transition-colors hover:bg-accent/50">
                             <CardContent className="flex items-center justify-between p-6">
                                 <div>

@@ -3,20 +3,17 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { useRouter } from "next/navigation";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import { placeOrderAction } from "@/actions/order";
-import { useCartStore } from "@/stores/cart-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { ERRORS } from "@/lib/constants/errors";
 
 export function CheckoutForm() {
     const [serverError, setServerError] = useState<string | null>(null);
-    const setCart = useCartStore((state) => state.setCart);
-    const router = useRouter();
 
     const {
         register,
@@ -31,9 +28,9 @@ export function CheckoutForm() {
         const result = await placeOrderAction(data);
 
         if (!result.success) {
-            setServerError(result.message || "Order failed");
-            toast.error("Order failed", {
-                description: result.message || "Please try again.",
+            setServerError(result.message || ERRORS.ORDER.PLACE_FAILED);
+            toast.error(ERRORS.ORDER.PLACE_FAILED, {
+                description: result.message || ERRORS.GENERIC.TRY_AGAIN,
             });
         }
     };

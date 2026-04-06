@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/lib/utils";
+import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 
 interface OrderPageProps {
     params: Promise<{ id: string }>;
@@ -22,13 +23,13 @@ export async function generateMetadata({
 
 export default async function OrderDetailPage({ params }: OrderPageProps) {
     const user = await getCurrentUser();
-    if (!user) redirect("/login");
+    if (!user) redirect(ROUTES.LOGIN);
 
     const { id } = await params;
 
     let order: Order;
     try {
-        order = await apiAuthGet<Order>(`/orders/${id}`);
+        order = await apiAuthGet<Order>(`${API_ROUTES.ORDERS}/${id}`);
     } catch (error) {
         if (error instanceof ApiClientError && error.statusCode === 404) {
             notFound();
