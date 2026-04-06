@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { apiPost } from "@/lib/api";
 import { ApiClientError } from "@/lib/api";
 import { setAuthCookies, clearAuthCookies } from "@/lib/auth";
+import * as v from "valibot";
 import { loginSchema, registerSchema } from "@/lib/validations/auth";
 import { ERRORS } from "@/lib/constants/errors";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
@@ -25,11 +26,11 @@ export async function loginAction(
         password: formData.get("password") as string,
     };
 
-    const parsed = loginSchema.safeParse(raw);
+    const parsed = v.safeParse(loginSchema, raw);
     if (!parsed.success) {
         return {
             success: false,
-            fieldErrors: parsed.error.flatten().fieldErrors as Record<
+            fieldErrors: v.flatten<typeof loginSchema>(parsed.issues).nested as Record<
                 string,
                 string[]
             >,
@@ -37,7 +38,7 @@ export async function loginAction(
     }
 
     try {
-        const result = await apiPost<AuthResponse>(API_ROUTES.AUTH.LOGIN, parsed.data);
+        const result = await apiPost<AuthResponse>(API_ROUTES.AUTH.LOGIN, parsed.output);
         await setAuthCookies(result.accessToken, result.refreshToken);
     } catch (error) {
         if (error instanceof ApiClientError) {
@@ -71,11 +72,11 @@ export async function registerAction(
         confirmPassword: formData.get("confirmPassword") as string,
     };
 
-    const parsed = registerSchema.safeParse(raw);
+    const parsed = v.safeParse(registerSchema, raw);
     if (!parsed.success) {
         return {
             success: false,
-            fieldErrors: parsed.error.flatten().fieldErrors as Record<
+            fieldErrors: v.flatten<typeof registerSchema>(parsed.issues).nested as Record<
                 string,
                 string[]
             >,
@@ -83,7 +84,7 @@ export async function registerAction(
     }
 
     try {
-        const { confirmPassword: _, ...registerData } = parsed.data;
+        const { confirmPassword: _, ...registerData } = parsed.output;
         const result = await apiPost<AuthResponse>(
             API_ROUTES.AUTH.REGISTER,
             registerData,

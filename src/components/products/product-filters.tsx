@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/select";
 
 interface ProductFiltersProps {
+    currentCategory?: string;
     currentSort?: string;
     currentOrder?: string;
 }
 
 export function ProductFilters({
+    currentCategory,
     currentSort,
     currentOrder,
 }: ProductFiltersProps) {

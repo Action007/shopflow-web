@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useRouter } from "next/navigation";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import { placeOrderAction } from "@/actions/order";
@@ -23,7 +23,7 @@ export function CheckoutForm() {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<CheckoutInput>({
-        resolver: zodResolver(checkoutSchema),
+        resolver: valibotResolver(checkoutSchema),
     });
 
     const onSubmit = async (data: CheckoutInput) => {

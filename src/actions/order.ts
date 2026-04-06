@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
 import { apiAuthPost } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
+import * as v from "valibot";
 import { checkoutSchema } from "@/lib/validations/checkout";
 import type { Order } from "@/types/order";
 
@@ -21,11 +22,11 @@ export async function placeOrderAction(formData: {
     zipCode: string;
     phone: string;
 }): Promise<PlaceOrderResult> {
-    const parsed = checkoutSchema.safeParse(formData);
+    const parsed = v.safeParse(checkoutSchema, formData);
     if (!parsed.success) {
         return {
             success: false,
-            fieldErrors: parsed.error.flatten().fieldErrors as Record<
+            fieldErrors: v.flatten<typeof checkoutSchema>(parsed.issues).nested as Record<
                 string,
                 string[]
             >,
@@ -34,7 +35,7 @@ export async function placeOrderAction(formData: {
 
     let orderId: string;
     try {
-        const fullAddress = `${parsed.data.shippingAddress}, ${parsed.data.city}, ${parsed.data.state} ${parsed.data.zipCode}`;
+        const fullAddress = `${parsed.output.shippingAddress}, ${parsed.output.city}, ${parsed.output.state} ${parsed.output.zipCode}`;
         const order = await apiAuthPost<Order>("/orders", {
             shippingAddress: fullAddress,
         });
