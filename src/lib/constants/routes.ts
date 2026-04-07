@@ -1,6 +1,3 @@
-// Centralized route and API endpoint definitions
-
-// Frontend routes
 export const ROUTES = {
     HOME: "/",
     LOGIN: "/login",
@@ -11,7 +8,6 @@ export const ROUTES = {
     ORDERS: "/orders",
 } as const;
 
-// API endpoints
 export const API_ROUTES = {
     AUTH: {
         LOGIN: "/auth/login",
@@ -23,6 +19,7 @@ export const API_ROUTES = {
         LIST: "/products",
         DETAIL: (id: string) => `/products/${id}`,
     },
+    CATEGORIES: "/categories",
     USER: {
         ME: "/users/me",
     },
@@ -31,12 +28,10 @@ export const API_ROUTES = {
     ORDERS: "/orders",
 } as const;
 
-// Protected routes (require authentication)
 export const PROTECTED_ROUTES = [
     ROUTES.CART,
     ROUTES.CHECKOUT,
     ROUTES.ORDERS,
 ] as const;
 
-// Auth routes (redirect to home if already authenticated)
 export const AUTH_ROUTES = [ROUTES.LOGIN, ROUTES.REGISTER] as const;

@@ -8,14 +8,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { ROUTES } from "@/lib/constants/routes";
+import type { Category } from "@/types/product";
 
 interface ProductFiltersProps {
+    categories: Category[];
     currentCategory?: string;
     currentSort?: string;
     currentOrder?: string;
 }
 
 export function ProductFilters({
+    categories,
     currentCategory,
     currentSort,
     currentOrder,
@@ -34,13 +40,38 @@ export function ProductFilters({
         router.push(`/products?${params.toString()}`);
     };
 
+    const clearAllFilters = () => {
+        router.push(ROUTES.PRODUCTS);
+    };
+
+    const hasActiveFilters = !!currentCategory;
+
     return (
         <div className="mb-6 flex flex-wrap items-center gap-4">
+            {categories.length > 0 && (
+                <Select
+                    value={currentCategory ?? "all"}
+                    onValueChange={(value) => updateParam("categoryId", value)}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All categories</SelectItem>
+                        {categories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            )}
+
             <Select
                 value={currentSort ?? "createdAt"}
                 onValueChange={(value) => updateParam("sortBy", value)}
             >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[160px]">
                     <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -62,6 +93,13 @@ export function ProductFilters({
                     <SelectItem value="desc">Descending</SelectItem>
                 </SelectContent>
             </Select>
+
+            {hasActiveFilters && (
+                <Button variant="ghost" size="sm" onClick={clearAllFilters}>
+                    <X className="mr-1 h-4 w-4" />
+                    Clear filters
+                </Button>
+            )}
         </div>
     );
 }

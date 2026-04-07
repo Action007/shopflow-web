@@ -5,12 +5,16 @@ import { buildQueryString } from "@/lib/utils";
 import type {
     PaginatedResult,
     Product,
+    Category,
     ProductSearchParams,
 } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
 import { ProductFilters } from "@/components/products/product-filters";
+import { ProductSearch } from "@/components/products/product-search";
 import { Pagination } from "@/components/shared/pagination";
 import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton";
+import { API_ROUTES } from "@/lib/constants/routes";
+import { ERRORS } from "@/lib/constants/errors";
 
 export const metadata: Metadata = {
     title: "Products",
@@ -25,6 +29,9 @@ export default async function ProductsPage({
     searchParams,
 }: ProductsPageProps) {
     const params = await searchParams;
+    const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES, {
+        revalidate: 300,
+    });
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -35,7 +42,12 @@ export default async function ProductsPage({
                 </p>
             </div>
 
+            <div className="mb-6 max-w-md">
+                <ProductSearch />
+            </div>
+
             <ProductFilters
+                categories={categories}
                 currentCategory={params.categoryId}
                 currentSort={params.sortBy}
                 currentOrder={params.sortOrder}
@@ -55,18 +67,19 @@ async function ProductList({ params }: { params: ProductSearchParams }) {
     const queryString = buildQueryString(params);
 
     const result = await apiGet<PaginatedResult<Product>>(
-        `/products${queryString}`
+        `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
+        { revalidate: 300 },
     );
 
     if (result.items.length === 0) {
         return (
             <div className="py-12 text-center text-muted-foreground">
-                No products found. Try adjusting your filters.
+                {ERRORS.PAGES.NO_PRODUCTS}
             </div>
         );
     }
 
-    return ( 
+    return (
         <>
             <ProductGrid products={result.items} />
             <div className="mt-8">
