@@ -1,14 +1,25 @@
 import Link from "next/link";
+import Image from "next/image";
+import {
+    ArrowRight,
+    Cable,
+    Headphones,
+    Laptop,
+    Smartphone,
+    Watch,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiGet } from "@/lib/api";
-import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
+import { ROUTES } from "@/lib/constants/routes";
 import type { PaginatedResult, Product, Category } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
+
+const categoryIcons = [Smartphone, Laptop, Headphones, Watch, Cable];
 
 export default async function HomePage() {
     const [productsResult, categories] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
-            "/products?limit=8&sortBy=createdAt&sortOrder=desc",
+            "/products?limit=4&sortBy=createdAt&sortOrder=desc",
             {
                 revalidate: 300,
             },
@@ -16,53 +27,150 @@ export default async function HomePage() {
         apiGet<Category[]>("/categories", { revalidate: 300 }),
     ]);
 
-    return (
-        <div>
-            <section className="bg-muted/50 py-16 md:py-24">
-                <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-                        Welcome to ShopNext
-                    </h1>
-                    <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
-                        A modern e-commerce experience built with Next.js App
-                        Router and NestJS.
-                    </p>
-                    <Button asChild size="lg" className="mt-8">
-                        <Link href={ROUTES.PRODUCTS}>Browse products</Link>
-                    </Button>
-                </div>
-            </section>
+    const displayCategories = categories.slice(0, 5);
 
-            {categories.length > 0 && (
-                <section className="container mx-auto px-4 py-12">
-                    <h2 className="text-2xl font-bold">Categories</h2>
-                    <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-                        {categories.map((category) => (
-                            <Link
-                                key={category.id}
-                                href={`/products?categoryId=${category.id}`}
-                                className="rounded-lg border bg-card p-6 text-center transition-colors hover:bg-accent"
+    return (
+        <div className="pb-24 lg:pb-0">
+            <div className="mx-auto max-w-[1280px]">
+                <section className="dot-grid relative min-h-[600px] overflow-hidden px-6 lg:grid lg:min-h-[700px] lg:grid-cols-2 lg:items-center lg:px-12">
+                    <div className="relative z-10 flex min-h-[600px] flex-col justify-center lg:min-h-0 lg:pr-12">
+                        <h1 className="mb-4 max-w-[12ch] text-[56px] font-black leading-[1.1] tracking-[-0.02em] text-on-surface lg:max-w-none">
+                            The best tech, delivered.
+                        </h1>
+                        <p className="mb-8 max-w-[280px] text-base text-zinc-400 lg:max-w-[480px] lg:text-lg">
+                            Experience precision-engineered hardware curated for
+                            the modern digital obsidian aesthetic.
+                        </p>
+                        <div className="flex flex-col gap-4 lg:flex-row">
+                            <Button asChild className="px-8 py-4 lg:px-12">
+                                <Link href={ROUTES.PRODUCTS}>Shop Now</Link>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                asChild
+                                className="px-8 py-4 lg:px-12"
                             >
-                                <span className="font-medium">
-                                    {category.name}
-                                </span>
-                            </Link>
-                        ))}
+                                <Link href={ROUTES.PRODUCTS}>View All</Link>
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className="absolute -right-20 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl lg:hidden" />
+
+                    <div className="absolute bottom-10 right-6 h-64 w-48 rotate-6 overflow-hidden rounded-2xl shadow-2xl lg:relative lg:bottom-auto lg:right-0 lg:h-[700px] lg:w-full lg:rotate-0 lg:self-stretch">
+                        <Image
+                            src={"/main-page-img.jpg"}
+                            alt={"Featured product"}
+                            fill
+                            priority
+                            sizes="(max-width: 1024px) 192px, 50vw"
+                            className="object-cover grayscale brightness-75 lg:object-right lg:brightness-100 lg:grayscale-0"
+                        />
                     </div>
                 </section>
-            )}
 
-            <section className="container mx-auto px-4 py-12">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold">Latest products</h2>
-                    <Button variant="ghost" asChild>
-                        <Link href={ROUTES.PRODUCTS}>View all</Link>
-                    </Button>
-                </div>
-                <div className="mt-6">
-                    <ProductGrid products={productsResult.items} />
-                </div>
-            </section>
+                <section className="mb-12 mt-8">
+                    <div className="no-scrollbar flex gap-3 overflow-x-auto px-6 lg:justify-center lg:overflow-visible lg:px-12">
+                        {displayCategories.map((category, index) => {
+                            const Icon = categoryIcons[index] ?? Smartphone;
+                            return (
+                                <Link
+                                    key={category.id}
+                                    href={`/products?categoryId=${category.id}`}
+                                    className="flex shrink-0 items-center gap-2 rounded-full border border-outline-variant/15 bg-surface-low px-4 py-3 transition-transform duration-300 ease-fluid hover:-translate-y-0.5"
+                                >
+                                    <Icon className="h-4 w-4 text-primary" />
+                                    <span className="text-xs font-bold uppercase tracking-widest">
+                                        {category.name}
+                                    </span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                <section className="mb-16 px-6 lg:px-12">
+                    <div className="mb-8 flex items-end justify-between">
+                        <h2 className="text-2xl font-black uppercase tracking-tight lg:text-3xl">
+                            Featured
+                        </h2>
+                        <Link
+                            href={ROUTES.PRODUCTS}
+                            className="flex items-center gap-1 text-sm font-bold text-primary"
+                        >
+                            View all <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </div>
+                    <ProductGrid
+                        products={productsResult.items}
+                        className="grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+                    />
+                </section>
+
+                <section className="mb-16 px-6 lg:px-12">
+                    <div className="space-y-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8 lg:space-y-0">
+                        <div className="space-y-4">
+                            <h2 className="text-3xl font-black tracking-tighter lg:text-5xl">
+                                Power that feels infinite.
+                            </h2>
+                            <p className="max-w-[500px] leading-relaxed text-neutral-500 lg:text-lg">
+                                Beyond the aesthetic, we prioritize the raw
+                                performance metrics that professional workflows
+                                demand. No compromises, just precision.
+                            </p>
+                            <Link
+                                href={ROUTES.PRODUCTS}
+                                className="inline-flex items-center gap-2 border-b-2 border-primary/20 pb-1 font-bold text-primary"
+                            >
+                                Learn about our hardware legacy
+                            </Link>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="aspect-square rounded-xl bg-surface-high p-4 lg:h-[200px] lg:aspect-auto">
+                                <div className="flex h-full flex-col justify-end">
+                                    <span className="text-3xl font-black text-primary lg:text-4xl">
+                                        120Hz
+                                    </span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+                                        Refresh Rate
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="aspect-square rounded-xl border border-primary/20 bg-primary-container/20 p-4 lg:h-[200px] lg:aspect-auto">
+                                <div className="flex h-full flex-col justify-end">
+                                    <span className="text-3xl font-black text-primary lg:text-4xl">
+                                        0.2ms
+                                    </span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
+                                        Response
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="aspect-square rounded-xl bg-surface-high p-4 lg:h-[200px] lg:aspect-auto">
+                                <div className="flex h-full flex-col justify-end">
+                                    <span className="text-3xl font-black text-on-surface lg:text-4xl">
+                                        8K
+                                    </span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+                                        Resolution
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="aspect-square rounded-xl bg-surface-high p-4 lg:h-[200px] lg:aspect-auto">
+                                <div className="flex h-full flex-col justify-end">
+                                    <span className="text-3xl font-black text-on-surface lg:text-4xl">
+                                        ∞
+                                    </span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+                                        Possibilities
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
     );
 }

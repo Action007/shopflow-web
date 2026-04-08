@@ -1,20 +1,12 @@
 "use client";
 
+import { AlertCircle } from "lucide-react";
 import { useActionState } from "react";
 import Link from "next/link";
 import { loginAction, type ActionResult } from "@/actions/auth";
 import { ROUTES } from "@/lib/constants/routes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 
 const initialState: ActionResult = { success: false };
 
@@ -25,66 +17,120 @@ export function LoginForm() {
     );
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-2xl">Login</CardTitle>
-                <CardDescription>
-                    Enter your credentials to access your account
-                </CardDescription>
-            </CardHeader>
-            <form action={formAction}>
-                <CardContent className="space-y-4">
-                    {state.message && (
-                        <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                            {state.message}
-                        </div>
-                    )}
+        <main className="w-full max-w-md">
+            <div className="mb-12 flex justify-center">
+                <span className="text-[22px] font-black tracking-tighter text-on-surface">
+                    ShopFlow
+                </span>
+            </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input id="email" name="email" type="email" required />
-                        {state.fieldErrors?.email && (
-                            <p className="text-sm text-destructive">
-                                {state.fieldErrors.email[0]}
-                            </p>
+            <div className="w-full rounded-xl border border-outline-variant/10 bg-surface-low p-8 shadow-2xl">
+                <div className="mb-8">
+                    <h1 className="mb-2 text-[36px] font-bold leading-tight tracking-tight">
+                        Welcome back
+                    </h1>
+                    <p className="text-sm font-medium text-on-surface-variant">
+                        Login to your account
+                    </p>
+                </div>
+
+                <form action={formAction}>
+                    <div className="space-y-6">
+                        {state.message && (
+                            <div className="mb-6 flex items-center gap-3 rounded-r-lg border-l-4 border-destructive bg-error-container/20 p-4">
+                                <AlertCircle className="h-5 w-5 text-destructive" />
+                                <p className="text-sm font-semibold text-destructive">
+                                    {state.message}
+                                </p>
+                            </div>
                         )}
-                    </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            name="password"
-                            type="password"
-                            required
-                        />
-                        {state.fieldErrors?.password && (
-                            <p className="text-sm text-destructive">
-                                {state.fieldErrors.password[0]}
-                            </p>
-                        )}
-                    </div>
-                </CardContent>
+                        <Field label="Email Address">
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="name@example.com"
+                                required
+                            />
+                            {state.fieldErrors?.email && (
+                                <p className="text-[10px] font-medium text-destructive">
+                                    {state.fieldErrors.email[0]}
+                                </p>
+                            )}
+                        </Field>
 
-                <CardFooter className="flex flex-col gap-4">
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        disabled={isPending}
-                    >
-                        {isPending ? "Logging in..." : "Login"}
-                    </Button>
-                    <p className="text-sm text-muted-foreground">
-                        Don't have an account?{" "}
+                        <Field
+                            label="Password"
+                            action={
+                                <Link
+                                    href="#"
+                                    className="text-[10px] font-bold text-primary transition-colors duration-300 ease-fluid hover:text-primary-container"
+                                >
+                                    FORGOT?
+                                </Link>
+                            }
+                        >
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                required
+                            />
+                            {state.fieldErrors?.password && (
+                                <p className="text-[10px] font-medium text-destructive">
+                                    {state.fieldErrors.password[0]}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Button
+                            type="submit"
+                            className="w-full text-sm uppercase tracking-widest text-[var(--color-on-primary)]"
+                            disabled={isPending}
+                        >
+                            {isPending ? "Logging In..." : "Login"}
+                        </Button>
+                    </div>
+                </form>
+
+                <div className="mt-8 text-center">
+                    <p className="text-sm text-on-surface-variant">
+                        Don&apos;t have an account?
                         <Link
                             href={ROUTES.REGISTER}
-                            className="text-primary hover:underline"
+                            className="ml-1 font-bold text-primary transition-all duration-300 ease-fluid hover:underline"
                         >
                             Register
                         </Link>
                     </p>
-                </CardFooter>
-            </form>
-        </Card>
+                </div>
+            </div>
+
+            <div className="pointer-events-none fixed left-1/2 top-0 -z-10 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-primary/5 blur-[120px]" />
+        </main>
+    );
+}
+
+function Field({
+    label,
+    action,
+    children,
+}: {
+    label: string;
+    action?: React.ReactNode;
+    children: React.ReactNode;
+}) {
+    return (
+        <div className="space-y-2">
+            <div className="ml-1 flex items-center justify-between">
+                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+                    {label}
+                </label>
+                {action}
+            </div>
+            {children}
+        </div>
     );
 }

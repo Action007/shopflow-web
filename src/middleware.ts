@@ -4,7 +4,6 @@ import {
     ROUTES,
     PROTECTED_ROUTES,
     AUTH_ROUTES,
-    API_ROUTES,
 } from "@/lib/constants/routes";
 import {
     COOKIE_NAMES,

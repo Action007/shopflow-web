@@ -84,7 +84,8 @@ export async function registerAction(
     }
 
     try {
-        const { confirmPassword: _, ...registerData } = parsed.output;
+        const { confirmPassword, ...registerData } = parsed.output;
+        void confirmPassword;
         const result = await apiPost<AuthResponse>(
             API_ROUTES.AUTH.REGISTER,
             registerData,

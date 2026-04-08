@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { User } from "lucide-react";
+import { LogIn, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -10,26 +10,29 @@ export async function Header() {
     const user = await getCurrentUser();
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <header className="glass-header fixed inset-x-0 top-0 z-50">
+            <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between px-6 py-4 lg:px-12">
                 <div className="flex items-center gap-4">
                     <MobileNav user={user} />
-                    <Link href="/" className="text-xl font-bold">
-                        ShopNext
+                    <Link
+                        href="/"
+                        className="text-[22px] font-black tracking-tighter text-neutral-50"
+                    >
+                        ShopFlow
                     </Link>
                 </div>
 
-                <nav className="hidden md:flex items-center gap-6">
+                <nav className="hidden items-center gap-8 lg:flex">
                     <Link
                         href="/products"
-                        className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-sm font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
                     >
                         Products
                     </Link>
                     {user && (
                         <Link
-                            href="/orders"
-                            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            href="/order"
+                            className="text-sm font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
                         >
                             Orders
                         </Link>
@@ -37,21 +40,43 @@ export async function Header() {
                 </nav>
 
                 <div className="flex items-center gap-2">
-                    <CartBadge />
+                    <div className="hidden items-center gap-2 lg:flex">
+                        <Button variant="ghost" size="icon" asChild>
+                            <Link href="/products" aria-label="Search products">
+                                <Search className="h-5 w-5" />
+                            </Link>
+                        </Button>
+                        <CartBadge />
+                        {user ? (
+                            <div className="flex items-center gap-1">
+                                <Button variant="ghost" size="icon" asChild>
+                                    <Link href="/order" aria-label="Orders">
+                                        <User className="h-5 w-5" />
+                                    </Link>
+                                </Button>
+                                <LogoutButton />
+                            </div>
+                        ) : (
+                            <Button variant="ghost" asChild className="px-3">
+                                <Link href="/login">
+                                    <LogIn className="h-4 w-4" />
+                                    Login
+                                </Link>
+                            </Button>
+                        )}
+                    </div>
 
                     {user ? (
-                        <div className="flex items-center gap-2">
-                            <span className="hidden md:inline text-sm text-muted-foreground">
-                                {user.firstName}
-                            </span>
+                        <div className="lg:hidden">
                             <LogoutButton />
                         </div>
                     ) : (
-                        <Button variant="ghost" size="icon" asChild>
-                            <Link href="/login">
-                                <User className="h-5 w-5" />
-                                <span className="sr-only">Login</span>
-                            </Link>
+                        <Button
+                            variant="ghost"
+                            asChild
+                            className="px-0 text-neutral-400 hover:bg-transparent hover:text-blue-400 lg:hidden"
+                        >
+                            <Link href="/login">Login</Link>
                         </Button>
                     )}
                 </div>

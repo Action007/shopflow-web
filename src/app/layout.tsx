@@ -5,6 +5,7 @@ import { ToastProvider } from "@/providers/toast-provider";
 
 const inter = Inter({
     subsets: ["latin"],
+    weight: ["400", "700", "900"],
     display: "swap",
     variable: "--font-inter",
 });
@@ -24,7 +25,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className={inter.variable}>
-            <body className="min-h-screen bg-background font-sans antialiased">
+            <body className="min-h-screen bg-background font-sans text-on-surface antialiased">
                 {children}
                 <ToastProvider />
             </body>

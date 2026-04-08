@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 import { formatPrice } from "@/lib/utils";
 import type { CartItem } from "@/types/cart";
 
@@ -14,29 +13,67 @@ export function OrderPreview({ items }: OrderPreviewProps) {
     );
 
     return (
-        <Card className="sticky top-24">
-            <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {items.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm">
-                        <span>
-                            {item.product.name} × {item.quantity}
+        <aside className="lg:sticky lg:top-24">
+            <section className="space-y-4 rounded-xl border border-outline-variant/10 bg-[#18181b] p-6">
+                <h2 className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500">
+                    Order Summary
+                </h2>
+
+                <div className="space-y-4">
+                    {items.map((item) => (
+                        <div
+                            key={item.id}
+                            className="flex items-center justify-between"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-800">
+                                    {item.product.imageUrl ? (
+                                        <Image
+                                            src={item.product.imageUrl}
+                                            alt={item.product.name}
+                                            fill
+                                            sizes="48px"
+                                            className="object-cover"
+                                        />
+                                    ) : null}
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold text-on-surface">
+                                        {item.product.name}
+                                    </p>
+                                    <p className="text-xs text-neutral-500">
+                                        Qty: {item.quantity}
+                                    </p>
+                                </div>
+                            </div>
+                            <span className="font-mono text-sm text-blue-400">
+                                {formatPrice(
+                                    parseFloat(item.priceAtAdd) * item.quantity,
+                                )}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-2 space-y-2 border-t border-[#3f3f46]/30 pt-4">
+                    <div className="flex justify-between text-xs text-neutral-400">
+                        <span>Subtotal</span>
+                        <span className="font-mono">{formatPrice(total)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs text-neutral-400">
+                        <span>Shipping</span>
+                        <span className="font-mono">FREE</span>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 text-on-surface">
+                        <span className="text-sm font-black uppercase tracking-widest">
+                            Total
                         </span>
-                        <span>
-                            {formatPrice(
-                                parseFloat(item.priceAtAdd) * item.quantity,
-                            )}
+                        <span className="text-xl font-black tracking-tighter text-blue-400">
+                            {formatPrice(total)}
                         </span>
                     </div>
-                ))}
-                <Separator />
-                <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>{formatPrice(total)}</span>
                 </div>
-            </CardContent>
-        </Card>
+            </section>
+        </aside>
     );
 }

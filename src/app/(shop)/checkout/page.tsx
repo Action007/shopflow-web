@@ -14,14 +14,12 @@ export const metadata: Metadata = {
 export default async function CheckoutPage() {
     const user = await getCurrentUser();
 
-    // TODO: Check redirect functionality for unauthorized
     if (!user) redirect(`${ROUTES.LOGIN}?callbackUrl=${ROUTES.CHECKOUT}`);
 
     let cart: Cart | null = null;
     try {
         cart = await apiAuthGet<Cart>(API_ROUTES.CART);
     } catch {
-        // No cart
     }
 
     if (!cart || cart.items.length === 0) {
@@ -29,15 +27,12 @@ export default async function CheckoutPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
-            <div className="grid gap-8 lg:grid-cols-3">
-                <div className="lg:col-span-2">
-                    <CheckoutForm />
-                </div>
-                <div>
-                    <OrderPreview items={cart.items} />
-                </div>
+        <div className="px-6 pb-32 pt-4 lg:mx-auto lg:grid lg:max-w-[1280px] lg:grid-cols-[1fr_380px] lg:gap-8 lg:px-12 lg:pb-12">
+            <div>
+                <CheckoutForm />
+            </div>
+            <div className="mb-6 lg:mb-0 lg:order-2">
+                <OrderPreview items={cart.items} />
             </div>
         </div>
     );

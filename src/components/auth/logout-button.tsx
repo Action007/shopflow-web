@@ -7,7 +7,12 @@ import { logoutAction } from "@/actions/auth";
 export function LogoutButton() {
     return (
         <form action={logoutAction}>
-            <Button variant="ghost" size="icon" type="submit">
+            <Button
+                variant="ghost"
+                size="icon"
+                type="submit"
+                className="text-neutral-400 hover:text-blue-400"
+            >
                 <LogOut className="h-5 w-5" />
                 <span className="sr-only">Logout</span>
             </Button>

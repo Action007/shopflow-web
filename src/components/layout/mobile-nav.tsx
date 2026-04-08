@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, ShoppingCart, Package, LogIn, LogOut } from "lucide-react";
+import { Menu, Package, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -12,86 +12,106 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { logoutAction } from "@/actions/auth";
-import { ROUTES } from "@/lib/constants/routes";
 import type { User } from "@/types/user";
+import { ROUTES } from "@/lib/constants/routes";
+import { useCartStore, selectItemCount } from "@/stores/cart-store";
 
 interface MobileNavProps {
     user: User | null;
 }
 
+const links = [
+    { href: ROUTES.PRODUCTS, label: "Products" },
+    { href: ROUTES.CART, label: "Cart", withBadge: true },
+] as const;
+
 export function MobileNav({ user }: MobileNavProps) {
     const [open, setOpen] = useState(false);
+    const itemCount = useCartStore(selectItemCount);
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="md:hidden text-on-surface"
+                >
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72">
-                <SheetHeader>
-                    <SheetTitle>ShopNext</SheetTitle>
+            <SheetContent
+                side="left"
+                className="w-[88vw] max-w-sm border-outline-variant/15 bg-background/90"
+            >
+                <SheetHeader className="border-b border-outline-variant/10 pb-6">
+                    <SheetTitle className="text-[22px] tracking-tighter">
+                        ShopFlow
+                    </SheetTitle>
                 </SheetHeader>
-                <nav className="mt-8 flex flex-col gap-4">
-                    <Link
-                        href={ROUTES.PRODUCTS}
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 text-sm font-medium"
-                    >
-                        Products
-                    </Link>
-                    <Link
-                        href={ROUTES.CART}
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 text-sm font-medium"
-                    >
-                        <ShoppingCart className="h-4 w-4" />
-                        Cart
-                    </Link>
-                    {user && (
-                        <Link
-                            href={ROUTES.ORDERS}
-                            onClick={() => setOpen(false)}
-                            className="flex items-center gap-3 text-sm font-medium"
-                        >
-                            <Package className="h-4 w-4" />
-                            Orders
-                        </Link>
-                    )}
 
-                    <div className="my-2 border-t" />
-
-                    {user ? (
-                        <div className="space-y-3">
-                            <p className="text-sm text-muted-foreground">
-                                Signed in as {user.firstName} {user.lastName}
-                            </p>
-                            <form action={logoutAction}>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    type="submit"
-                                    className="w-full"
-                                >
-                                    <LogOut className="mr-2 h-4 w-4" />
-                                    Logout
-                                </Button>
-                            </form>
-                        </div>
-                    ) : (
-                        <Link href="/login" onClick={() => setOpen(false)}>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="w-full"
+                <nav className="flex flex-1 flex-col gap-8 px-6 pb-6">
+                    <div className="space-y-3">
+                        {links.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setOpen(false)}
+                                className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
                             >
-                                <LogIn className="mr-2 h-4 w-4" />
-                                Login
-                            </Button>
-                        </Link>
-                    )}
+                                <span>{link.label}</span>
+                                {"withBadge" in link && link.withBadge && itemCount > 0 ? (
+                                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-on-primary">
+                                        {itemCount > 99 ? "99+" : itemCount}
+                                    </span>
+                                ) : null}
+                            </Link>
+                        ))}
+
+                        {user && (
+                            <Link
+                                href="/order"
+                                onClick={() => setOpen(false)}
+                                className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
+                            >
+                                <span>Orders</span>
+                                <Package className="h-4 w-4 text-primary" />
+                            </Link>
+                        )}
+                    </div>
+
+                    <div className="mt-auto space-y-4 rounded-xl bg-surface-low p-4">
+                        {user ? (
+                            <>
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                                        Signed In
+                                    </p>
+                                    <p className="font-bold text-on-surface">
+                                        {user.firstName} {user.lastName}
+                                    </p>
+                                </div>
+                                <form action={logoutAction}>
+                                    <Button
+                                        type="submit"
+                                        variant="outline"
+                                        className="w-full justify-center"
+                                    >
+                                        <LogOut className="h-4 w-4" />
+                                        Logout
+                                    </Button>
+                                </form>
+                            </>
+                        ) : (
+                            <Link href={ROUTES.LOGIN} onClick={() => setOpen(false)}>
+                                <Button className="w-full justify-center">
+                                    <LogIn className="h-4 w-4" />
+                                    Login
+                                </Button>
+                            </Link>
+                        )}
+                    </div>
                 </nav>
             </SheetContent>
         </Sheet>

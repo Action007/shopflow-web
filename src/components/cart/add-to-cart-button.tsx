@@ -9,13 +9,19 @@ import { CartItem } from "@/types/cart";
 import { toast } from "sonner";
 import { ERRORS } from "@/lib/constants/errors";
 import { APP_CONFIG } from "@/lib/constants/app-config";
+import { cn } from "@/lib/utils";
 
 interface AddToCartButtonProps {
     productId: string;
     disabled?: boolean;
+    className?: string;
 }
 
-export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
+export function AddToCartButton({
+    productId,
+    disabled,
+    className,
+}: AddToCartButtonProps) {
     const [isAdding, setIsAdding] = useState(false);
     const [justAdded, setJustAdded] = useState(false);
     const { setCart, optimisticAdd, optimisticRemove } = useCartStore();
@@ -53,7 +59,7 @@ export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
             onClick={handleAdd}
             disabled={disabled || isAdding}
             size="lg"
-            className="w-full md:w-auto"
+            className={cn("w-full md:w-auto", className)}
             variant={justAdded ? "secondary" : "default"}
         >
             {justAdded ? (

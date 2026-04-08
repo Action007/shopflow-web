@@ -51,11 +51,11 @@ export function Pagination({ meta }: PaginationProps) {
     };
 
     return (
-        <div className="flex items-center justify-center gap-1">
+        <div className="flex items-center justify-center gap-2">
             <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9"
+                className="h-10 w-10 text-outline hover:bg-surface-high"
                 asChild
                 disabled={!meta.hasPrevious}
             >
@@ -77,16 +77,20 @@ export function Pagination({ meta }: PaginationProps) {
                 p === "..." ? (
                     <span
                         key={`ellipsis-${i}`}
-                        className="px-2 text-muted-foreground"
+                        className="mx-1 text-outline"
                     >
                         ...
                     </span>
                 ) : (
                     <Button
                         key={p}
-                        variant={p === meta.page ? "default" : "outline"}
+                        variant={p === meta.page ? "secondary" : "ghost"}
                         size="icon"
-                        className="h-9 w-9"
+                        className={
+                            p === meta.page
+                                ? "h-10 w-10 bg-primary-container/20 font-bold text-primary hover:bg-primary-container/20"
+                                : "h-10 w-10 text-outline hover:bg-surface-high"
+                        }
                         asChild={p !== meta.page}
                     >
                         {p === meta.page ? (
@@ -106,7 +110,7 @@ export function Pagination({ meta }: PaginationProps) {
             <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9"
+                className="h-10 w-10 text-outline hover:bg-surface-high"
                 asChild
                 disabled={!meta.hasNext}
             >

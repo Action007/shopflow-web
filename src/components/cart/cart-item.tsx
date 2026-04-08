@@ -3,8 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/stores/cart-store";
 import { adjustCartItemAction, removeCartItemAction } from "@/actions/cart";
@@ -66,81 +64,80 @@ export function CartItem({ item }: CartItemProps) {
     };
 
     return (
-        <Card className="flex gap-4 p-4">
-            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+        <div className="group flex gap-4 rounded-xl bg-surface-low p-4 transition-all duration-300 ease-fluid hover:bg-surface-high">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-highest">
                 {item.product.imageUrl ? (
                     <Image
                         src={item.product.imageUrl}
                         alt={item.product.name}
                         fill
-                        sizes="96px"
+                        sizes="80px"
                         className="object-cover"
                     />
                 ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                    <div className="flex h-full items-center justify-center text-xs text-text-muted">
                         No image
                     </div>
                 )}
             </div>
 
             <div className="flex flex-1 flex-col justify-between">
-                <div>
-                    <Link
-                        href={`/products/${item.productId}`}
-                        className="font-medium hover:underline"
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <Link
+                            href={`/products/${item.productId}`}
+                            className="font-bold leading-none text-on-surface"
+                        >
+                            {item.product.name}
+                        </Link>
+                        <p className="mt-1 text-[10px] uppercase tracking-widest text-on-surface-variant">
+                            {item.product.category?.name ?? "Product"}
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-destructive"
+                        onClick={handleRemove}
                     >
-                        {item.product.name}
-                    </Link>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                        {formatPrice(item.priceAtAdd)} each
-                    </p>
+                        <Trash2 className="h-5 w-5" />
+                    </button>
                 </div>
 
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() =>
-                                handleUpdateQuantity(item.quantity - 1)
-                            }
+                <div className="mt-4 flex items-end justify-between gap-4">
+                    <div className="flex items-center overflow-hidden rounded-lg bg-surface-highest">
+                        <button
+                            type="button"
+                            className="px-2 py-1 transition-colors duration-300 ease-fluid hover:bg-neutral-700"
+                            onClick={() => handleUpdateQuantity(item.quantity - 1)}
                             disabled={item.quantity <= 1}
                         >
                             <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="w-8 text-center text-sm font-medium">
+                        </button>
+                        <span className="px-3 text-sm font-bold">
                             {item.quantity}
                         </span>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() =>
-                                handleUpdateQuantity(item.quantity + 1)
-                            }
+                        <button
+                            type="button"
+                            className="px-2 py-1 transition-colors duration-300 ease-fluid hover:bg-neutral-700"
+                            onClick={() => handleUpdateQuantity(item.quantity + 1)}
                         >
                             <Plus className="h-4 w-4" />
-                        </Button>
+                        </button>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <span className="font-medium">
+                    <div className="text-right">
+                        <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-blue-400">
+                            {formatPrice(item.priceAtAdd)}
+                        </p>
+                        <p className="text-lg font-black text-on-surface">
                             {formatPrice(
                                 parseFloat(item.priceAtAdd) * item.quantity,
                             )}
-                        </span>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={handleRemove}
-                        >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
+                        </p>
                     </div>
                 </div>
             </div>
-        </Card>
+        </div>
     );
 }
