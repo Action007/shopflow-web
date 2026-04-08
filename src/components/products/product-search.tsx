@@ -8,8 +8,13 @@ import { Button } from "@/components/ui/button";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { ROUTES } from "@/lib/constants/routes";
 import { APP_CONFIG } from "@/lib/constants/app-config";
+import { cn } from "@/lib/utils";
 
-export function ProductSearch() {
+interface ProductSearchProps {
+    className?: string;
+}
+
+export function ProductSearch({ className }: ProductSearchProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [query, setQuery] = useState(searchParams.get("search") ?? "");
@@ -36,20 +41,20 @@ export function ProductSearch() {
     };
 
     return (
-        <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className={cn("relative", className)}>
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
             <Input
                 placeholder="Search products..."
                 value={query}
                 onChange={handleChange}
-                className="pl-9 pr-9"
+                className="h-12 rounded-lg border border-outline-variant/20 bg-surface-high pl-11 pr-11"
                 aria-label="Search products"
             />
             {query && (
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2"
+                    className="absolute right-1.5 top-1/2 h-8 w-8 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
                     onClick={handleClear}
                     aria-label="Clear search"
                 >

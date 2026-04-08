@@ -44,15 +44,19 @@ export function ProductFilters({
     const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
 
-    const updateParam = (key: string, value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-        if (value && value !== "all") {
-            params.set(key, value);
-        } else {
-            params.delete(key);
+    const updateCategory = (categoryId?: string) => {
+        const params = new URLSearchParams();
+
+        if (categoryId) {
+            params.set("categoryId", categoryId);
         }
-        params.delete("page");
-        router.push(`/products?${params.toString()}`);
+
+        setOpen(false);
+        router.push(
+            params.toString()
+                ? `${ROUTES.PRODUCTS}?${params.toString()}`
+                : ROUTES.PRODUCTS,
+        );
     };
 
     const updatePrice = (key: "minPrice" | "maxPrice", value: string) => {
@@ -115,7 +119,7 @@ export function ProductFilters({
                 <div className="space-y-2">
                     <button
                         type="button"
-                        onClick={() => updateParam("categoryId", "all")}
+                        onClick={() => updateCategory()}
                         className={cn(
                             "block py-1 text-left text-sm transition-colors duration-300 ease-fluid",
                             !currentCategory
@@ -129,7 +133,7 @@ export function ProductFilters({
                         <button
                             key={category.id}
                             type="button"
-                            onClick={() => updateParam("categoryId", category.id)}
+                            onClick={() => updateCategory(category.id)}
                             className={cn(
                                 "block py-1 text-left text-sm transition-colors duration-300 ease-fluid",
                                 currentCategory === category.id

@@ -11,6 +11,7 @@ import type {
 import { ProductGrid } from "@/components/products/product-grid";
 import { ProductFilters } from "@/components/products/product-filters";
 import { ProductSortSelect } from "@/components/products/product-sort-select";
+import { ProductSearch } from "@/components/products/product-search";
 import { Pagination } from "@/components/shared/pagination";
 import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton";
 import { API_ROUTES } from "@/lib/constants/routes";
@@ -47,18 +48,7 @@ export default async function ProductsPage({
             <div className="mx-auto w-full max-w-md lg:max-w-none lg:flex-1">
                 <Suspense
                     key={JSON.stringify(params)}
-                    fallback={
-                        <div className="space-y-8">
-                            <div className="flex items-end justify-between gap-4">
-                                <div>
-                                    <div className="mb-2 h-10 w-40 rounded-full shimmer" />
-                                    <div className="h-4 w-28 rounded-full shimmer opacity-50" />
-                                </div>
-                                <div className="hidden h-12 w-44 rounded-lg shimmer lg:block" />
-                            </div>
-                            <ProductGridSkeleton />
-                        </div>
-                    }
+                    fallback={<ProductGridSkeleton />}
                 >
                     <ProductList params={params} />
                 </Suspense>
@@ -101,7 +91,7 @@ async function ProductList({ params }: { params: ProductSearchParams }) {
 
     return (
         <>
-            <div className="mb-8 flex items-end justify-between gap-4">
+            <div className="mb-4 flex items-end justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-black tracking-tight text-on-surface">
                         All Products
@@ -115,6 +105,19 @@ async function ProductList({ params }: { params: ProductSearchParams }) {
                     <ProductSortSelect
                         value={sortValue}
                         className="w-48 bg-surface-high"
+                    />
+                </div>
+            </div>
+
+            <div className="mb-8 space-y-4">
+                <ProductSearch
+                    key={`mobile-${params.search ?? ""}`}
+                    className="w-full lg:hidden"
+                />
+                <div className="hidden items-center justify-between gap-4 lg:flex">
+                    <ProductSearch
+                        key={`desktop-${params.search ?? ""}`}
+                        className="w-full max-w-md"
                     />
                 </div>
             </div>
