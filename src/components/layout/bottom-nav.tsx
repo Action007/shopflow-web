@@ -20,7 +20,7 @@ export function BottomNav() {
 
     return (
         <nav className="glass-header fixed inset-x-0 bottom-0 z-50 rounded-t-lg lg:hidden">
-            <div className="flex h-16 items-center justify-around px-2">
+            <div className="flex h-14 items-center justify-around px-2">
                 {items.map((item) => {
                     const Icon = item.icon;
                     const isActive =

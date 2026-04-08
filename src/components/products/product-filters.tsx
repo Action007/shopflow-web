@@ -113,6 +113,7 @@ export function ProductFilters({
                     key={`${minPrice ?? ""}-${maxPrice ?? ""}`}
                     initialMinPrice={minPrice}
                     initialMaxPrice={maxPrice}
+                    onApply={() => setOpen(false)}
                 />
             </section>
 
@@ -120,7 +121,11 @@ export function ProductFilters({
                 <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-outline">
                     Sort By
                 </h4>
-                <ProductSortSelect value={sortValue} className="w-full" />
+                <ProductSortSelect
+                    value={sortValue}
+                    className="w-full"
+                    onChangeComplete={() => setOpen(false)}
+                />
             </section>
 
             <Button
@@ -140,7 +145,7 @@ export function ProductFilters({
                 {filterPanel}
             </aside>
 
-            <div className="fixed bottom-24 left-1/2 z-40 -translate-x-1/2 lg:hidden">
+            <div className="fixed bottom-16 left-1/2 z-40 -translate-x-1/2 lg:hidden">
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
                         <Button className="rounded-full px-6 py-3 text-on-primary">
@@ -148,14 +153,17 @@ export function ProductFilters({
                             Filters
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="bottom" className="max-h-[80vh]">
+                    <SheetContent
+                        side="bottom"
+                        className="max-h-[calc(100dvh-2rem)]"
+                    >
                         <SheetHeader>
                             <SheetTitle className="flex items-center gap-2">
                                 <SlidersHorizontal className="h-4 w-4 text-primary" />
                                 Filters
                             </SheetTitle>
                         </SheetHeader>
-                        <div className="overflow-y-auto px-6 pb-6">
+                        <div className="overflow-y-auto px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
                             {filterPanel}
                         </div>
                     </SheetContent>

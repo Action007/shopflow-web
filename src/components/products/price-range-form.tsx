@@ -9,11 +9,13 @@ import { ROUTES } from "@/lib/constants/routes";
 interface PriceRangeFormProps {
     initialMinPrice?: string;
     initialMaxPrice?: string;
+    onApply?: () => void;
 }
 
 export function PriceRangeForm({
     initialMinPrice,
     initialMaxPrice,
+    onApply,
 }: PriceRangeFormProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -46,6 +48,7 @@ export function PriceRangeForm({
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         applyPriceRange(minPriceValue, maxPriceValue);
+        onApply?.();
     };
 
     const clearPriceRange = () => {

@@ -37,7 +37,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                     <span
                         className={cn(
-                            "absolute left-4 top-4 rounded-full bg-tertiary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-tertiary backdrop-blur-md",
+                            "absolute left-3 top-3 rounded-full bg-tertiary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-tertiary backdrop-blur-md",
                             !inStock && "bg-destructive/10 text-destructive",
                         )}
                     >

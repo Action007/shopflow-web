@@ -8,6 +8,7 @@ import { ROUTES } from "@/lib/constants/routes";
 interface ProductSortSelectProps {
     value: string;
     className?: string;
+    onChangeComplete?: () => void;
 }
 
 const options = [
@@ -21,6 +22,7 @@ const options = [
 export function ProductSortSelect({
     value,
     className,
+    onChangeComplete,
 }: ProductSortSelectProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -47,6 +49,7 @@ export function ProductSortSelect({
 
         params.delete("page");
         router.push(`${ROUTES.PRODUCTS}?${params.toString()}`);
+        onChangeComplete?.();
     };
 
     return (
