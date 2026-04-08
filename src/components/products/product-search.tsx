@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { SubmitEventHandler, useEffect, useState } from "react";
-import { Search, X } from "lucide-react";
+import { ChangeEvent, useState } from "react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/constants/routes";
@@ -17,7 +17,7 @@ export function ProductSearch({ className }: ProductSearchProps) {
     const searchParams = useSearchParams();
     const [searchValue, setSearchValue] = useState(searchParams.get("search") ?? "");
 
-    const submitSearch: SubmitEventHandler<HTMLFormElement> = (e) => {
+    const submitSearch = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
 
@@ -34,7 +34,6 @@ export function ProductSearch({ className }: ProductSearchProps) {
                 : ROUTES.PRODUCTS,
         );
     };
-
 
     return (
         <form className={cn("relative", className)} onSubmit={submitSearch}>

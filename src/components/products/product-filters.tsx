@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Filter, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
+import { PriceRangeForm } from "@/components/products/price-range-form";
 import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
@@ -35,7 +35,6 @@ export function ProductFilters({
     maxPrice,
 }: ProductFiltersProps) {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const [open, setOpen] = useState(false);
 
     const updateCategory = (categoryId?: string) => {
@@ -46,21 +45,6 @@ export function ProductFilters({
         }
 
         setOpen(false);
-        router.push(
-            params.toString()
-                ? `${ROUTES.PRODUCTS}?${params.toString()}`
-                : ROUTES.PRODUCTS,
-        );
-    };
-
-    const updatePrice = (key: "minPrice" | "maxPrice", value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-        if (value.trim()) {
-            params.set(key, value);
-        } else {
-            params.delete(key);
-        }
-        params.delete("page");
         router.push(
             params.toString()
                 ? `${ROUTES.PRODUCTS}?${params.toString()}`
@@ -125,26 +109,11 @@ export function ProductFilters({
                 <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-outline">
                     Price Range
                 </h4>
-                <div className="flex items-center gap-2">
-                    <Input
-                        defaultValue={minPrice ?? ""}
-                        placeholder="Min"
-                        type="number"
-                        className="bg-surface-low"
-                        onBlur={(event) =>
-                            updatePrice("minPrice", event.currentTarget.value)
-                        }
-                    />
-                    <Input
-                        defaultValue={maxPrice ?? ""}
-                        placeholder="Max"
-                        type="number"
-                        className="bg-surface-low"
-                        onBlur={(event) =>
-                            updatePrice("maxPrice", event.currentTarget.value)
-                        }
-                    />
-                </div>
+                <PriceRangeForm
+                    key={`${minPrice ?? ""}-${maxPrice ?? ""}`}
+                    initialMinPrice={minPrice}
+                    initialMaxPrice={maxPrice}
+                />
             </section>
 
             <section>
@@ -156,9 +125,9 @@ export function ProductFilters({
 
             <Button
                 type="button"
-                variant="ghost"
+                variant="secondary"
                 onClick={clearAllFilters}
-                className="w-full justify-center border border-outline-variant/20"
+                className="w-full justify-center bg-surface-high text-on-surface hover:bg-surface-highest"
             >
                 Clear Filters
             </Button>
