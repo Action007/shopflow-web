@@ -71,7 +71,7 @@ export function MobileNav({ user }: MobileNavProps) {
 
                         {user && (
                             <Link
-                                href="/order"
+                                href={ROUTES.ORDERS}
                                 onClick={() => setOpen(false)}
                                 className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
                             >

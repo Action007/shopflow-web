@@ -71,8 +71,6 @@ export async function api<T>(
             path: endpoint,
         }));
 
-        // Handle 401 Unauthorized — redirect only if this was an authenticated request
-        // Public routes (like /auth/login) don't set redirectOn401, so they handle 401s themselves
         if (errorBody.statusCode === 401 && redirectOn401) {
             redirect(ROUTES.LOGIN);
         }

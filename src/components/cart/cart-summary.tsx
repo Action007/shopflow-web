@@ -9,6 +9,7 @@ import {
     selectTotalPrice,
 } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/utils";
+import { ROUTES } from "@/lib/constants/routes";
 
 export function CartSummary() {
     const itemCount = useCartStore(selectItemCount);
@@ -54,7 +55,7 @@ export function CartSummary() {
                     </Button>
                 ) : (
                     <Button asChild className="mt-8 w-full rounded-lg text-lg">
-                        <Link href="/checkout">
+                        <Link href={ROUTES.CHECKOUT}>
                             Proceed to Checkout
                             <ArrowRight className="h-5 w-5" />
                         </Link>

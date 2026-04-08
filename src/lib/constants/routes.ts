@@ -5,7 +5,7 @@ export const ROUTES = {
     PRODUCTS: "/products",
     CART: "/cart",
     CHECKOUT: "/checkout",
-    ORDERS: "/orders",
+    ORDERS: "/order",
 } as const;
 
 export const API_ROUTES = {

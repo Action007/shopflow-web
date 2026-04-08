@@ -13,7 +13,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const inStock = product.stockQuantity > 0;
 
     return (
-        <article className="group overflow-hidden rounded-xl bg-surface-low transition-all duration-300 ease-fluid hover:bg-surface-high">
+        <article className="flex flex-col group overflow-hidden rounded-xl bg-surface-low transition-all duration-300 ease-fluid hover:bg-surface-high">
             <Link href={`/products/${product.id}`} className="block">
                 <div
                     className={cn(
@@ -46,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 </div>
             </Link>
 
-            <div className="flex flex-col gap-4 p-6">
+            <div className="flex flex-col justify-between h-full gap-4 p-6">
                 <div className="space-y-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-outline">
                         {product.category?.name ?? "Product"}
@@ -58,15 +58,17 @@ export function ProductCard({ product }: ProductCardProps) {
                     </Link>
                 </div>
 
-                <p className="text-2xl font-black tabular-nums text-primary">
-                    {formatPrice(product.price)}
-                </p>
-
-                <AddToCartButton
-                    productId={product.id}
-                    disabled={!inStock}
-                    className="w-full lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100"
-                />
+                <div>
+                    <p className="text-2xl font-black tabular-nums text-primary mb-4">
+                        {formatPrice(product.price)}
+                    </p>
+                    <AddToCartButton
+                        productId={product.id}
+                        disabled={!inStock}
+                        variant="card"
+                        className="rounded-lg py-3 text-sm uppercase tracking-wider"
+                    />
+                </div>
             </div>
         </article>
     );

@@ -15,12 +15,14 @@ interface AddToCartButtonProps {
     productId: string;
     disabled?: boolean;
     className?: string;
+    variant?: "default" | "card";
 }
 
 export function AddToCartButton({
     productId,
     disabled,
     className,
+    variant = "default",
 }: AddToCartButtonProps) {
     const [isAdding, setIsAdding] = useState(false);
     const [justAdded, setJustAdded] = useState(false);
@@ -57,10 +59,10 @@ export function AddToCartButton({
     return (
         <Button
             onClick={handleAdd}
-            disabled={disabled || isAdding}
+            disabled={disabled || isAdding || justAdded}
             size="lg"
-            className={cn("w-full md:w-auto", className)}
-            variant={justAdded ? "secondary" : "default"}
+            className={cn("w-full", className)}
+            variant={justAdded ? "secondary" : variant}
         >
             {justAdded ? (
                 <>

@@ -5,12 +5,13 @@ import { usePathname } from "next/navigation";
 import { Search, ShoppingCart, Store, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore, selectItemCount } from "@/stores/cart-store";
+import { ROUTES } from "@/lib/constants/routes";
 
 const items = [
-    { href: "/", label: "Shop", icon: Store },
-    { href: "/products", label: "Search", icon: Search },
-    { href: "/cart", label: "Cart", icon: ShoppingCart },
-    { href: "/order", label: "Profile", icon: User },
+    { href: ROUTES.HOME, label: "Shop", icon: Store },
+    { href: ROUTES.PRODUCTS, label: "Search", icon: Search },
+    { href: ROUTES.CART, label: "Cart", icon: ShoppingCart },
+    { href: ROUTES.ORDERS, label: "Profile", icon: User },
 ] as const;
 
 export function BottomNav() {
@@ -23,8 +24,8 @@ export function BottomNav() {
                 {items.map((item) => {
                     const Icon = item.icon;
                     const isActive =
-                        item.href === "/"
-                            ? pathname === "/"
+                        item.href === ROUTES.HOME
+                            ? pathname === ROUTES.HOME
                             : pathname.startsWith(item.href);
 
                     return (
@@ -43,7 +44,7 @@ export function BottomNav() {
                                     isActive && "fill-current stroke-[1.75]",
                                 )}
                             />
-                            {item.href === "/cart" && itemCount > 0 && (
+                            {item.href === ROUTES.CART && itemCount > 0 && (
                                 <span className="absolute -right-1 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-on-primary">
                                     {itemCount > 9 ? "9+" : itemCount}
                                 </span>

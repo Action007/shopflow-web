@@ -3,13 +3,6 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Filter, SlidersHorizontal } from "lucide-react";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -19,6 +12,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
+import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
 import type { Category } from "@/types/product";
@@ -67,31 +61,11 @@ export function ProductFilters({
             params.delete(key);
         }
         params.delete("page");
-        router.push(`/products?${params.toString()}`);
-    };
-
-    const updateSort = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-
-        if (value === "featured") {
-            params.delete("sortBy");
-            params.delete("sortOrder");
-        } else if (value === "price-asc") {
-            params.set("sortBy", "price");
-            params.set("sortOrder", "asc");
-        } else if (value === "price-desc") {
-            params.set("sortBy", "price");
-            params.set("sortOrder", "desc");
-        } else if (value === "name-asc") {
-            params.set("sortBy", "name");
-            params.set("sortOrder", "asc");
-        } else {
-            params.set("sortBy", "createdAt");
-            params.set("sortOrder", "desc");
-        }
-
-        params.delete("page");
-        router.push(`/products?${params.toString()}`);
+        router.push(
+            params.toString()
+                ? `${ROUTES.PRODUCTS}?${params.toString()}`
+                : ROUTES.PRODUCTS,
+        );
     };
 
     const clearAllFilters = () => {
@@ -177,18 +151,7 @@ export function ProductFilters({
                 <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-outline">
                     Sort By
                 </h4>
-                <Select value={sortValue} onValueChange={updateSort}>
-                    <SelectTrigger className="w-full bg-surface-low">
-                        <SelectValue placeholder="Featured" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="featured">Featured</SelectItem>
-                        <SelectItem value="newest">Newest Arrivals</SelectItem>
-                        <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                        <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                        <SelectItem value="name-asc">Name</SelectItem>
-                    </SelectContent>
-                </Select>
+                <ProductSortSelect value={sortValue} className="w-full" />
             </section>
 
             <Button

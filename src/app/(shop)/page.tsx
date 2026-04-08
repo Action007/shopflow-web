@@ -30,10 +30,10 @@ export default async function HomePage() {
     const displayCategories = categories.slice(0, 5);
 
     return (
-        <div className="pb-24 lg:pb-0">
+        <div className="lg:pb-0">
             <div className="mx-auto max-w-[1280px]">
-                <section className="dot-grid relative min-h-[600px] overflow-hidden px-6 lg:grid lg:min-h-[700px] lg:grid-cols-2 lg:items-center lg:px-12">
-                    <div className="relative z-10 flex min-h-[600px] flex-col justify-center lg:min-h-0 lg:pr-12">
+                <section className="dot-grid relative overflow-hidden px-4 lg:grid lg:min-h-[700px] lg:grid-cols-2 lg:items-center">
+                    <div className="relative z-10 py-20 flex flex-col justify-center md:py-30 lg:min-h-0 lg:pr-12">
                         <h1 className="mb-4 max-w-[12ch] text-[56px] font-black leading-[1.1] tracking-[-0.02em] text-on-surface lg:max-w-none">
                             The best tech, delivered.
                         </h1>
@@ -41,25 +41,18 @@ export default async function HomePage() {
                             Experience precision-engineered hardware curated for
                             the modern digital obsidian aesthetic.
                         </p>
-                        <div className="flex flex-col gap-4 lg:flex-row">
-                            <Button asChild className="px-8 py-4 lg:px-12">
+                        <div className="flex flex-col gap-4 md:w-1/2">
+                            <Button asChild className="px-8 py-4 lg:px-14 text-base">
                                 <Link href={ROUTES.PRODUCTS}>Shop Now</Link>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                asChild
-                                className="px-8 py-4 lg:px-12"
-                            >
-                                <Link href={ROUTES.PRODUCTS}>View All</Link>
                             </Button>
                         </div>
                     </div>
 
-                    <div className="absolute -right-20 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl lg:hidden" />
+                    <div className="absolute -right-20 top-1/3 h-90 w-90 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl lg:hidden" />
 
-                    <div className="absolute bottom-10 right-6 h-64 w-48 rotate-6 overflow-hidden rounded-2xl shadow-2xl lg:relative lg:bottom-auto lg:right-0 lg:h-[700px] lg:w-full lg:rotate-0 lg:self-stretch">
+                    <div className="absolute bottom-30 right-5 h-80 w-70 rotate-6 overflow-hidden rounded-2xl shadow-2xl lg:relative md:bottom-40 lg:bottom-auto lg:right-0 lg:h-[700px] lg:w-full lg:rotate-0 lg:self-stretch">
                         <Image
-                            src={"/main-page-img.jpg"}
+                            src={"/main-img.jpg"}
                             alt={"Featured product"}
                             fill
                             priority
@@ -91,9 +84,7 @@ export default async function HomePage() {
 
                 <section className="mb-16 px-6 lg:px-12">
                     <div className="mb-8 flex items-end justify-between">
-                        <h2 className="text-2xl font-black uppercase tracking-tight lg:text-3xl">
-                            Featured
-                        </h2>
+
                         <Link
                             href={ROUTES.PRODUCTS}
                             className="flex items-center gap-1 text-sm font-bold text-primary"
@@ -107,7 +98,7 @@ export default async function HomePage() {
                     />
                 </section>
 
-                <section className="mb-16 px-6 lg:px-12">
+                <section className="mb-16 px-6 lg:px-12 sm:mb-30">
                     <div className="space-y-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8 lg:space-y-0">
                         <div className="space-y-4">
                             <h2 className="text-3xl font-black tracking-tighter lg:text-5xl">

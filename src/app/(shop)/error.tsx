@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ERRORS } from "@/lib/constants/errors";
+import { ROUTES } from "@/lib/constants/routes";
 
 export default function ShopError({
     error,
@@ -20,7 +21,7 @@ export default function ShopError({
             <div className="mt-6 flex gap-4">
                 <Button onClick={reset}>Try again</Button>
                 <Button variant="outline" asChild>
-                    <Link href="/">Go home</Link>
+                    <Link href={ROUTES.HOME}>Go home</Link>
                 </Button>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { apiGet } from "@/lib/api";
+import { ApiClientError, apiGet } from "@/lib/api";
 import { buildQueryString } from "@/lib/utils";
 import type {
     PaginatedResult,
@@ -10,8 +10,7 @@ import type {
 } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
 import { ProductFilters } from "@/components/products/product-filters";
-import { ProductSortSelect } from "@/components/products/product-sort-select";
-import { ProductSearch } from "@/components/products/product-search";
+import { ProductsToolbar } from "@/components/products/products-toolbar";
 import { Pagination } from "@/components/shared/pagination";
 import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton";
 import { API_ROUTES } from "@/lib/constants/routes";
@@ -47,34 +46,65 @@ export default async function ProductsPage({
 
             <div className="mx-auto w-full max-w-md lg:max-w-none lg:flex-1">
                 <Suspense
-                    key={JSON.stringify(params)}
+                    key={`toolbar-${JSON.stringify(params)}`}
+                    fallback={
+                        <ProductsToolbar
+                            search={params.search}
+                            sortValue={getSortValue(params)}
+                        />
+                    }
+                >
+                    <ProductsToolbarData params={params} />
+                </Suspense>
+
+                <Suspense
+                    key={`results-${JSON.stringify(params)}`}
                     fallback={<ProductGridSkeleton />}
                 >
-                    <ProductList params={params} />
+                    <ProductsResults params={params} />
                 </Suspense>
             </div>
         </div>
     );
 }
 
-async function ProductList({ params }: { params: ProductSearchParams }) {
-    const queryString = buildQueryString(params);
+async function ProductsToolbarData({
+    params,
+}: {
+    params: ProductSearchParams;
+}) {
+    const state = await getProductsState(params);
 
-    const result = await apiGet<PaginatedResult<Product>>(
-        `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
-        { revalidate: 300 },
+    return (
+        <ProductsToolbar
+            search={params.search}
+            sortValue={getSortValue(params)}
+            total={state.result?.meta.total}
+        />
     );
+}
 
-    const sortValue =
-        params.sortBy === "price" && params.sortOrder === "asc"
-            ? "price-asc"
-            : params.sortBy === "price" && params.sortOrder === "desc"
-              ? "price-desc"
-              : params.sortBy === "name"
-                ? "name-asc"
-                : params.sortBy === "createdAt"
-                  ? "newest"
-                  : "featured";
+async function ProductsResults({ params }: { params: ProductSearchParams }) {
+    const state = await getProductsState(params);
+
+    if (state.error) {
+        return (
+            <div className="rounded-3xl border border-error/10 bg-error-container/5 px-6 py-12 text-center">
+                <h2 className="text-xl font-bold tracking-tight text-on-surface">
+                    Invalid filters
+                </h2>
+                <p className="mt-2 text-sm text-on-surface-variant">
+                    {state.error.message}
+                </p>
+            </div>
+        );
+    }
+
+    if (!state.result) {
+        return null;
+    }
+
+    const { result } = state;
 
     if (result.items.length === 0) {
         return (
@@ -91,37 +121,6 @@ async function ProductList({ params }: { params: ProductSearchParams }) {
 
     return (
         <>
-            <div className="mb-4 flex items-end justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-black tracking-tight text-on-surface">
-                        All Products
-                    </h1>
-                    <p className="mt-2 text-sm text-outline">
-                        Showing {result.meta.total} items
-                    </p>
-                </div>
-
-                <div className="hidden lg:block">
-                    <ProductSortSelect
-                        value={sortValue}
-                        className="w-48 bg-surface-high"
-                    />
-                </div>
-            </div>
-
-            <div className="mb-8 space-y-4">
-                <ProductSearch
-                    key={`mobile-${params.search ?? ""}`}
-                    className="w-full lg:hidden"
-                />
-                <div className="hidden items-center justify-between gap-4 lg:flex">
-                    <ProductSearch
-                        key={`desktop-${params.search ?? ""}`}
-                        className="w-full max-w-md"
-                    />
-                </div>
-            </div>
-
             <ProductGrid
                 products={result.items}
                 className="grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
@@ -132,4 +131,35 @@ async function ProductList({ params }: { params: ProductSearchParams }) {
             </div>
         </>
     );
+}
+
+async function getProductsState(params: ProductSearchParams) {
+    try {
+        const queryString = buildQueryString(params);
+
+        const result = await apiGet<PaginatedResult<Product>>(
+            `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
+            { revalidate: 300 },
+        );
+
+        return { result, error: null } as const;
+    } catch (error) {
+        if (error instanceof ApiClientError && error.statusCode === 400) {
+            return { result: null, error } as const;
+        }
+
+        throw error;
+    }
+}
+
+function getSortValue(params: ProductSearchParams) {
+    return params.sortBy === "price" && params.sortOrder === "asc"
+        ? "price-asc"
+        : params.sortBy === "price" && params.sortOrder === "desc"
+          ? "price-desc"
+          : params.sortBy === "name"
+            ? "name-asc"
+            : params.sortBy === "createdAt"
+              ? "newest"
+              : "featured";
 }

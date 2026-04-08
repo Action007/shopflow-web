@@ -5,7 +5,7 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-xl border border-transparent bg-clip-padding text-sm font-bold whitespace-nowrap transition-all duration-300 ease-fluid outline-none select-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 active:scale-95 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-xl border border-transparent bg-clip-padding text-sm font-bold whitespace-nowrap transition-all duration-300 ease-fluid outline-none select-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 active:scale-96 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -15,6 +15,8 @@ const buttonVariants = cva(
           "border border-outline-variant/30 bg-transparent text-on-surface hover:bg-surface-high aria-expanded:bg-surface-high",
         secondary:
           "border border-outline-variant/30 bg-surface-container text-on-surface hover:bg-surface-high",
+        card:
+          "bg-surface-highest text-on-surface hover:bg-primary hover:text-on-primary",
         ghost:
           "bg-transparent text-on-surface hover:bg-surface-high aria-expanded:bg-surface-high",
         destructive:

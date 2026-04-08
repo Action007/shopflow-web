@@ -56,8 +56,8 @@ export async function loginAction(
         };
     }
 
-    revalidatePath("/", "layout");
-    redirect("/");
+    revalidatePath(ROUTES.HOME, "layout");
+    redirect(ROUTES.HOME);
 }
 
 export async function registerAction(
@@ -108,12 +108,12 @@ export async function registerAction(
         };
     }
 
-    revalidatePath("/", "layout");
-    redirect("/");
+    revalidatePath(ROUTES.HOME, "layout");
+    redirect(ROUTES.HOME);
 }
 
 export async function logoutAction() {
     await clearAuthCookies();
-    revalidatePath("/", "layout");
+    revalidatePath(ROUTES.HOME, "layout");
     redirect(ROUTES.LOGIN);
 }
