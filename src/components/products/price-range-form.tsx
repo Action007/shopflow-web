@@ -65,6 +65,8 @@ export function PriceRangeForm({
                     placeholder="Min"
                     type="number"
                     inputMode="numeric"
+                    min="0"
+                    step="0.01"
                     className="border border-outline-variant/20 bg-surface-low"
                     aria-label="Minimum price"
                 />
@@ -76,6 +78,8 @@ export function PriceRangeForm({
                     placeholder="Max"
                     type="number"
                     inputMode="numeric"
+                    min="0"
+                    step="0.01"
                     className="border border-outline-variant/20 bg-surface-low"
                     aria-label="Maximum price"
                 />
@@ -83,9 +87,11 @@ export function PriceRangeForm({
             <div className="flex items-center gap-2">
                 <Button
                     type="submit"
-                    variant="secondary"
+                    variant={
+                        minPriceValue || maxPriceValue ? "secondary" : "ghost"
+                    }
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 border border-outline-variant/20"
                 >
                     Apply
                 </Button>

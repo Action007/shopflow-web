@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ApiClientError, apiGet } from "@/lib/api";
 import { buildQueryString } from "@/lib/utils";
 import type {
@@ -13,7 +14,8 @@ import { ProductFilters } from "@/components/products/product-filters";
 import { ProductsToolbar } from "@/components/products/products-toolbar";
 import { Pagination } from "@/components/shared/pagination";
 import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton";
-import { API_ROUTES } from "@/lib/constants/routes";
+import { Button } from "@/components/ui/button";
+import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { ERRORS } from "@/lib/constants/errors";
 
 export const metadata: Metadata = {
@@ -108,6 +110,13 @@ async function ProductsResults({ params }: { params: ProductSearchParams }) {
                 <p className="mt-2 text-sm text-neutral-400">
                     {ERRORS.PAGES.NO_PRODUCTS}
                 </p>
+                <Button
+                    asChild
+                    variant="secondary"
+                    className="mt-6 bg-surface-high text-on-surface hover:bg-surface-highest"
+                >
+                    <Link href={ROUTES.PRODUCTS}>Reset Filters</Link>
+                </Button>
             </div>
         );
     }
