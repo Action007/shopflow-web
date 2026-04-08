@@ -47,12 +47,7 @@ export default async function ProductsPage({
             <div className="mx-auto w-full max-w-md lg:max-w-none lg:flex-1">
                 <Suspense
                     key={`toolbar-${JSON.stringify(params)}`}
-                    fallback={
-                        <ProductsToolbar
-                            search={params.search}
-                            sortValue={getSortValue(params)}
-                        />
-                    }
+                    fallback={<ProductsToolbar />}
                 >
                     <ProductsToolbarData params={params} />
                 </Suspense>
@@ -77,8 +72,6 @@ async function ProductsToolbarData({
 
     return (
         <ProductsToolbar
-            search={params.search}
-            sortValue={getSortValue(params)}
             total={state.result?.meta.total}
         />
     );
@@ -150,16 +143,4 @@ async function getProductsState(params: ProductSearchParams) {
 
         throw error;
     }
-}
-
-function getSortValue(params: ProductSearchParams) {
-    return params.sortBy === "price" && params.sortOrder === "asc"
-        ? "price-asc"
-        : params.sortBy === "price" && params.sortOrder === "desc"
-          ? "price-desc"
-          : params.sortBy === "name"
-            ? "name-asc"
-            : params.sortBy === "createdAt"
-              ? "newest"
-              : "featured";
 }

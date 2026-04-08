@@ -1,13 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { SubmitEventHandler, useEffect, useState } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { ROUTES } from "@/lib/constants/routes";
-import { APP_CONFIG } from "@/lib/constants/app-config";
 import { cn } from "@/lib/utils";
 
 interface ProductSearchProps {
@@ -17,50 +15,46 @@ interface ProductSearchProps {
 export function ProductSearch({ className }: ProductSearchProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [query, setQuery] = useState(searchParams.get("search") ?? "");
+    const [searchValue, setSearchValue] = useState(searchParams.get("search") ?? "");
 
-    const navigate = useDebouncedCallback((value: string) => {
+    const submitSearch: SubmitEventHandler<HTMLFormElement> = (e) => {
+        e.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
-        if (value.trim()) {
-            params.set("search", value.trim());
+
+        if (searchValue.trim()) {
+            params.set("search", searchValue.trim());
         } else {
             params.delete("search");
         }
+
         params.delete("page");
-        router.push(`${ROUTES.PRODUCTS}?${params.toString()}`);
-    }, APP_CONFIG.SEARCH.DEBOUNCE_DELAY_MS);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(e.target.value);
-        navigate(e.target.value);
+        router.push(
+            params.toString()
+                ? `${ROUTES.PRODUCTS}?${params.toString()}`
+                : ROUTES.PRODUCTS,
+        );
     };
 
-    const handleClear = () => {
-        setQuery("");
-        navigate("");
-    };
 
     return (
-        <div className={cn("relative", className)}>
+        <form className={cn("relative", className)} onSubmit={submitSearch}>
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
             <Input
                 placeholder="Search products..."
-                value={query}
-                onChange={handleChange}
-                className="h-12 rounded-lg border border-outline-variant/20 bg-surface-high pl-11 pr-11"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="h-12 rounded-lg border border-outline-variant/20 bg-surface-high pl-11 pr-28"
                 aria-label="Search products"
             />
-            {query && (
+            <div className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
                 <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-1.5 top-1/2 h-8 w-8 -translate-y-1/2 text-on-surface-variant hover:text-on-surface"
-                    onClick={handleClear}
-                    aria-label="Clear search"
+                    type="submit"
+                    variant="secondary"
+                    className="h-9 rounded-lg px-3 py-2 text-[10px] font-bold uppercase tracking-widest"
                 >
-                    <X className="h-4 w-4" />
+                    Search
                 </Button>
-            )}
-        </div>
+            </div>
+        </form>
     );
 }
