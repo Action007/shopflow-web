@@ -23,7 +23,7 @@ export function ProductPurchasePanel({
                     <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 sm:hidden">
                         Quantity
                     </span>
-                    <div className="flex items-center">
+                    <div className="flex items-center sm:w-full sm:justify-around">
                         <button
                             type="button"
                             className="flex h-8 w-8 items-center justify-center rounded-full text-on-surface transition-colors duration-300 ease-fluid hover:bg-white/5 disabled:opacity-40"

@@ -39,6 +39,7 @@ export const ERRORS = {
 
     ORDER: {
         PLACE_FAILED: "Failed to place order. Please try again.",
+        CANCEL_FAILED: "Failed to cancel order. Please try again.",
         NOT_FOUND: "Order not found",
     },
 

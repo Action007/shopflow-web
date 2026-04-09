@@ -79,7 +79,7 @@ export async function cancelOrderAction(
 
         return {
             success: false,
-            message: "Failed to cancel order. Please try again.",
+            message: ERRORS.ORDER.CANCEL_FAILED,
         };
     }
 }

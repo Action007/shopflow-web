@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { loginAction, type ActionResult } from "@/actions/auth";
 import { ROUTES } from "@/lib/constants/routes";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -17,14 +18,7 @@ export function LoginForm() {
     );
 
     return (
-        <main className="w-full max-w-md">
-            <div className="mb-12 flex justify-center">
-                <span className="text-[22px] font-black tracking-tighter text-on-surface">
-                    ShopFlow
-                </span>
-            </div>
-
-            <div className="w-full rounded-xl border border-outline-variant/10 bg-surface-low p-8 shadow-2xl">
+        <AuthShell backgroundVariant="login" brandSize="sm">
                 <div className="mb-8">
                     <h1 className="mb-2 text-[36px] font-bold leading-tight tracking-tight">
                         Welcome back
@@ -106,10 +100,7 @@ export function LoginForm() {
                         </Link>
                     </p>
                 </div>
-            </div>
-
-            <div className="pointer-events-none fixed left-1/2 top-0 -z-10 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-primary/5 blur-[120px]" />
-        </main>
+        </AuthShell>
     );
 }
 
