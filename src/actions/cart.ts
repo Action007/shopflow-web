@@ -1,6 +1,6 @@
 "use server";
 
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { apiAuthPost, apiAuthPatch, apiAuthDelete } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import {
@@ -28,7 +28,7 @@ export async function addToCartAction(
             { productId, quantity },
             { redirectOn401: false },
         );
-        updateTag("cart");
+        revalidateTag("cart", "max");
         return { success: true, cart };
     } catch (error) {
         if (error instanceof ApiClientError) {
@@ -61,7 +61,7 @@ export async function adjustCartItemAction(
             },
             { redirectOn401: false },
         );
-        updateTag("cart");
+        revalidateTag("cart", "max");
         return { success: true, cart };
     } catch (error) {
         if (error instanceof ApiClientError) {
@@ -90,7 +90,7 @@ export async function removeCartItemAction(
             `${API_ROUTES.CART}/${productId}`,
             { redirectOn401: false },
         );
-        updateTag("cart");
+        revalidateTag("cart", "max");
         return { success: true, cart };
     } catch (error) {
         if (error instanceof ApiClientError) {

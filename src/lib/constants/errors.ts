@@ -29,6 +29,7 @@ export const ERRORS = {
         ADD_FAILED: "Failed to add item",
         UPDATE_FAILED: "Could not update quantity",
         REMOVE_FAILED: "Could not remove item",
+        ORDER_CANCEL_FAILED: "Could not cancel order",
         LOGIN_REQUIRED_DESCRIPTION:
             "Please sign in to add items to your cart.",
         GENERIC: "Cart operation failed",

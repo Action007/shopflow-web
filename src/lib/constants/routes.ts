@@ -26,6 +26,7 @@ export const API_ROUTES = {
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",
+    CANCEL: "/cancel"
 } as const;
 
 export const PROTECTED_ROUTES = [

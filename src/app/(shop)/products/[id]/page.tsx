@@ -26,6 +26,7 @@ export async function generateMetadata({
     try {
         const product = await apiGet<Product>(`/products/${id}`, {
             revalidate: 300,
+            tags: ["cart-detail"]
         });
         return {
             title: product.name,
@@ -127,7 +128,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                     {product.name}
                                 </h1>
                                 <div
-                                    className={`w-full max-w-[100px] flex items-center gap-1 rounded-md px-2 py-1 ${
+                                    className={`w-full max-w-[110px] flex items-center gap-1 rounded-md px-2 py-1 ${
                                         inStock
                                             ? "bg-tertiary/10"
                                             : "bg-destructive/10"
@@ -159,6 +160,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                         Number.parseFloat(product.price) * 1.08,
                                     )}
                                 </span>
+                            </div>
+
+                            <div className="mb-6 flex flex-wrap gap-3">
+                                <div className="rounded-full border border-outline-variant/15 rounded-sm bg-surface-low px-3 py-2">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-outline">
+                                        Category
+                                    </span>
+                                    <p className="mt-1 font-mono text-sm tabular-nums text-on-surface">
+                                        {product.category?.name}
+                                    </p>
+                                </div>
+                                <div className="rounded-full border border-outline-variant/15 rounded-sm bg-surface-low px-3 py-2">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-outline">
+                                        Stock
+                                    </span>
+                                    <p className="mt-1 font-mono text-sm tabular-nums text-on-surface">
+                                        {product.stockQuantity} units
+                                    </p>
+                                </div>
                             </div>
 
                             <p className="mb-6 leading-relaxed text-on-surface-variant">
@@ -193,6 +213,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         <ProductPurchasePanel
                             productId={product.id}
                             inStock={inStock}
+                            stockQuantity={product.stockQuantity}
                         />
                     </div>
                 </div>

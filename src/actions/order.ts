@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { apiAuthPost } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import * as v from "valibot";
@@ -48,8 +48,9 @@ export async function placeOrderAction(formData: {
             shippingAddress: fullAddress,
         });
         orderId = order.id;
-        updateTag("cart");
-        updateTag("orders");
+        revalidateTag("orders", "max");
+        revalidateTag("cart-detail", "max");
+        revalidateTag("cart", "max");
     } catch (error) {
         if (error instanceof ApiClientError) {
             return { success: false, message: error.message };
@@ -68,9 +69,11 @@ export async function cancelOrderAction(
 ): Promise<CancelOrderResult> {
     try {
         const order = await apiAuthPost<Order>(
-            `${API_ROUTES.ORDERS}/${orderId}/cancel`,
+            `${API_ROUTES.ORDERS}/${orderId}${API_ROUTES.CANCEL}`,
         );
-        updateTag("orders");
+        revalidateTag("orders", "max");
+        revalidateTag("cart-detail", "max");
+        revalidateTag("cart", "max");
         return { success: true, order };
     } catch (error) {
         if (error instanceof ApiClientError) {

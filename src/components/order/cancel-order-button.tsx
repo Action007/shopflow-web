@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cancelOrderAction } from "@/actions/order";
+import { ERRORS } from "@/lib/constants/errors";
 
 interface CancelOrderButtonProps {
     orderId: string;
@@ -19,7 +20,7 @@ export function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
             const result = await cancelOrderAction(orderId);
 
             if (!result.success) {
-                toast.error("Could not cancel order", {
+                toast.error(ERRORS.CART.ORDER_CANCEL_FAILED, {
                     description: result.message,
                 });
                 return;
