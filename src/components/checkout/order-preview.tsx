@@ -25,7 +25,7 @@ export function OrderPreview({ items }: OrderPreviewProps) {
                             key={item.id}
                             className="flex items-center justify-between"
                         >
-                            <div className="flex items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-3">
                                 <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-800">
                                     {item.product.imageUrl ? (
                                         <Image

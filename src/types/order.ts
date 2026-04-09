@@ -1,9 +1,12 @@
+import type { Product } from "@/types/product";
+
 export interface OrderItem {
     id: string;
     productId: string;
     quantity: number;
     priceAtPurchase: string;
     productNameAtPurchase: string;
+    product?: Product;
 }
 
 export interface Order {
