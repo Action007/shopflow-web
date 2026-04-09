@@ -22,6 +22,7 @@ export default async function HomePage() {
             "/products?limit=4&sortBy=createdAt&sortOrder=desc",
             {
                 revalidate: 300,
+                tags: ["products"],
             },
         ),
         apiGet<Category[]>("/categories", { revalidate: 300 }),

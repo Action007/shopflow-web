@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Minus, Plus, Heart } from "lucide-react";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Button } from "@/components/ui/button";

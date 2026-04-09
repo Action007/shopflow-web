@@ -136,7 +136,7 @@ async function getProductsState(params: ProductSearchParams) {
 
         const result = await apiGet<PaginatedResult<Product>>(
             `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
-            { revalidate: 300 },
+            { revalidate: 300, tags: ["products"] },
         );
 
         return { result, error: null } as const;

@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { apiAuthPost } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import * as v from "valibot";
@@ -21,6 +21,18 @@ export interface CancelOrderResult {
     success: boolean;
     message?: string;
     order?: Order;
+}
+
+function invalidateProductCaches(productIds: string[]) {
+    const uniqueProductIds = Array.from(new Set(productIds.filter(Boolean)));
+
+    revalidateTag("products", "max");
+    revalidatePath(ROUTES.PRODUCTS);
+
+    for (const productId of uniqueProductIds) {
+        revalidateTag(`product-${productId}`, "max");
+        revalidatePath(`${ROUTES.PRODUCTS}/${productId}`);
+    }
 }
 
 export async function placeOrderAction(formData: {
@@ -51,6 +63,7 @@ export async function placeOrderAction(formData: {
         revalidateTag("orders", "max");
         revalidateTag("cart-detail", "max");
         revalidateTag("cart", "max");
+        invalidateProductCaches(order.items.map((item) => item.productId));
     } catch (error) {
         if (error instanceof ApiClientError) {
             return { success: false, message: error.message };
@@ -74,6 +87,7 @@ export async function cancelOrderAction(
         revalidateTag("orders", "max");
         revalidateTag("cart-detail", "max");
         revalidateTag("cart", "max");
+        invalidateProductCaches(order.items.map((item) => item.productId));
         return { success: true, order };
     } catch (error) {
         if (error instanceof ApiClientError) {
