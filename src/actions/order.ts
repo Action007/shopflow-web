@@ -17,6 +17,12 @@ export interface PlaceOrderResult {
     orderId?: string;
 }
 
+export interface CancelOrderResult {
+    success: boolean;
+    message?: string;
+    order?: Order;
+}
+
 export async function placeOrderAction(formData: {
     shippingAddress: string;
     city: string;
@@ -55,4 +61,25 @@ export async function placeOrderAction(formData: {
     }
 
     redirect(`${ROUTES.ORDERS}/${orderId}`);
+}
+
+export async function cancelOrderAction(
+    orderId: string,
+): Promise<CancelOrderResult> {
+    try {
+        const order = await apiAuthPost<Order>(
+            `${API_ROUTES.ORDERS}/${orderId}/cancel`,
+        );
+        updateTag("orders");
+        return { success: true, order };
+    } catch (error) {
+        if (error instanceof ApiClientError) {
+            return { success: false, message: error.message };
+        }
+
+        return {
+            success: false,
+            message: "Failed to cancel order. Please try again.",
+        };
+    }
 }

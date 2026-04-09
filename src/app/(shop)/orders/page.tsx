@@ -10,18 +10,10 @@ import { formatPrice } from "@/lib/utils";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { OrderStatusBadge } from "@/components/order/order-status-badge";
 
 export const metadata: Metadata = {
     title: "Orders",
-};
-
-const statusClasses: Record<string, string> = {
-    DELIVERED: "bg-tertiary-container/10 text-tertiary ring-1 ring-tertiary/20",
-    SHIPPED: "bg-primary-container/10 text-primary ring-1 ring-primary/20",
-    PROCESSING: "bg-primary-container/10 text-primary ring-1 ring-primary/20",
-    PENDING: "text-neutral-400 ring-1 ring-neutral-700",
-    CANCELLED:
-        "bg-error-container/10 text-destructive ring-1 ring-destructive/20 opacity-70",
 };
 
 export default async function OrdersPage() {
@@ -69,7 +61,7 @@ export default async function OrdersPage() {
                         {result.items.map((order) => (
                             <Link
                                 key={order.id}
-                                href={`/order/${order.id}`}
+                                href={`${ROUTES.ORDERS}/${order.id}`}
                                 className={cn(
                                     "group flex items-center justify-between rounded-[12px] bg-[#18181b] p-5 transition-all duration-300 ease-fluid hover:bg-surface-high",
                                     order.status === "CANCELLED" &&
@@ -81,14 +73,7 @@ export default async function OrdersPage() {
                                         <span className="font-bold tracking-tight text-neutral-50">
                                             Order #{order.orderNumber}
                                         </span>
-                                        <span
-                                            className={cn(
-                                                "rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-widest",
-                                                statusClasses[order.status],
-                                            )}
-                                        >
-                                            {order.status}
-                                        </span>
+                                        <OrderStatusBadge status={order.status} />
                                     </div>
                                     <div className="flex items-center gap-4 text-xs text-neutral-500">
                                         <span>

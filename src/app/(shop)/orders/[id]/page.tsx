@@ -9,7 +9,8 @@ import { ApiClientError } from "@/lib/api";
 import type { Order } from "@/types/order";
 import { formatPrice } from "@/lib/utils";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
-import { Button } from "@/components/ui/button";
+import { CancelOrderButton } from "@/components/order/cancel-order-button";
+import { OrderStatusBadge } from "@/components/order/order-status-badge";
 
 interface OrderPageProps {
     params: Promise<{ id: string }>;
@@ -44,9 +45,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                 <section className="mb-8">
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-3">
-                            <span className="rounded-full bg-tertiary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-tertiary">
-                                {order.status}
-                            </span>
+                            <OrderStatusBadge status={order.status} />
                             <span className="font-mono text-xs text-neutral-500">
                                 #{order.orderNumber}
                             </span>
@@ -187,9 +186,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                         </section>
 
                         {order.status === "PENDING" && (
-                            <Button variant="destructive" className="w-fit">
-                                Cancel Order
-                            </Button>
+                            <CancelOrderButton orderId={order.id} />
                         )}
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import type { Metadata } from "next";
 import {
+    AlertCircle,
     Check,
     ChevronRight,
     Cpu,
@@ -135,9 +136,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             <h1 className="text-4xl font-black tracking-tighter text-on-surface lg:text-5xl">
                                 {product.name}
                             </h1>
-                            <div className="flex items-center gap-1 rounded-md bg-tertiary/10 px-2 py-1">
-                                <Check className="h-[14px] w-[14px] text-tertiary" />
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-tertiary">
+                            <div
+                                className={`flex items-center gap-1 rounded-md px-2 py-1 ${
+                                    inStock
+                                        ? "bg-tertiary/10"
+                                        : "bg-destructive/10"
+                                }`}
+                            >
+                                {inStock ? (
+                                    <Check className="h-[14px] w-[14px] text-tertiary" />
+                                ) : (
+                                    <AlertCircle className="h-[14px] w-[14px] text-destructive" />
+                                )}
+                                <span
+                                    className={`text-[10px] font-bold uppercase tracking-wider ${
+                                        inStock
+                                            ? "text-tertiary"
+                                            : "text-destructive"
+                                    }`}
+                                >
                                     {inStock ? "In Stock" : "Unavailable"}
                                 </span>
                             </div>
