@@ -45,7 +45,7 @@ export function BottomNav() {
                                 )}
                             />
                             {item.href === ROUTES.CART && itemCount > 0 && (
-                                <span className="absolute -right-1 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-on-primary">
+                                <span className="absolute -right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-on-primary">
                                     {itemCount > 9 ? "9+" : itemCount}
                                 </span>
                             )}

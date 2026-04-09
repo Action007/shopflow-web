@@ -8,7 +8,7 @@ interface ProductsToolbarProps {
 
 export function ProductsToolbar({ total }: ProductsToolbarProps) {
     return (
-        <section className="lg:flex justify-between mb-8">
+        <section className="lg:flex justify-between mb-6">
             <div className="mb-4 flex items-end justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-black tracking-tight text-on-surface">

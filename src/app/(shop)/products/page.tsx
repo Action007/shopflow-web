@@ -9,7 +9,7 @@ import type {
     Category,
     ProductSearchParams,
 } from "@/types/product";
-import { ProductGrid } from "@/components/products/product-grid";
+import { CatalogProductGrid } from "@/components/products/catalog-product-grid";
 import { ProductFilters } from "@/components/products/product-filters";
 import { ProductsToolbar } from "@/components/products/products-toolbar";
 import { Pagination } from "@/components/shared/pagination";
@@ -36,30 +36,32 @@ export default async function ProductsPage({
     });
 
     return (
-        <div className="px-6 pb-32 pt-8 lg:mx-auto lg:flex lg:max-w-[1280px] lg:gap-8 lg:px-12">
-            <ProductFilters
-                categories={categories}
-                currentCategory={params.categoryId}
-                currentSort={params.sortBy}
-                currentOrder={params.sortOrder}
-                minPrice={params.minPrice}
-                maxPrice={params.maxPrice}
-            />
+        <div className="mx-4">
+            <div className="pb-32 pt-8 lg:mx-auto lg:flex lg:max-w-[1280px] lg:gap-8">
+                <ProductFilters
+                    categories={categories}
+                    currentCategory={params.categoryId}
+                    currentSort={params.sortBy}
+                    currentOrder={params.sortOrder}
+                    minPrice={params.minPrice}
+                    maxPrice={params.maxPrice}
+                />
 
-            <div className="mx-auto w-full max-w-md sm:max-w-none lg:flex-1">
-                <Suspense
-                    key={`toolbar-${JSON.stringify(params)}`}
-                    fallback={<ProductsToolbar />}
-                >
-                    <ProductsToolbarData params={params} />
-                </Suspense>
+                <div className="mx-full w-full sm:max-w-none lg:flex-1">
+                    <Suspense
+                        key={`toolbar-${JSON.stringify(params)}`}
+                        fallback={<ProductsToolbar />}
+                    >
+                        <ProductsToolbarData params={params} />
+                    </Suspense>
 
-                <Suspense
-                    key={`results-${JSON.stringify(params)}`}
-                    fallback={<ProductGridSkeleton />}
-                >
-                    <ProductsResults params={params} />
-                </Suspense>
+                    <Suspense
+                        key={`results-${JSON.stringify(params)}`}
+                        fallback={<ProductGridSkeleton />}
+                    >
+                        <ProductsResults params={params} />
+                    </Suspense>
+                </div>
             </div>
         </div>
     );
@@ -72,11 +74,7 @@ async function ProductsToolbarData({
 }) {
     const state = await getProductsState(params);
 
-    return (
-        <ProductsToolbar
-            total={state.result?.meta.total}
-        />
-    );
+    return <ProductsToolbar total={state.result?.meta.total} />;
 }
 
 async function ProductsResults({ params }: { params: ProductSearchParams }) {
@@ -123,10 +121,7 @@ async function ProductsResults({ params }: { params: ProductSearchParams }) {
 
     return (
         <>
-            <ProductGrid
-                products={result.items}
-                className="grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            />
+            <CatalogProductGrid products={result.items} />
 
             <div className="mt-16">
                 <Pagination meta={result.meta} />

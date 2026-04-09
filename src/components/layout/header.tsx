@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogIn, Search, User } from "lucide-react";
+import { LogIn, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -27,14 +27,14 @@ export async function Header() {
                 <nav className="hidden items-center gap-8 lg:flex">
                     <Link
                         href={ROUTES.PRODUCTS}
-                        className="text-sm font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                        className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
                     >
                         Products
                     </Link>
                     {user && (
                         <Link
                             href={ROUTES.ORDERS}
-                            className="text-sm font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                            className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
                         >
                             Orders
                         </Link>
@@ -43,11 +43,6 @@ export async function Header() {
 
                 <div className="flex items-center gap-2">
                     <div className="hidden items-center gap-2 lg:flex">
-                        <Button variant="ghost" size="icon" asChild>
-                            <Link href={ROUTES.PRODUCTS} aria-label="Search products">
-                                <Search className="h-5 w-5" />
-                            </Link>
-                        </Button>
                         <CartBadge />
                         {user ? (
                             <div className="flex items-center gap-1">

@@ -29,6 +29,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
     let order: Order;
     try {
         order = await apiAuthGet<Order>(`${API_ROUTES.ORDERS}/${id}`);
+        console.log('order: ', order);
     } catch (error) {
         if (error instanceof ApiClientError && error.statusCode === 404) {
             notFound();
@@ -71,9 +72,6 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                         <h3 className="font-bold text-on-surface">
                                             {item.productNameAtPurchase}
                                         </h3>
-                                        <p className="text-sm text-neutral-500">
-                                            Premium configuration
-                                        </p>
                                         <p className="mt-1 text-sm text-on-surface">
                                             Qty: {item.quantity}
                                         </p>

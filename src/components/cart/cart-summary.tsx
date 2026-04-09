@@ -17,7 +17,7 @@ export function CartSummary() {
 
     return (
         <aside className="lg:sticky lg:top-24">
-            <div className="rounded-xl bg-surface-low lg:p-6">
+            <div className="rounded-xl bg-surface-low p-6">
                 <h2 className="mb-6 hidden text-xl font-black uppercase tracking-tighter lg:block">
                     Order Summary
                 </h2>

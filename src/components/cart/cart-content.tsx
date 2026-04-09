@@ -34,8 +34,8 @@ export function CartContent() {
 
     return (
         <>
-            <div className="mb-10">
-                <h1 className="text-[3.5rem] font-black leading-tight tracking-tighter text-on-surface">
+            <div className="mb-6">
+                <h1 className="text-3xl font-black leading-tight tracking-tighter text-on-surface">
                     Your Cart{" "}
                     <span className="ml-2 align-top text-2xl font-normal text-on-surface-variant">
                         ({itemCount})
