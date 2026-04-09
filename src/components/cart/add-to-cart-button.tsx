@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCartAction } from "@/actions/cart";
@@ -9,6 +10,7 @@ import { CartItem } from "@/types/cart";
 import { toast } from "sonner";
 import { ERRORS } from "@/lib/constants/errors";
 import { APP_CONFIG } from "@/lib/constants/app-config";
+import { ROUTES } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
 
 interface AddToCartButtonProps {
@@ -28,6 +30,9 @@ export function AddToCartButton({
     variant = "default",
     onAdded,
 }: AddToCartButtonProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [isAdding, setIsAdding] = useState(false);
     const [justAdded, setJustAdded] = useState(false);
     const { setCart, optimisticAdd, optimisticRemove } = useCartStore();
@@ -55,6 +60,20 @@ export function AddToCartButton({
         } else {
             // rollback
             optimisticRemove(productId);
+            if (result.code === "UNAUTHORIZED") {
+                const currentPath = searchParams.toString()
+                    ? `${pathname}?${searchParams.toString()}`
+                    : pathname;
+
+                toast.error(ERRORS.AUTH.LOGIN_REQUIRED, {
+                    description: ERRORS.CART.LOGIN_REQUIRED_DESCRIPTION,
+                });
+                router.push(
+                    `${ROUTES.LOGIN}?callbackUrl=${encodeURIComponent(currentPath)}`,
+                );
+                return;
+            }
+
             toast.error(ERRORS.CART.ADD_FAILED, {
                 description: result.message || ERRORS.GENERIC.TRY_AGAIN,
             });

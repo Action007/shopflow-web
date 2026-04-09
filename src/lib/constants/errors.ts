@@ -2,6 +2,9 @@ export const ERRORS = {
     AUTH: {
         INVALID_CREDENTIALS: "Invalid email or password",
         EMAIL_ALREADY_EXISTS: "An account with this email already exists",
+        LOGIN_REQUIRED: "Login required",
+        LOGIN_REQUIRED_DESCRIPTION:
+            "Please sign in to continue with this action.",
         GENERIC: "Something went wrong. Please try again.",
     },
 
@@ -26,6 +29,8 @@ export const ERRORS = {
         ADD_FAILED: "Failed to add item",
         UPDATE_FAILED: "Could not update quantity",
         REMOVE_FAILED: "Could not remove item",
+        LOGIN_REQUIRED_DESCRIPTION:
+            "Please sign in to add items to your cart.",
         GENERIC: "Cart operation failed",
     },
 
