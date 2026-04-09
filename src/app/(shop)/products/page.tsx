@@ -46,7 +46,7 @@ export default async function ProductsPage({
                 maxPrice={params.maxPrice}
             />
 
-            <div className="mx-auto w-full max-w-md lg:max-w-none lg:flex-1">
+            <div className="mx-auto w-full max-w-md sm:max-w-none lg:flex-1">
                 <Suspense
                     key={`toolbar-${JSON.stringify(params)}`}
                     fallback={<ProductsToolbar />}
@@ -125,7 +125,7 @@ async function ProductsResults({ params }: { params: ProductSearchParams }) {
         <>
             <ProductGrid
                 products={result.items}
-                className="grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+                className="grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
             />
 
             <div className="mt-16">

@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
     product: Product;
+    imagePriority?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, imagePriority = false }: ProductCardProps) {
     const inStock = product.stockQuantity > 0;
 
     return (
@@ -26,6 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             src={product.imageUrl}
                             alt={product.name}
                             fill
+                            priority={imagePriority}
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="h-full w-full object-cover transition-transform duration-500 ease-fluid group-hover:scale-105"
                         />

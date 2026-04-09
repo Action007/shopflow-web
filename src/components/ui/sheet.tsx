@@ -75,6 +75,7 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         data-side={side}
+        aria-describedby={props["aria-describedby"] ?? undefined}
         className={cn(
           sheetContentBaseClassName,
           sheetContentSideClassNames[side],
