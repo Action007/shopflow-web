@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -11,6 +12,7 @@ import { ApiClientError } from "@/lib/api";
 import type { Product, PaginatedResult } from "@/types/product";
 import { formatPrice } from "@/lib/utils";
 import { ProductPurchasePanel } from "@/components/products/product-purchase-panel";
+import { ROUTES } from "@/lib/constants/routes";
 
 interface ProductPageProps {
     params: Promise<{ id: string }>;
@@ -72,9 +74,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="mx-6">
             <div className="mx-auto pb-32 pt-4 sm:max-w-[1280px]">
                 <nav className="mb-4 flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-500">
-                    <span>Shop</span>
+                    <Link
+                        href={ROUTES.HOME}
+                        className="transition-colors duration-300 ease-fluid hover:text-on-surface"
+                    >
+                        Shop
+                    </Link>
                     <ChevronRight className="h-3 w-3" />
-                    <span>{product.category?.name ?? "Products"}</span>
+                    {product.category ? (
+                        <Link
+                            href={`${ROUTES.PRODUCTS}?categoryId=${product.category.id}`}
+                            className="transition-colors duration-300 ease-fluid hover:text-on-surface"
+                        >
+                            {product.category.name}
+                        </Link>
+                    ) : (
+                        <Link
+                            href={ROUTES.PRODUCTS}
+                            className="transition-colors duration-300 ease-fluid hover:text-on-surface"
+                        >
+                            Products
+                        </Link>
+                    )}
                     <ChevronRight className="h-3 w-3" />
                     <span className="text-primary">{product.name}</span>
                 </nav>
@@ -101,12 +122,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
                     <div className="lg:flex lg:flex-col lg:gap-6">
                         <section className="mb-8">
-                            <div className="mb-2 flex items-start justify-between gap-4">
-                                <h1 className="text-4xl font-black tracking-tighter text-on-surface lg:text-5xl">
+                            <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+                                <h1 className="text-3xl font-black tracking-tighter text-on-surface lg:text-5xl">
                                     {product.name}
                                 </h1>
                                 <div
-                                    className={`flex items-center gap-1 rounded-md px-2 py-1 ${
+                                    className={`w-full max-w-[100px] flex items-center gap-1 rounded-md px-2 py-1 ${
                                         inStock
                                             ? "bg-tertiary/10"
                                             : "bg-destructive/10"
