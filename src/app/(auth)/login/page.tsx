@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: "Login",
 };
 
-export default function LoginPage() {
-    return <LoginForm />;
+interface LoginPageProps {
+    searchParams: Promise<{
+        callbackUrl?: string;
+    }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+    const params = await searchParams;
+
+    return <LoginForm callbackUrl={params.callbackUrl} />;
 }

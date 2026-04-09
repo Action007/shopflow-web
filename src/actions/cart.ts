@@ -3,6 +3,10 @@
 import { updateTag } from "next/cache";
 import { apiAuthPost, apiAuthPatch, apiAuthDelete } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
+import {
+    ACTION_RESULT_CODES,
+    type ActionResultCode,
+} from "@/lib/constants/action-result-codes";
 import { ERRORS } from "@/lib/constants/errors";
 import { API_ROUTES } from "@/lib/constants/routes";
 import type { Cart } from "@/types/cart";
@@ -11,7 +15,7 @@ export interface CartActionResult {
     success: boolean;
     message?: string;
     cart?: Cart;
-    code?: "UNAUTHORIZED" | "API_ERROR" | "UNKNOWN";
+    code?: ActionResultCode;
 }
 
 export async function addToCartAction(
@@ -32,13 +36,15 @@ export async function addToCartAction(
                 success: false,
                 message: error.message,
                 code:
-                    error.statusCode === 401 ? "UNAUTHORIZED" : "API_ERROR",
+                    error.statusCode === 401
+                        ? ACTION_RESULT_CODES.UNAUTHORIZED
+                        : ACTION_RESULT_CODES.API_ERROR,
             };
         }
         return {
             success: false,
             message: ERRORS.CART.ADD_FAILED,
-            code: "UNKNOWN",
+            code: ACTION_RESULT_CODES.UNKNOWN,
         };
     }
 }
@@ -63,13 +69,15 @@ export async function adjustCartItemAction(
                 success: false,
                 message: error.message,
                 code:
-                    error.statusCode === 401 ? "UNAUTHORIZED" : "API_ERROR",
+                    error.statusCode === 401
+                        ? ACTION_RESULT_CODES.UNAUTHORIZED
+                        : ACTION_RESULT_CODES.API_ERROR,
             };
         }
         return {
             success: false,
             message: ERRORS.CART.UPDATE_FAILED,
-            code: "UNKNOWN",
+            code: ACTION_RESULT_CODES.UNKNOWN,
         };
     }
 }
@@ -90,13 +98,15 @@ export async function removeCartItemAction(
                 success: false,
                 message: error.message,
                 code:
-                    error.statusCode === 401 ? "UNAUTHORIZED" : "API_ERROR",
+                    error.statusCode === 401
+                        ? ACTION_RESULT_CODES.UNAUTHORIZED
+                        : ACTION_RESULT_CODES.API_ERROR,
             };
         }
         return {
             success: false,
             message: ERRORS.CART.REMOVE_FAILED,
-            code: "UNKNOWN",
+            code: ACTION_RESULT_CODES.UNKNOWN,
         };
     }
 }

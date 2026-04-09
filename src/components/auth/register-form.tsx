@@ -11,12 +11,20 @@ import { Input } from "@/components/ui/input";
 
 const initialState: ActionResult = { success: false };
 
-export function RegisterForm() {
+interface RegisterFormProps {
+    callbackUrl?: string;
+}
+
+export function RegisterForm({ callbackUrl }: RegisterFormProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [state, formAction, isPending] = useActionState(
         registerAction,
         initialState,
     );
+
+    const loginHref = callbackUrl
+        ? `${ROUTES.LOGIN}?callbackUrl=${encodeURIComponent(callbackUrl)}`
+        : ROUTES.LOGIN;
 
     return (
         <AuthShell
@@ -41,6 +49,11 @@ export function RegisterForm() {
             </header>
 
             <form action={formAction} className="space-y-6">
+                <input
+                    type="hidden"
+                    name="callbackUrl"
+                    value={callbackUrl ?? ROUTES.HOME}
+                />
                 <div className="grid grid-cols-2 gap-4">
                     <Field
                         label="First Name"
@@ -135,7 +148,7 @@ export function RegisterForm() {
                 <p className="text-sm text-on-surface-variant">
                     Already have an account?
                     <Link
-                        href={ROUTES.LOGIN}
+                        href={loginHref}
                         className="ml-1 font-bold text-primary transition-all duration-300 ease-fluid hover:underline"
                     >
                         Login

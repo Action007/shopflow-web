@@ -21,6 +21,7 @@ export async function loginAction(
     _prevState: ActionResult,
     formData: FormData,
 ): Promise<ActionResult> {
+    const callbackUrl = (formData.get("callbackUrl") as string) || ROUTES.HOME;
     const raw = {
         email: formData.get("email") as string,
         password: formData.get("password") as string,
@@ -57,13 +58,14 @@ export async function loginAction(
     }
 
     revalidatePath(ROUTES.HOME, "layout");
-    redirect(ROUTES.HOME);
+    redirect(callbackUrl);
 }
 
 export async function registerAction(
     _prevState: ActionResult,
     formData: FormData,
 ): Promise<ActionResult> {
+    const callbackUrl = (formData.get("callbackUrl") as string) || ROUTES.HOME;
     const raw = {
         firstName: formData.get("firstName") as string,
         lastName: formData.get("lastName") as string,
@@ -109,7 +111,7 @@ export async function registerAction(
     }
 
     revalidatePath(ROUTES.HOME, "layout");
-    redirect(ROUTES.HOME);
+    redirect(callbackUrl);
 }
 
 export async function logoutAction() {

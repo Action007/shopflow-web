@@ -8,6 +8,7 @@ import { addToCartAction } from "@/actions/cart";
 import { useCartStore } from "@/stores/cart-store";
 import { CartItem } from "@/types/cart";
 import { toast } from "sonner";
+import { ACTION_RESULT_CODES } from "@/lib/constants/action-result-codes";
 import { ERRORS } from "@/lib/constants/errors";
 import { APP_CONFIG } from "@/lib/constants/app-config";
 import { ROUTES } from "@/lib/constants/routes";
@@ -60,7 +61,7 @@ export function AddToCartButton({
         } else {
             // rollback
             optimisticRemove(productId);
-            if (result.code === "UNAUTHORIZED") {
+            if (result.code === ACTION_RESULT_CODES.UNAUTHORIZED) {
                 const currentPath = searchParams.toString()
                     ? `${pathname}?${searchParams.toString()}`
                     : pathname;
