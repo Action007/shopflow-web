@@ -13,16 +13,20 @@ import { cn } from "@/lib/utils";
 
 interface AddToCartButtonProps {
     productId: string;
+    quantity?: number;
     disabled?: boolean;
     className?: string;
     variant?: "default" | "card";
+    onAdded?: () => void;
 }
 
 export function AddToCartButton({
     productId,
+    quantity = 1,
     disabled,
     className,
     variant = "default",
+    onAdded,
 }: AddToCartButtonProps) {
     const [isAdding, setIsAdding] = useState(false);
     const [justAdded, setJustAdded] = useState(false);
@@ -34,18 +38,19 @@ export function AddToCartButton({
         // Optimistic update — badge reflects the add immediately
         const optimisticItem = {
             productId,
-            quantity: 1,
+            quantity,
             priceAtAdd: "0",
             product: { name: "", imageUrl: null },
         } as CartItem;
         optimisticAdd(optimisticItem);
 
-        const result = await addToCartAction(productId, 1);
+        const result = await addToCartAction(productId, quantity);
         setIsAdding(false);
 
         if (result.success && result.cart) {
             setCart(result.cart); // reconcile with real data
             setJustAdded(true);
+            onAdded?.();
             setTimeout(() => setJustAdded(false), APP_CONFIG.CART.OPTIMISTIC_FEEDBACK_DURATION_MS);
         } else {
             // rollback

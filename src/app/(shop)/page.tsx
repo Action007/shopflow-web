@@ -83,7 +83,7 @@ export default async function HomePage() {
                 </section>
 
                 <section className="mb-16 px-6 lg:px-12">
-                    <div className="mb-8 flex items-end justify-between">
+                    <div className="mb-8 flex justify-end">
 
                         <Link
                             href={ROUTES.PRODUCTS}
