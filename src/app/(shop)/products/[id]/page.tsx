@@ -26,7 +26,7 @@ export async function generateMetadata({
     try {
         const product = await apiGet<Product>(`/products/${id}`, {
             revalidate: 300,
-            tags: ["cart-detail"]
+            tags: [`product-${id}`],
         });
         return {
             title: product.name,

@@ -8,7 +8,7 @@ export const COOKIE_CONFIG = {
     SECURE: process.env.NODE_ENV === "production",
     SAME_SITE: "lax" as const,
     PATH_ROOT: "/",
-    PATH_AUTH: "/auth/refresh",
+    PATH_AUTH: "/",
 } as const;
 
 export const TOKEN_EXPIRY = {

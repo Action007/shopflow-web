@@ -16,7 +16,6 @@ async function withAuth(options: FetchOptions = {}): Promise<FetchOptions> {
             ...options.headers,
             ...(token && { [HEADER_NAMES.AUTHORIZATION]: `Bearer ${token}` }),
         },
-        cache: "no-store", // Authenticated data is always dynamic
     };
 }
 
@@ -24,7 +23,14 @@ export async function apiAuthGet<T>(
     endpoint: string,
     options: FetchOptions = {},
 ): Promise<T> {
-    return api<T>(endpoint, { ...(await withAuth(options)), method: "GET" });
+    const hasCacheControls =
+        Boolean(options.tags?.length) || options.revalidate !== undefined;
+
+    return api<T>(endpoint, {
+        ...(await withAuth(options)),
+        method: "GET",
+        cache: options.cache ?? (hasCacheControls ? "force-cache" : "no-store"),
+    });
 }
 
 export async function apiAuthPost<T>(
@@ -36,6 +42,7 @@ export async function apiAuthPost<T>(
         ...(await withAuth(options)),
         method: "POST",
         body: data ? JSON.stringify(data) : undefined,
+        cache: "no-store",
     });
 }
 
@@ -48,6 +55,7 @@ export async function apiAuthPatch<T>(
         ...(await withAuth(options)),
         method: "PATCH",
         body: JSON.stringify(data),
+        cache: "no-store",
     });
 }
 
@@ -55,5 +63,9 @@ export async function apiAuthDelete<T>(
     endpoint: string,
     options: FetchOptions = {},
 ): Promise<T> {
-    return api<T>(endpoint, { ...(await withAuth(options)), method: "DELETE" });
+    return api<T>(endpoint, {
+        ...(await withAuth(options)),
+        method: "DELETE",
+        cache: "no-store",
+    });
 }

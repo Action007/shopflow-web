@@ -61,7 +61,6 @@ export async function placeOrderAction(formData: {
         });
         orderId = order.id;
         revalidateTag("orders", "max");
-        revalidateTag("cart-detail", "max");
         revalidateTag("cart", "max");
         invalidateProductCaches(order.items.map((item) => item.productId));
     } catch (error) {
@@ -85,7 +84,6 @@ export async function cancelOrderAction(
             `${API_ROUTES.ORDERS}/${orderId}${API_ROUTES.CANCEL}`,
         );
         revalidateTag("orders", "max");
-        revalidateTag("cart-detail", "max");
         revalidateTag("cart", "max");
         invalidateProductCaches(order.items.map((item) => item.productId));
         return { success: true, order };
