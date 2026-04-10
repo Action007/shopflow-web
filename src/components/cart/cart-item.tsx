@@ -120,7 +120,7 @@ export function CartItem({ item }: CartItemProps) {
                         >
                             <Minus className="h-4 w-4" />
                         </button>
-                        <span className="px-3 text-sm font-bold">
+                        <span className="flex justify-c w-[40px] px-3 text-sm font-bold">
                             {localQuantity}
                         </span>
                         <button

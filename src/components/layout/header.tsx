@@ -31,17 +31,18 @@ export async function Header() {
                         >
                             Products
                         </Link>
-                        <Link
-                            href={ROUTES.SUPPORT}
-                            className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
-                        >
-                            Support
-                        </Link>
+
                         <Link
                             href={ROUTES.ORDERS}
                             className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
                         >
                             Orders
+                        </Link>
+                        <Link
+                            href={ROUTES.SUPPORT}
+                            className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                        >
+                            Support
                         </Link>
                     </nav>
 
