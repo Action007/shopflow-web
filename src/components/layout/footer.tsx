@@ -26,6 +26,12 @@ export function Footer() {
                             Categories
                         </Link>
                         <Link
+                            href={ROUTES.SUPPORT}
+                            className="text-sm text-neutral-500 transition-colors duration-300 ease-fluid hover:text-blue-400"
+                        >
+                            Support
+                        </Link>
+                        <Link
                             href={ROUTES.ORDERS}
                             className="text-sm text-neutral-500 transition-colors duration-300 ease-fluid hover:text-blue-400"
                         >
@@ -38,16 +44,16 @@ export function Footer() {
                             Support
                         </h4>
                         <Link
+                            href={ROUTES.PROFILE}
+                            className="text-sm text-neutral-500 transition-colors duration-300 ease-fluid hover:text-blue-400"
+                        >
+                            Profile
+                        </Link>
+                        <Link
                             href={ROUTES.LOGIN}
                             className="text-sm text-neutral-500 transition-colors duration-300 ease-fluid hover:text-blue-400"
                         >
-                            Support
-                        </Link>
-                        <Link
-                            href={ROUTES.REGISTER}
-                            className="text-sm text-neutral-500 transition-colors duration-300 ease-fluid hover:text-blue-400"
-                        >
-                            Privacy
+                            Login
                         </Link>
                     </div>
                 </div>

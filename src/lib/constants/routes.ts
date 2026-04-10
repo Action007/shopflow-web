@@ -3,6 +3,8 @@ export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     PRODUCTS: "/products",
+    SUPPORT: "/support",
+    PROFILE: "/profile",
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",
@@ -33,6 +35,7 @@ export const PROTECTED_ROUTES = [
     ROUTES.CART,
     ROUTES.CHECKOUT,
     ROUTES.ORDERS,
+    ROUTES.PROFILE,
 ] as const;
 
 export const AUTH_ROUTES = [ROUTES.LOGIN, ROUTES.REGISTER] as const;

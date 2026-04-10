@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, ShoppingCart, Store, User } from "lucide-react";
+import { Headphones, ShoppingCart, Store, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore, selectItemCount } from "@/stores/cart-store";
 import { ROUTES } from "@/lib/constants/routes";
 
 const items = [
     { href: ROUTES.HOME, label: "Shop", icon: Store },
-    { href: ROUTES.PRODUCTS, label: "Search", icon: Search },
+    { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
     { href: ROUTES.CART, label: "Cart", icon: ShoppingCart },
-    { href: ROUTES.ORDERS, label: "Profile", icon: User },
+    { href: ROUTES.PROFILE, label: "Profile", icon: User },
 ] as const;
 
 export function BottomNav() {

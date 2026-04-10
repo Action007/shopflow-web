@@ -21,7 +21,7 @@ export default function ShopError({
             <div className="mt-6 flex gap-4">
                 <Button onClick={reset}>Try again</Button>
                 <Button variant="outline" asChild>
-                    <Link href={ROUTES.HOME}>Go home</Link>
+                    <Link href={ROUTES.HOME}>Go to Homepage</Link>
                 </Button>
             </div>
         </div>

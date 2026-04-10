@@ -31,14 +31,28 @@ export async function Header() {
                     >
                         Products
                     </Link>
+                    <Link
+                        href={ROUTES.SUPPORT}
+                        className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                    >
+                        Support
+                    </Link>
                     {user && (
-                        <Link
-                            href={ROUTES.ORDERS}
-                            className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
-                        >
-                            Orders
-                        </Link>
-                    )}
+                        <>
+                            <Link
+                                href={ROUTES.ORDERS}
+                                className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                            >
+                                Orders
+                            </Link>
+                            <Link
+                                href={ROUTES.PROFILE}
+                                className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                            >
+                                Profile
+                            </Link>
+                        </>
+                    )} 
                 </nav>
 
                 <div className="flex items-center gap-2">
@@ -47,7 +61,7 @@ export async function Header() {
                         {user ? (
                             <div className="flex items-center gap-1">
                                 <Button variant="ghost" size="icon" asChild>
-                                    <Link href={ROUTES.ORDERS} aria-label="Orders">
+                                    <Link href={ROUTES.PROFILE} aria-label="Profile">
                                         <User className="h-5 w-5" />
                                     </Link>
                                 </Button>

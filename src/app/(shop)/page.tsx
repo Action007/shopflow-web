@@ -5,6 +5,9 @@ import {
     Cable,
     Headphones,
     Laptop,
+    PackageCheck,
+    ShieldCheck,
+    SlidersHorizontal,
     Smartphone,
     Watch,
 } from "lucide-react";
@@ -15,6 +18,26 @@ import type { PaginatedResult, Product, Category } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
 
 const categoryIcons = [Smartphone, Laptop, Headphones, Watch, Cable];
+const assuranceItems = [
+    {
+        title: "Curated Catalog",
+        description:
+            "A tighter product mix built around everyday performance, not endless filler.",
+        icon: SlidersHorizontal,
+    },
+    {
+        title: "Live Stock Clarity",
+        description:
+            "Availability stays visible while you browse, so the cart feels dependable.",
+        icon: PackageCheck,
+    },
+    {
+        title: "Secure Ordering",
+        description:
+            "Checkout is designed to stay focused, fast, and clear from cart to confirmation.",
+        icon: ShieldCheck,
+    },
+];
 
 export default async function HomePage() {
     const [productsResult, categories] = await Promise.all([
@@ -85,7 +108,6 @@ export default async function HomePage() {
 
                 <section className="mb-16 px-6 lg:px-12">
                     <div className="mb-8 flex justify-end">
-
                         <Link
                             href={ROUTES.PRODUCTS}
                             className="flex items-center gap-1 text-sm font-bold text-primary"
@@ -97,6 +119,50 @@ export default async function HomePage() {
                         products={productsResult.items}
                         className="grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
                     />
+                </section>
+
+                <section className="mb-16 px-6 lg:px-12">
+                    <div className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-6 lg:p-8">
+                        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                            <div className="space-y-3">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-primary/80">
+                                    Why ShopFlow
+                                </p>
+                                <h2 className="max-w-[12ch] text-3xl font-black tracking-tighter lg:text-5xl">
+                                    Built to feel considered, not crowded.
+                                </h2>
+                            </div>
+                            <p className="max-w-[420px] text-sm leading-relaxed text-on-surface-variant lg:text-base">
+                                The homepage now leads into a store experience
+                                that feels sharper: fewer distractions, clearer
+                                product signals, and a purchase flow that stays
+                                calm.
+                            </p>
+                        </div>
+
+                        <div className="grid gap-4 lg:grid-cols-3">
+                            {assuranceItems.map((item) => {
+                                const Icon = item.icon;
+
+                                return (
+                                    <article
+                                        key={item.title}
+                                        className="rounded-2xl border border-outline-variant/10 bg-surface-high p-5"
+                                    >
+                                        <div className="mb-8 inline-flex rounded-full bg-primary/10 p-3 text-primary">
+                                            <Icon className="h-5 w-5" />
+                                        </div>
+                                        <h3 className="mb-2 text-xl font-bold tracking-tight">
+                                            {item.title}
+                                        </h3>
+                                        <p className="max-w-[28ch] text-sm leading-relaxed text-on-surface-variant">
+                                            {item.description}
+                                        </p>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </section>
 
                 <section className="mb-16 px-6 lg:px-12 sm:mb-30">
@@ -159,6 +225,51 @@ export default async function HomePage() {
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="mb-20 px-6 lg:px-12 sm:mb-32">
+                    <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                        <div className="rounded-[28px] border border-primary/15 bg-primary-container/10 p-6 lg:p-8">
+                            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-primary/80">
+                                Store Rhythm
+                            </p>
+                            <h2 className="max-w-[14ch] text-3xl font-black tracking-tighter lg:text-4xl">
+                                Browse the latest, move fast when something
+                                fits.
+                            </h2>
+                            <p className="mt-4 max-w-[52ch] text-sm leading-relaxed text-on-surface-variant lg:text-base">
+                                With {categories.length} active categories and{" "}
+                                {productsResult.meta.total} products in the
+                                catalog, the experience stays broad enough to
+                                explore while still feeling intentionally
+                                edited.
+                            </p>
+                            <div className="mt-8 flex flex-wrap gap-3">
+                                <Button asChild className="px-6">
+                                    <Link href={ROUTES.PRODUCTS}>
+                                        Explore Catalog
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+                            {[
+                                "01. Find the category that matches your setup.",
+                                "02. Compare details without leaving the flow.",
+                                "03. Checkout once the right product clicks.",
+                            ].map((step) => (
+                                <div
+                                    key={step}
+                                    className="rounded-2xl bg-surface-low p-5"
+                                >
+                                    <p className="text-sm font-medium leading-relaxed text-on-surface-variant">
+                                        {step}
+                                    </p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>

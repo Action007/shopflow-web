@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Package, LogIn, LogOut } from "lucide-react";
+import { Menu, Package, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -22,6 +22,7 @@ interface MobileNavProps {
 
 const links = [
     { href: ROUTES.PRODUCTS, label: "Products" },
+    { href: ROUTES.SUPPORT, label: "Support" },
     { href: ROUTES.CART, label: "Cart", withBadge: true },
 ] as const;
 
@@ -70,14 +71,24 @@ export function MobileNav({ user }: MobileNavProps) {
                         ))}
 
                         {user && (
-                            <Link
-                                href={ROUTES.ORDERS}
-                                onClick={() => setOpen(false)}
-                                className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
-                            >
-                                <span>Orders</span>
-                                <Package className="h-4 w-4 text-primary" />
-                            </Link>
+                            <>
+                                <Link
+                                    href={ROUTES.ORDERS}
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
+                                >
+                                    <span>Orders</span>
+                                    <Package className="h-4 w-4 text-primary" />
+                                </Link>
+                                <Link
+                                    href={ROUTES.PROFILE}
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
+                                >
+                                    <span>Profile</span>
+                                    <User className="h-4 w-4 text-primary" />
+                                </Link>
+                            </>
                         )}
                     </div>
 

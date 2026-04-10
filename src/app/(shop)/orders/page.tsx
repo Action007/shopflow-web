@@ -103,9 +103,10 @@ export default async function OrdersPage() {
                     </p>
                     <Button
                         variant="secondary"
+                        asChild
                         className="w-full bg-primary text-on-primary hover:scale-[1.02]"
                     >
-                        Contact Support
+                        <Link href={ROUTES.SUPPORT}>Contact Support</Link>
                     </Button>
                 </div>
             </div>
