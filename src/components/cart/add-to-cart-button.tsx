@@ -6,7 +6,6 @@ import { ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addToCartAction } from "@/actions/cart";
 import { useCartStore } from "@/stores/cart-store";
-import { CartItem } from "@/types/cart";
 import { toast } from "sonner";
 import { ACTION_RESULT_CODES } from "@/lib/constants/action-result-codes";
 import { ERRORS } from "@/lib/constants/errors";
@@ -36,31 +35,20 @@ export function AddToCartButton({
     const searchParams = useSearchParams();
     const [isAdding, setIsAdding] = useState(false);
     const [justAdded, setJustAdded] = useState(false);
-    const { setCart, optimisticAdd, optimisticRemove } = useCartStore();
+    const setCart = useCartStore((state) => state.setCart);
 
     const handleAdd = async () => {
         setIsAdding(true);
-
-        // Optimistic update — badge reflects the add immediately
-        const optimisticItem = {
-            productId,
-            quantity,
-            priceAtAdd: "0",
-            product: { name: "", imageUrl: null },
-        } as CartItem;
-        optimisticAdd(optimisticItem);
 
         const result = await addToCartAction(productId, quantity);
         setIsAdding(false);
 
         if (result.success && result.cart) {
-            setCart(result.cart); // reconcile with real data
+            setCart(result.cart);
             setJustAdded(true);
             onAdded?.();
             setTimeout(() => setJustAdded(false), APP_CONFIG.CART.OPTIMISTIC_FEEDBACK_DURATION_MS);
         } else {
-            // rollback
-            optimisticRemove(productId);
             if (result.code === ACTION_RESULT_CODES.UNAUTHORIZED) {
                 const currentPath = searchParams.toString()
                     ? `${pathname}?${searchParams.toString()}`

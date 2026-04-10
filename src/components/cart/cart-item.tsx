@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
@@ -17,15 +18,19 @@ interface CartItemProps {
 }
 
 export function CartItem({ item }: CartItemProps) {
-    const {
-        setCart,
-        optimisticUpdateQuantity,
-        optimisticAdd,
-        optimisticRemove,
-    } = useCartStore();
+    const setCart = useCartStore((state) => state.setCart);
+    const [localQuantity, setLocalQuantity] = useState<number>(
+        item.quantity ?? 0,
+    );
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    useEffect(() => {
+        setLocalQuantity(item.quantity);
+    }, [item.quantity]);
 
     const debouncedAdjust = useDebouncedCallback(
-        async (newQuantity: number, confirmedQuantity: number) => {
+        async (newQuantity: number) => {
+            setIsUpdating(true);
             const result = await adjustCartItemAction(
                 item.productId,
                 newQuantity,
@@ -33,30 +38,31 @@ export function CartItem({ item }: CartItemProps) {
             if (result.success && result.cart) {
                 setCart(result.cart);
             } else {
-                optimisticUpdateQuantity(item.productId, confirmedQuantity);
+                setLocalQuantity(item.quantity);
                 toast.error(ERRORS.CART.UPDATE_FAILED, {
                     description: result.message || ERRORS.GENERIC.TRY_AGAIN,
                 });
             }
+            setIsUpdating(false);
         },
         APP_CONFIG.CART.DEBOUNCE_DELAY_MS,
     );
 
-    const handleUpdateQuantity = (newQuantity: number) => {
-        if (newQuantity < 1) return;
-        const confirmedQuantity = item.quantity;
-        optimisticUpdateQuantity(item.productId, newQuantity);
-        debouncedAdjust(newQuantity, confirmedQuantity);
+    const handleUpdateQuantity = (delta: number) => {
+        const newQty = localQuantity + delta;
+        if (newQty < 1) {
+            handleRemove();
+            return;
+        }
+        setLocalQuantity(newQty);
+        debouncedAdjust(newQty);
     };
 
     const handleRemove = async () => {
-        optimisticRemove(item.productId);
-
         const result = await removeCartItemAction(item.productId);
         if (result.success && result.cart) {
             setCart(result.cart);
         } else {
-            optimisticAdd(item);
             toast.error(ERRORS.CART.REMOVE_FAILED, {
                 description: result.message || ERRORS.GENERIC.TRY_AGAIN,
             });
@@ -109,18 +115,19 @@ export function CartItem({ item }: CartItemProps) {
                         <button
                             type="button"
                             className="px-2 py-1 transition-colors duration-300 ease-fluid hover:bg-neutral-700"
-                            onClick={() => handleUpdateQuantity(item.quantity - 1)}
-                            disabled={item.quantity <= 1}
+                            onClick={() => handleUpdateQuantity(-1)}
+                            disabled={isUpdating}
                         >
                             <Minus className="h-4 w-4" />
                         </button>
                         <span className="px-3 text-sm font-bold">
-                            {item.quantity}
+                            {localQuantity}
                         </span>
                         <button
                             type="button"
                             className="px-2 py-1 transition-colors duration-300 ease-fluid hover:bg-neutral-700"
-                            onClick={() => handleUpdateQuantity(item.quantity + 1)}
+                            onClick={() => handleUpdateQuantity(1)}
+                            disabled={isUpdating}
                         >
                             <Plus className="h-4 w-4" />
                         </button>
@@ -132,7 +139,7 @@ export function CartItem({ item }: CartItemProps) {
                         </p>
                         <p className="text-lg font-black text-on-surface">
                             {formatPrice(
-                                parseFloat(item.priceAtAdd) * item.quantity,
+                                parseFloat(item.priceAtAdd) * localQuantity,
                             )}
                         </p>
                     </div>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Cart, CartItem } from "@/types/cart";
+import type { Cart } from "@/types/cart";
 
 interface CartState {
     cart: Cart | null;
@@ -9,9 +9,6 @@ interface CartState {
 interface CartActions {
     setCart: (cart: Cart | null) => void;
     initialize: (cart: Cart | null) => void;
-    optimisticAdd: (item: CartItem) => void;
-    optimisticUpdateQuantity: (productId: string, quantity: number) => void;
-    optimisticRemove: (productId: string) => void;
 }
 
 type CartStore = CartState & CartActions;
@@ -23,60 +20,6 @@ export const useCartStore = create<CartStore>((set) => ({
     initialize: (cart) => set({ cart, isInitialized: true }),
 
     setCart: (cart) => set({ cart }),
-
-    optimisticAdd: (item) =>
-        set((state) => {
-            if (!state.cart) {
-                return {
-                    cart: { items: [item] } as Cart,
-                    isInitialized: true,
-                };
-            }
-            const existing = state.cart.items.find(
-                (i) => i.productId === item.productId,
-            );
-            if (existing) {
-                return {
-                    cart: {
-                        ...state.cart,
-                        items: state.cart.items.map((i) =>
-                            i.productId === item.productId
-                                ? { ...i, quantity: i.quantity + item.quantity }
-                                : i,
-                        ),
-                    },
-                };
-            }
-            return {
-                cart: { ...state.cart, items: [...state.cart.items, item] },
-            };
-        }),
-
-    optimisticUpdateQuantity: (productId, quantity) =>
-        set((state) => {
-            if (!state.cart) return state;
-            return {
-                cart: {
-                    ...state.cart,
-                    items: state.cart.items.map((i) =>
-                        i.productId === productId ? { ...i, quantity } : i,
-                    ),
-                },
-            };
-        }),
-
-    optimisticRemove: (productId) =>
-        set((state) => {
-            if (!state.cart) return state;
-            return {
-                cart: {
-                    ...state.cart,
-                    items: state.cart.items.filter(
-                        (i) => i.productId !== productId,
-                    ),
-                },
-            };
-        }),
 }));
 
 // Derived selectors — use these in components instead of computing inline

@@ -18,7 +18,7 @@ export default async function CheckoutPage() {
 
     let cart: Cart | null = null;
     try {
-        cart = await apiAuthGet<Cart>(API_ROUTES.CART);
+        cart = await apiAuthGet<Cart>(API_ROUTES.CART, { tags: ["cart"] });
     } catch {
     }
 
