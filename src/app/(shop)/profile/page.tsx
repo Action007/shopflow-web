@@ -92,20 +92,20 @@ export default async function ProfilePage() {
                                 </div>
                             </div>
 
-                            <div className="mt-8 space-y-5">
+                            <div className="mt-8 space-y-6">
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-on-surface-variant">
+                                    <p className="text-sm font-semibold tracking-[-0.01em] text-on-surface-variant">
                                         Member Since
                                     </p>
-                                    <p className="mt-1 font-mono text-sm text-primary">
+                                    <p className="mt-2 font-mono text-base tracking-[0.02em] text-primary">
                                         {formatMemberSince(user.createdAt)}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-on-surface-variant">
+                                    <p className="text-sm font-semibold tracking-[-0.01em] text-on-surface-variant">
                                         Latest Shipping Address
                                     </p>
-                                    <p className="mt-1 text-[15px] leading-relaxed text-on-surface">
+                                    <p className="mt-2 text-[15px] font-medium leading-7 tracking-[-0.01em] text-on-surface">
                                         {latestOrder?.shippingAddress ??
                                             "No address on file yet."}
                                     </p>
