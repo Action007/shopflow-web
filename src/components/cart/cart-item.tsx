@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
@@ -103,6 +103,7 @@ export function CartItem({ item }: CartItemProps) {
 
                     <button
                         type="button"
+                        aria-label={`Remove ${item.product.name} from cart`}
                         className="text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-destructive"
                         onClick={handleRemove}
                     >
@@ -114,6 +115,7 @@ export function CartItem({ item }: CartItemProps) {
                     <div className="flex items-center overflow-hidden rounded-lg bg-surface-highest">
                         <button
                             type="button"
+                            aria-label={`Decrease quantity of ${item.product.name}`}
                             className="px-2 py-1 transition-colors duration-300 ease-fluid hover:bg-neutral-700"
                             onClick={() => handleUpdateQuantity(-1)}
                             disabled={isUpdating}
@@ -125,6 +127,7 @@ export function CartItem({ item }: CartItemProps) {
                         </span>
                         <button
                             type="button"
+                            aria-label={`Increase quantity of ${item.product.name}`}
                             className="px-2 py-1 transition-colors duration-300 ease-fluid hover:bg-neutral-700"
                             onClick={() => handleUpdateQuantity(1)}
                             disabled={isUpdating}
