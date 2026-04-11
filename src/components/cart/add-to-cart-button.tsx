@@ -85,7 +85,7 @@ export function AddToCartButton({
             ) : (
                 <>
                     <ShoppingCart className="mr-2 h-5 w-5" />
-                    {isAdding ? "Adding..." : "Add to cart"}
+                    Add to cart
                 </>
             )}
         </Button>
