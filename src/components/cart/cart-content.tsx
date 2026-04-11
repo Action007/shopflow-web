@@ -52,7 +52,10 @@ export function CartContent() {
             <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8">
                 <div className="space-y-6">
                     {cart.items.map((item) => (
-                        <CartItem key={item.id} item={item} />
+                        <CartItem
+                            key={`${item.id}-${item.quantity}`}
+                            item={item}
+                        />
                     ))}
                 </div>
                 <div className="mt-12 lg:mt-0">

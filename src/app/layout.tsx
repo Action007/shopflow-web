@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { ToastProvider } from "@/providers/toast-provider";
 
-const inter = Inter({
-    subsets: ["latin"],
-    weight: ["400", "700", "900"],
+const inter = localFont({
+    src: [
+        {
+            path: "../../public/fonts/inter-latin-wght-normal.woff2",
+            style: "normal",
+            weight: "100 900",
+        },
+        {
+            path: "../../public/fonts/inter-latin-wght-italic.woff2",
+            style: "italic",
+            weight: "100 900",
+        },
+    ],
     display: "swap",
     variable: "--font-inter",
 });

@@ -46,9 +46,9 @@ describe("middleware", () => {
     });
 
     it("redirects unauthenticated users from protected routes to login with callback", async () => {
-        const { middleware } = await import("../middleware");
+        const { proxy } = await import("../proxy");
 
-        await middleware(makeRequest("/checkout") as never);
+        await proxy(makeRequest("/checkout") as never);
 
         const redirectUrl = redirectMock.mock.calls[0][0];
         expect(redirectUrl.toString()).toContain("/login");
@@ -56,9 +56,9 @@ describe("middleware", () => {
     });
 
     it("redirects authenticated users away from auth routes", async () => {
-        const { middleware } = await import("../middleware");
+        const { proxy } = await import("../proxy");
 
-        await middleware(
+        await proxy(
             makeRequest("/login", { access_token: "token" }) as never,
         );
 
@@ -80,9 +80,9 @@ describe("middleware", () => {
             }),
         );
 
-        const { middleware } = await import("../middleware");
+        const { proxy } = await import("../proxy");
 
-        const response = await middleware(
+        const response = await proxy(
             makeRequest("/orders", { refresh_token: "refresh-only" }) as never,
         );
 
@@ -98,9 +98,9 @@ describe("middleware", () => {
             }),
         );
 
-        const { middleware } = await import("../middleware");
+        const { proxy } = await import("../proxy");
 
-        await middleware(
+        await proxy(
             makeRequest("/orders", { refresh_token: "bad-refresh" }) as never,
         );
 

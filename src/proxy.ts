@@ -43,7 +43,7 @@ async function tryRefreshTokens(
 ): Promise<{ accessToken: string; refreshToken: string } | null> {
     if (!API_URL) {
         console.error(
-            "[Middleware] API_URL is not defined — cannot refresh tokens.",
+            "[Proxy] API_URL is not defined — cannot refresh tokens.",
         );
         return null;
     }
@@ -62,10 +62,7 @@ async function tryRefreshTokens(
         const body = await res.json();
 
         if (!body?.data?.accessToken || !body?.data?.refreshToken) {
-            console.error(
-                "[Middleware] Unexpected refresh response shape:",
-                body,
-            );
+            console.error("[Proxy] Unexpected refresh response shape:", body);
             return null;
         }
 
@@ -74,12 +71,12 @@ async function tryRefreshTokens(
             refreshToken: body.data.refreshToken,
         };
     } catch (err) {
-        console.error("[Middleware] Token refresh request failed:", err);
+        console.error("[Proxy] Token refresh request failed:", err);
         return null;
     }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const accessToken = request.cookies.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
     const refreshToken = request.cookies.get(COOKIE_NAMES.REFRESH_TOKEN)?.value;
@@ -97,14 +94,12 @@ export async function middleware(request: NextRequest) {
         isAuthenticated = newTokens !== null;
     }
 
-    // Unauthenticated user hitting a protected route
     if (isProtected && !isAuthenticated) {
         const loginUrl = new URL(ROUTES.LOGIN, request.url);
         loginUrl.searchParams.set("callbackUrl", pathname);
         return NextResponse.redirect(loginUrl);
     }
 
-    // Authenticated user hitting an auth route
     if (isAuthRoute && isAuthenticated) {
         const response = NextResponse.redirect(
             new URL(ROUTES.HOME, request.url),
@@ -119,7 +114,6 @@ export async function middleware(request: NextRequest) {
         return response;
     }
 
-    // Default: allow request through, attach refreshed cookies if needed
     const response = NextResponse.next();
     if (newTokens) {
         setAuthCookies(response, newTokens.accessToken, newTokens.refreshToken);

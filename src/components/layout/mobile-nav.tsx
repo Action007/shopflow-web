@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Package, LogIn, LogOut, User } from "lucide-react";
+import { Menu, Package, LogIn, LogOut, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -86,7 +86,7 @@ export function MobileNav({ user }: MobileNavProps) {
                                     className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
                                 >
                                     <span>Profile</span>
-                                    <User className="h-4 w-4 text-primary" />
+                                    <UserIcon className="h-4 w-4 text-primary" />
                                 </Link>
                             </>
                         )}
