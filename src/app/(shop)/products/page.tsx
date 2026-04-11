@@ -14,6 +14,7 @@ import { ProductFilters } from "@/components/products/product-filters";
 import { ProductsToolbar } from "@/components/products/products-toolbar";
 import { Pagination } from "@/components/shared/pagination";
 import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton";
+import { ProductsToolbarSkeleton } from "@/components/products/products-toolbar-skeleton";
 import { Button } from "@/components/ui/button";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { ERRORS } from "@/lib/constants/errors";
@@ -50,7 +51,7 @@ export default async function ProductsPage({
                 <div className="mx-full w-full sm:max-w-none lg:flex-1">
                     <Suspense
                         key={`toolbar-${JSON.stringify(params)}`}
-                        fallback={<ProductsToolbar />}
+                        fallback={<ProductsToolbarSkeleton />}
                     >
                         <ProductsToolbarData params={params} />
                     </Suspense>

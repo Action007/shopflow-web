@@ -1,4 +1,6 @@
+import Link from "next/link";
 import Image from "next/image";
+import { ROUTES } from "@/lib/constants/routes";
 import { formatPrice } from "@/lib/utils";
 import type { CartItem } from "@/types/cart";
 
@@ -13,7 +15,7 @@ export function OrderPreview({ items }: OrderPreviewProps) {
     );
 
     return (
-        <aside className="lg:sticky lg:top-24">
+        <aside className="lg:sticky lg:top-18">
             <section className="space-y-4 rounded-xl border border-outline-variant/10 bg-[#18181b] p-6">
                 <h2 className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500">
                     Order Summary
@@ -26,21 +28,31 @@ export function OrderPreview({ items }: OrderPreviewProps) {
                             className="flex items-center justify-between"
                         >
                             <div className="flex flex-wrap items-center gap-3">
-                                <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-800">
-                                    {item.product.imageUrl ? (
-                                        <Image
-                                            src={item.product.imageUrl}
-                                            alt={item.product.name}
-                                            fill
-                                            sizes="48px"
-                                            className="object-cover"
-                                        />
-                                    ) : null}
-                                </div>
+                                <Link
+                                    href={`${ROUTES.PRODUCTS}/${item.product.id}`}
+                                    className="block"
+                                >
+                                    <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-800">
+                                        {item.product.imageUrl ? (
+                                            <Image
+                                                src={item.product.imageUrl}
+                                                alt={item.product.name}
+                                                fill
+                                                sizes="48px"
+                                                className="object-cover"
+                                            />
+                                        ) : null}
+                                    </div>
+                                </Link>
                                 <div>
-                                    <p className="text-sm font-bold text-on-surface">
-                                        {item.product.name}
-                                    </p>
+                                    <Link
+                                        href={`${ROUTES.PRODUCTS}/${item.product.id}`}
+                                        className="block"
+                                    >
+                                        <p className="text-sm font-bold text-on-surface transition-colors duration-300 ease-fluid hover:text-primary">
+                                            {item.product.name}
+                                        </p>
+                                    </Link>
                                     <p className="text-xs text-neutral-500">
                                         Qty: {item.quantity}
                                     </p>

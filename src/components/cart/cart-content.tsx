@@ -6,11 +6,17 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { CartItem } from "./cart-item";
 import { CartSummary } from "./cart-summary";
+import { CartContentSkeleton } from "./cart-content-skeleton";
 import { ROUTES } from "@/lib/constants/routes";
 
 export function CartContent() {
     const cart = useCartStore((state) => state.cart);
+    const isInitialized = useCartStore((state) => state.isInitialized);
     const itemCount = cart?.items.length ?? 0;
+
+    if (!isInitialized) {
+        return <CartContentSkeleton />;
+    }
 
     if (!cart || cart.items.length === 0) {
         return (
