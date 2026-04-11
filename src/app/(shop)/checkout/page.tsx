@@ -27,7 +27,7 @@ export default async function CheckoutPage() {
     }
 
     return (
-        <div className="px-6 pb-32 pt-4 lg:mx-auto lg:grid lg:max-w-[1280px] lg:grid-cols-[1fr_380px] lg:gap-8 lg:px-12 lg:pb-12">
+        <div className="site-page pb-32 pt-4 lg:grid lg:grid-cols-[1fr_380px] lg:gap-8 lg:pb-12">
             <div>
                 <CheckoutForm />
             </div>

@@ -69,80 +69,79 @@ export default async function ProfilePage() {
     const latestOrder = orders.items[0] ?? null;
 
     return (
-        <div className="mx-4">
-            <div className="mx-auto max-w-[1280px] pb-16 pt-8 sm:pb-32">
-                <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
-                    <aside className="lg:sticky lg:top-24">
-                        <div className="rounded-[28px] bg-surface-low p-8 shadow-[0_0_60px_rgba(229,225,228,0.04)]">
-                            <div className="flex flex-col items-center text-center">
-                                <div className="lithium-glow mb-6 flex h-24 w-24 items-center justify-center rounded-full text-3xl font-black text-on-primary-container">
-                                    {initials}
-                                </div>
-                                <h1 className="font-headline text-[2rem] font-black tracking-[-0.03em] text-on-surface">
-                                    {user.firstName} {user.lastName}
-                                </h1>
-                                <p className="mt-2 text-[15px] text-on-surface-variant">
-                                    {user.email}
-                                </p>
-
-                                <div className="mt-5 inline-flex rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
-                                        {user.role}
-                                    </span>
-                                </div>
+        <div className="site-page pb-16 sm:pb-32">
+            <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
+                <aside className="lg:sticky lg:top-24">
+                    <div className="rounded-[28px] bg-surface-low p-8 shadow-[0_0_60px_rgba(229,225,228,0.04)]">
+                        <div className="flex flex-col items-center text-center">
+                            <div className="lithium-glow mb-6 flex h-24 w-24 items-center justify-center rounded-full text-3xl font-black text-on-primary-container">
+                                {initials}
                             </div>
+                            <h1 className="font-headline text-[2rem] font-black tracking-[-0.03em] text-on-surface">
+                                {user.firstName} {user.lastName}
+                            </h1>
+                            <p className="mt-2 text-[15px] text-on-surface-variant">
+                                {user.email}
+                            </p>
 
-                            <div className="mt-8 space-y-6">
-                                <div>
-                                    <p className="text-sm font-semibold tracking-[-0.01em] text-on-surface-variant">
-                                        Member Since
-                                    </p>
-                                    <p className="mt-2 font-mono text-base tracking-[0.02em] text-primary">
-                                        {formatMemberSince(user.createdAt)}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-sm font-semibold tracking-[-0.01em] text-on-surface-variant">
-                                        Latest Shipping Address
-                                    </p>
-                                    <p className="mt-2 text-[15px] font-medium leading-7 tracking-[-0.01em] text-on-surface">
-                                        {latestOrder?.shippingAddress ??
-                                            "No address on file yet."}
-                                    </p>
-                                </div>
+                            <div className="mt-5 inline-flex rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+                                    {user.role}
+                                </span>
                             </div>
                         </div>
-                    </aside>
 
-                    <div className="space-y-8">
-                        <section>
-                            <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
-                                Quick Actions
-                            </p>
-                            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                                {quickLinks.map((link) => {
-                                    const Icon = link.icon;
-
-                                    return (
-                                        <Link
-                                            key={link.title}
-                                            href={link.href}
-                                            className="rounded-[24px] bg-surface-low p-6 transition-colors duration-300 ease-fluid hover:bg-surface-high"
-                                        >
-                                            <Icon className="mb-4 h-6 w-6 text-primary" />
-                                            <h2 className="font-headline text-lg font-bold tracking-[-0.02em] text-on-surface">
-                                                {link.title}
-                                            </h2>
-                                            <p className="mt-3 text-[15px] leading-relaxed text-on-surface-variant">
-                                                {link.description}
-                                            </p>
-                                        </Link>
-                                    );
-                                })}
+                        <div className="mt-8 space-y-6">
+                            <div>
+                                <p className="text-sm font-semibold tracking-[-0.01em] text-on-surface-variant">
+                                    Member Since
+                                </p>
+                                <p className="mt-2 font-mono text-base tracking-[0.02em] text-primary">
+                                    {formatMemberSince(user.createdAt)}
+                                </p>
                             </div>
-                        </section>
+                            <div>
+                                <p className="text-sm font-semibold tracking-[-0.01em] text-on-surface-variant">
+                                    Latest Shipping Address
+                                </p>
+                                <p className="mt-2 text-[15px] font-medium leading-7 tracking-[-0.01em] text-on-surface">
+                                    {latestOrder?.shippingAddress ??
+                                        "No address on file yet."}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
 
-                        <section className="overflow-hidden rounded-[28px] bg-surface-low shadow-[0_0_60px_rgba(229,225,228,0.04)]">
+                <div className="space-y-8">
+                    <section>
+                        <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
+                            Quick Actions
+                        </p>
+                        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                            {quickLinks.map((link) => {
+                                const Icon = link.icon;
+
+                                return (
+                                    <Link
+                                        key={link.title}
+                                        href={link.href}
+                                        className="rounded-[24px] bg-surface-low p-6 transition-colors duration-300 ease-fluid hover:bg-surface-high"
+                                    >
+                                        <Icon className="mb-4 h-6 w-6 text-primary" />
+                                        <h2 className="font-headline text-lg font-bold tracking-[-0.02em] text-on-surface">
+                                            {link.title}
+                                        </h2>
+                                        <p className="mt-3 text-[15px] leading-relaxed text-on-surface-variant">
+                                            {link.description}
+                                        </p>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    </section>
+
+                    <section className="overflow-hidden rounded-[28px] bg-surface-low shadow-[0_0_60px_rgba(229,225,228,0.04)]">
                             <div className="px-6 py-5">
                                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
                                     Account Details
@@ -176,9 +175,9 @@ export default async function ProfilePage() {
                                     </div>
                                 ))}
                             </div>
-                        </section>
+                    </section>
 
-                        <section>
+                    <section>
                             <div className="mb-4 flex items-end justify-between gap-4">
                                 <div>
                                     <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
@@ -260,8 +259,7 @@ export default async function ProfilePage() {
                                     </div>
                                 </div>
                             )}
-                        </section>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>

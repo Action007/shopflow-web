@@ -12,8 +12,7 @@ export async function Header() {
 
     return (
         <header className="glass-header fixed inset-x-0 top-0 z-50">
-            <div className="mx-4">
-                <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between py-2">
+                <div className="site-container flex w-full items-center justify-between py-2">
                     <div className="flex items-center gap-4">
                         <MobileNav user={user} />
                         <Link
@@ -96,7 +95,6 @@ export async function Header() {
                         )}
                     </div>
                 </div>
-            </div>
         </header>
     );
 }

@@ -72,57 +72,56 @@ export default async function ProductPage({ params }: ProductPageProps) {
     const inStock = product.stockQuantity > 0;
 
     return (
-        <div className="mx-6">
-            <div className="mx-auto pb-32 pt-4 sm:max-w-[1280px]">
-                <nav className="mb-4 flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-500">
+        <div className="site-page pt-4">
+            <nav className="mb-4 flex items-center gap-2 text-xs uppercase tracking-widest text-neutral-500">
+                <Link
+                    href={ROUTES.HOME}
+                    className="transition-colors duration-300 ease-fluid hover:text-on-surface"
+                >
+                    Shop
+                </Link>
+                <ChevronRight className="h-3 w-3" />
+                {product.category ? (
                     <Link
-                        href={ROUTES.HOME}
+                        href={`${ROUTES.PRODUCTS}?categoryId=${product.category.id}`}
                         className="transition-colors duration-300 ease-fluid hover:text-on-surface"
                     >
-                        Shop
+                        {product.category.name}
                     </Link>
-                    <ChevronRight className="h-3 w-3" />
-                    {product.category ? (
-                        <Link
-                            href={`${ROUTES.PRODUCTS}?categoryId=${product.category.id}`}
-                            className="transition-colors duration-300 ease-fluid hover:text-on-surface"
-                        >
-                            {product.category.name}
-                        </Link>
-                    ) : (
-                        <Link
-                            href={ROUTES.PRODUCTS}
-                            className="transition-colors duration-300 ease-fluid hover:text-on-surface"
-                        >
-                            Products
-                        </Link>
-                    )}
-                    <ChevronRight className="h-3 w-3" />
-                    <span className="text-primary">{product.name}</span>
-                </nav>
+                ) : (
+                    <Link
+                        href={ROUTES.PRODUCTS}
+                        className="transition-colors duration-300 ease-fluid hover:text-on-surface"
+                    >
+                        Products
+                    </Link>
+                )}
+                <ChevronRight className="h-3 w-3" />
+                <span className="text-primary">{product.name}</span>
+            </nav>
 
-                <div className="gap-4 md:grid md:grid-cols-2 md:items-start md:gap-8">
-                    <div className="mb-8 lg:mb-0">
-                        <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-surface-low">
-                            {product.imageUrl ? (
-                                <Image
-                                    src={product.imageUrl}
-                                    alt={product.name}
-                                    fill
-                                    priority
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
-                                    className="object-cover"
-                                />
-                            ) : (
-                                <div className="flex h-full items-center justify-center text-sm text-text-muted">
-                                    No image available
-                                </div>
-                            )}
-                        </div>
+            <div className="gap-4 md:grid md:grid-cols-2 md:items-start md:gap-8">
+                <div className="mb-8 lg:mb-0">
+                    <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-surface-low">
+                        {product.imageUrl ? (
+                            <Image
+                                src={product.imageUrl}
+                                alt={product.name}
+                                fill
+                                priority
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                className="object-cover"
+                            />
+                        ) : (
+                            <div className="flex h-full items-center justify-center text-sm text-text-muted">
+                                No image available
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                    <div className="lg:flex lg:flex-col lg:gap-6">
-                        <section className="mb-8">
+                <div className="lg:flex lg:flex-col lg:gap-6">
+                    <section className="mb-8">
                             <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
                                 <h1 className="text-3xl font-black tracking-tighter text-on-surface lg:text-5xl">
                                     {product.name}
@@ -208,14 +207,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                     </span>
                                 </li>
                             </ul>
-                        </section>
+                    </section>
 
-                        <ProductPurchasePanel
-                            productId={product.id}
-                            inStock={inStock}
-                            stockQuantity={product.stockQuantity}
-                        />
-                    </div>
+                    <ProductPurchasePanel
+                        productId={product.id}
+                        inStock={inStock}
+                        stockQuantity={product.stockQuantity}
+                    />
                 </div>
             </div>
         </div>

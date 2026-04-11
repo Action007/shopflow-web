@@ -3,8 +3,8 @@ import { ROUTES } from "@/lib/constants/routes";
 
 export function Footer() {
     return (
-        <footer className="bg-neutral-950 px-8 py-12 pb-28 lg:px-12 lg:pb-12 sm:pt-30">
-            <div className="mx-auto flex max-w-[1280px] flex-col gap-10 lg:flex-row lg:justify-between">
+        <footer className="bg-neutral-950 py-12 pb-28 sm:pt-30 lg:pb-12">
+            <div className="site-container flex flex-col gap-10 lg:flex-row lg:justify-between">
                 <div>
                     <span className="text-xl font-black tracking-tighter text-neutral-50">
                         ShopFlow

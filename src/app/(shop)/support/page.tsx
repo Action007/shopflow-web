@@ -72,9 +72,8 @@ export default function SupportPage() {
                 <div className="absolute bottom-0 left-[-10%] h-[280px] w-[280px] rounded-full bg-primary-container/10 blur-[120px]" />
             </div>
 
-            <div className="mx-4">
-                <div className="relative mx-auto max-w-[1280px] pb-16 pt-8 sm:pb-32">
-                    <section className="px-2 py-10 text-center">
+            <div className="site-page relative pb-16 sm:pb-32">
+                <section className="px-2 py-10 text-center">
                         <div className="mx-auto mb-8 inline-flex h-20 w-20 items-center justify-center rounded-full border border-outline-variant/15 bg-surface-high">
                             <Headphones className="h-9 w-9 text-primary" />
                         </div>
@@ -100,9 +99,9 @@ export default function SupportPage() {
                                 />
                             </div>
                         </div>
-                    </section>
+                </section>
 
-                    <section className="mb-20 grid gap-4 md:grid-cols-3">
+                <section className="mb-20 grid gap-4 md:grid-cols-3">
                         {contactChannels.map((channel) => {
                             const Icon = channel.icon;
 
@@ -121,9 +120,9 @@ export default function SupportPage() {
                                 </article>
                             );
                         })}
-                    </section>
+                </section>
 
-                    <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+                <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
                         <div>
                             <div className="mb-8">
                                 <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
@@ -222,8 +221,7 @@ export default function SupportPage() {
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </div>
+                </section>
             </div>
         </div>
     );

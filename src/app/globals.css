@@ -135,6 +135,22 @@
 }
 
 @layer utilities {
+    .site-container {
+        width: 100%;
+        max-width: 1328px;
+        margin-inline: auto;
+        padding-inline: 24px;
+    }
+
+    .site-page {
+        width: 100%;
+        max-width: 1328px;
+        margin-inline: auto;
+        padding-inline: 24px;
+        padding-top: 2rem;
+        padding-bottom: 8rem;
+    }
+
     .glass-header {
         background: rgb(19 19 21 / 70%);
         backdrop-filter: blur(20px);

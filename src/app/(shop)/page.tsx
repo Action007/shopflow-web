@@ -55,7 +55,7 @@ export default async function HomePage() {
 
     return (
         <div className="lg:pb-0">
-            <div className="mx-auto max-w-[1280px] mx-4">
+            <div className="site-container">
                 <section className="dot-grid relative overflow-hidden lg:grid lg:min-h-[700px] lg:grid-cols-2 lg:items-center">
                     <div className="relative z-10 pl-4 py-20 flex flex-col justify-center md:py-30 lg:min-h-0 lg:pr-12">
                         <h1 className="mb-4 max-w-[12ch] text-[56px] font-black leading-[1.1] tracking-[-0.02em] text-on-surface lg:max-w-none">

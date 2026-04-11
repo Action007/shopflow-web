@@ -37,32 +37,30 @@ export default async function ProductsPage({
     });
 
     return (
-        <div className="mx-4">
-            <div className="pb-32 pt-8 lg:mx-auto lg:flex lg:max-w-[1280px] lg:gap-8">
-                <ProductFilters
-                    categories={categories}
-                    currentCategory={params.categoryId}
-                    currentSort={params.sortBy}
-                    currentOrder={params.sortOrder}
-                    minPrice={params.minPrice}
-                    maxPrice={params.maxPrice}
-                />
+        <div className="site-page lg:flex lg:gap-8">
+            <ProductFilters
+                categories={categories}
+                currentCategory={params.categoryId}
+                currentSort={params.sortBy}
+                currentOrder={params.sortOrder}
+                minPrice={params.minPrice}
+                maxPrice={params.maxPrice}
+            />
 
-                <div className="mx-full w-full sm:max-w-none lg:flex-1">
-                    <Suspense
-                        key={`toolbar-${JSON.stringify(params)}`}
-                        fallback={<ProductsToolbarSkeleton />}
-                    >
-                        <ProductsToolbarData params={params} />
-                    </Suspense>
+            <div className="mx-full w-full sm:max-w-none lg:flex-1">
+                <Suspense
+                    key={`toolbar-${JSON.stringify(params)}`}
+                    fallback={<ProductsToolbarSkeleton />}
+                >
+                    <ProductsToolbarData params={params} />
+                </Suspense>
 
-                    <Suspense
-                        key={`results-${JSON.stringify(params)}`}
-                        fallback={<ProductGridSkeleton />}
-                    >
-                        <ProductsResults params={params} />
-                    </Suspense>
-                </div>
+                <Suspense
+                    key={`results-${JSON.stringify(params)}`}
+                    fallback={<ProductGridSkeleton />}
+                >
+                    <ProductsResults params={params} />
+                </Suspense>
             </div>
         </div>
     );

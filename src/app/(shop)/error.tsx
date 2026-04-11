@@ -13,7 +13,7 @@ export default function ShopError({
     reset: () => void;
 }) {
     return (
-        <div className="container mx-auto flex flex-col items-center justify-center px-4 py-24">
+        <div className="site-container flex flex-col items-center justify-center py-24">
             <h2 className="text-2xl font-bold">Something went wrong</h2>
             <p className="mt-2 text-muted-foreground">
                 {error.message || ERRORS.PAGES.SHOP}

@@ -3,7 +3,7 @@ import { ProductsToolbarSkeleton } from "@/components/products/products-toolbar-
 
 export default function ProductsLoading() {
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="site-page py-8">
             <ProductsToolbarSkeleton />
             <div className="mt-8">
                 <ProductGridSkeleton />
