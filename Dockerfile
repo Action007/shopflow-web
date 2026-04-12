@@ -7,13 +7,19 @@ RUN npm ci
 
 FROM base AS builder
 WORKDIR /app
+ARG API_URL=http://localhost:3000/api/v1
+ENV API_URL=$API_URL
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN npx next build --webpack
 
 FROM base AS runner
 WORKDIR /app
+ARG API_URL=http://localhost:3000/api/v1
+ENV API_URL=$API_URL
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
