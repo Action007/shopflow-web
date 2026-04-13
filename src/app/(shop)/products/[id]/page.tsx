@@ -6,6 +6,7 @@ import {
     AlertCircle,
     Check,
     ChevronRight,
+    Shield,
 } from "lucide-react";
 import { apiGet } from "@/lib/api";
 import { ApiClientError } from "@/lib/api";
@@ -13,6 +14,8 @@ import type { Product, PaginatedResult } from "@/types/product";
 import { formatPrice } from "@/lib/utils";
 import { ProductPurchasePanel } from "@/components/products/product-purchase-panel";
 import { ROUTES } from "@/lib/constants/routes";
+import { getCurrentUser } from "@/lib/auth";
+import { isAdmin } from "@/lib/roles";
 
 interface ProductPageProps {
     params: Promise<{ id: string }>;
@@ -55,6 +58,8 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params;
+    const currentUser = await getCurrentUser();
+    const adminMode = isAdmin(currentUser);
 
     let product: Product;
     try {
@@ -209,11 +214,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             </ul>
                     </section>
 
-                    <ProductPurchasePanel
-                        productId={product.id}
-                        inStock={inStock}
-                        stockQuantity={product.stockQuantity}
-                    />
+                    {adminMode ? (
+                        <section className="rounded-[24px] border border-primary/20 bg-primary/5 p-5">
+                            <div className="flex items-start gap-3">
+                                <Shield className="mt-0.5 h-5 w-5 text-primary" />
+                                <div>
+                                    <h2 className="font-bold text-on-surface">
+                                        Admin view
+                                    </h2>
+                                    <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                                        Purchase controls are hidden for admins.
+                                        Continue in the admin workspace for catalog
+                                        management.
+                                    </p>
+                                    <Link
+                                        href={ROUTES.ADMIN.PRODUCTS}
+                                        className="mt-4 inline-flex text-sm font-bold text-primary"
+                                    >
+                                        Open Admin Products
+                                    </Link>
+                                </div>
+                            </div>
+                        </section>
+                    ) : (
+                        <ProductPurchasePanel
+                            productId={product.id}
+                            inStock={inStock}
+                            stockQuantity={product.stockQuantity}
+                        />
+                    )}
                 </div>
             </div>
         </div>

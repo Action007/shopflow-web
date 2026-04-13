@@ -5,6 +5,7 @@ import {
     ArrowUpRight,
     Headphones,
     Package,
+    Shield,
     ShoppingBag,
     ShoppingCart,
     UserRound,
@@ -17,6 +18,7 @@ import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import type { PaginatedResult } from "@/types/product";
 import type { Order } from "@/types/order";
 import { formatPrice } from "@/lib/utils";
+import { isAdmin } from "@/lib/roles";
 
 export const metadata: Metadata = {
     title: "Profile",
@@ -59,14 +61,49 @@ function formatMemberSince(date: string) {
 export default async function ProfilePage() {
     const user = await getCurrentUser();
     if (!user) redirect(`${ROUTES.LOGIN}?callbackUrl=${ROUTES.PROFILE}`);
+    const adminMode = isAdmin(user);
 
-    const orders = await apiAuthGet<PaginatedResult<Order>>(
-        `${API_ROUTES.ORDERS}?limit=3`,
-        { tags: ["orders"] },
-    );
+    const orders: PaginatedResult<Order> = adminMode
+        ? {
+              items: [],
+              meta: {
+                  total: 0,
+                  page: 1,
+                  limit: 3,
+                  totalPages: 0,
+                  hasNext: false,
+                  hasPrevious: false,
+              },
+          }
+        : await apiAuthGet<PaginatedResult<Order>>(
+              `${API_ROUTES.ORDERS}?limit=3`,
+              { tags: ["orders"] },
+          );
 
     const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`;
     const latestOrder = orders.items[0] ?? null;
+    const visibleQuickLinks = adminMode
+        ? [
+              {
+                  title: "Admin Console",
+                  description: "Open the management workspace for operations.",
+                  href: ROUTES.ADMIN.ROOT,
+                  icon: Shield,
+              },
+              {
+                  title: "Catalog",
+                  description: "Review the public storefront experience.",
+                  href: ROUTES.PRODUCTS,
+                  icon: ShoppingBag,
+              },
+              {
+                  title: "Support",
+                  description: "Check the customer-facing support entry point.",
+                  href: ROUTES.SUPPORT,
+                  icon: Headphones,
+              },
+          ]
+        : quickLinks;
 
     return (
         <div className="site-page pb-16 sm:pb-32">
@@ -119,7 +156,7 @@ export default async function ProfilePage() {
                             Quick Actions
                         </p>
                         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                            {quickLinks.map((link) => {
+                            {visibleQuickLinks.map((link) => {
                                 const Icon = link.icon;
 
                                 return (
@@ -195,7 +232,23 @@ export default async function ProfilePage() {
                                 </Link>
                             </div>
 
-                            {orders.items.length === 0 ? (
+                                    {adminMode ? (
+                                <div className="rounded-[28px] bg-surface-low p-8">
+                                    <Shield className="mb-5 h-8 w-8 text-primary" />
+                                    <h3 className="font-headline text-2xl font-bold tracking-[-0.02em]">
+                                        Admin activity lives in the admin console
+                                    </h3>
+                                    <p className="mt-2 max-w-[36ch] text-[15px] leading-relaxed text-on-surface-variant">
+                                        Personal shopper order history is hidden for admins.
+                                        Continue in the admin workspace to manage operations.
+                                    </p>
+                                    <Button asChild className="mt-6">
+                                        <Link href={ROUTES.ADMIN.ROOT}>
+                                            Open Admin Console
+                                        </Link>
+                                    </Button>
+                                </div>
+                            ) : orders.items.length === 0 ? (
                                 <div className="rounded-[28px] bg-surface-low p-8">
                                     <UserRound className="mb-5 h-8 w-8 text-primary" />
                                     <h3 className="font-headline text-2xl font-bold tracking-[-0.02em]">

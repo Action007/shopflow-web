@@ -18,6 +18,8 @@ import { ProductsToolbarSkeleton } from "@/components/products/products-toolbar-
 import { Button } from "@/components/ui/button";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { ERRORS } from "@/lib/constants/errors";
+import { getCurrentUser } from "@/lib/auth";
+import { canAccessShopperFeatures } from "@/lib/roles";
 
 export const metadata: Metadata = {
     title: "Products",
@@ -31,6 +33,8 @@ interface ProductsPageProps {
 export default async function ProductsPage({
     searchParams,
 }: ProductsPageProps) {
+    const currentUser = await getCurrentUser();
+    const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const params = await searchParams;
     const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES, {
         revalidate: 300,
@@ -59,7 +63,10 @@ export default async function ProductsPage({
                     key={`results-${JSON.stringify(params)}`}
                     fallback={<ProductGridSkeleton />}
                 >
-                    <ProductsResults params={params} />
+                    <ProductsResults
+                        params={params}
+                        showPurchaseActions={showPurchaseActions}
+                    />
                 </Suspense>
             </div>
         </div>
@@ -76,7 +83,13 @@ async function ProductsToolbarData({
     return <ProductsToolbar total={state.result?.meta.total} />;
 }
 
-async function ProductsResults({ params }: { params: ProductSearchParams }) {
+async function ProductsResults({
+    params,
+    showPurchaseActions,
+}: {
+    params: ProductSearchParams;
+    showPurchaseActions: boolean;
+}) {
     const state = await getProductsState(params);
 
     if (state.error) {
@@ -120,7 +133,10 @@ async function ProductsResults({ params }: { params: ProductSearchParams }) {
 
     return (
         <>
-            <CatalogProductGrid products={result.items} />
+            <CatalogProductGrid
+                products={result.items}
+                showPurchaseActions={showPurchaseActions}
+            />
 
             <div className="mt-16">
                 <Pagination meta={result.meta} />

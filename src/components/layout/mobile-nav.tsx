@@ -2,7 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Package, LogIn, LogOut, User as UserIcon } from "lucide-react";
+import {
+    Headphones,
+    Heart,
+    LogIn,
+    LogOut,
+    Menu,
+    Package,
+    Shield,
+    ShoppingCart,
+    Store,
+    User as UserIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -15,20 +26,36 @@ import { logoutAction } from "@/actions/auth";
 import type { User } from "@/types/user";
 import { ROUTES } from "@/lib/constants/routes";
 import { useCartStore, selectItemCount } from "@/stores/cart-store";
+import { canAccessShopperFeatures, isAdmin } from "@/lib/roles";
 
 interface MobileNavProps {
     user: User | null;
 }
 
-const links = [
-    { href: ROUTES.PRODUCTS, label: "Products" },
-    { href: ROUTES.SUPPORT, label: "Support" },
-    { href: ROUTES.CART, label: "Cart", withBadge: true },
-] as const;
-
 export function MobileNav({ user }: MobileNavProps) {
     const [open, setOpen] = useState(false);
     const itemCount = useCartStore(selectItemCount);
+    const shopperMode = canAccessShopperFeatures(user);
+    const adminMode = isAdmin(user);
+    const links = adminMode
+        ? [
+              { href: ROUTES.PRODUCTS, label: "Products", icon: Store },
+              { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
+              { href: ROUTES.ADMIN.ROOT, label: "Admin", icon: Shield },
+              { href: ROUTES.PROFILE, label: "Profile", icon: UserIcon },
+          ]
+        : [
+              { href: ROUTES.PRODUCTS, label: "Products", icon: Store },
+              { href: ROUTES.WISHLIST, label: "Wishlist", icon: Heart },
+              { href: ROUTES.ORDERS, label: "Orders", icon: Package },
+              { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
+              {
+                  href: ROUTES.CART,
+                  label: "Cart",
+                  icon: ShoppingCart,
+                  withBadge: true,
+              },
+          ];
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -61,7 +88,10 @@ export function MobileNav({ user }: MobileNavProps) {
                                 onClick={() => setOpen(false)}
                                 className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
                             >
-                                <span>{link.label}</span>
+                                <div className="flex items-center gap-3">
+                                    <link.icon className="h-4 w-4 text-primary" />
+                                    <span>{link.label}</span>
+                                </div>
                                 {"withBadge" in link && link.withBadge && itemCount > 0 ? (
                                     <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-on-primary">
                                         {itemCount > 99 ? "99+" : itemCount}
@@ -70,16 +100,8 @@ export function MobileNav({ user }: MobileNavProps) {
                             </Link>
                         ))}
 
-                        {user && (
+                        {user && shopperMode && (
                             <>
-                                <Link
-                                    href={ROUTES.ORDERS}
-                                    onClick={() => setOpen(false)}
-                                    className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
-                                >
-                                    <span>Orders</span>
-                                    <Package className="h-4 w-4 text-primary" />
-                                </Link>
                                 <Link
                                     href={ROUTES.PROFILE}
                                     onClick={() => setOpen(false)}
@@ -101,6 +123,9 @@ export function MobileNav({ user }: MobileNavProps) {
                                     </p>
                                     <p className="font-bold text-on-surface">
                                         {user.firstName} {user.lastName}
+                                    </p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                                        {user.role}
                                     </p>
                                 </div>
                                 <form action={logoutAction}>

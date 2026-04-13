@@ -16,6 +16,8 @@ import { apiGet } from "@/lib/api";
 import { ROUTES } from "@/lib/constants/routes";
 import type { PaginatedResult, Product, Category } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
+import { getCurrentUser } from "@/lib/auth";
+import { canAccessShopperFeatures } from "@/lib/roles";
 
 const categoryIcons = [Smartphone, Laptop, Headphones, Watch, Cable];
 const assuranceItems = [
@@ -40,6 +42,8 @@ const assuranceItems = [
 ];
 
 export default async function HomePage() {
+    const currentUser = await getCurrentUser();
+    const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const [productsResult, categories] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
             "/products?limit=4&sortBy=createdAt&sortOrder=desc",
@@ -117,6 +121,7 @@ export default async function HomePage() {
                     </div>
                     <ProductGrid
                         products={productsResult.items}
+                        showPurchaseActions={showPurchaseActions}
                         className="grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
                     />
                 </section>

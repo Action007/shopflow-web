@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, Package } from "lucide-react";
-import { getCurrentUser } from "@/lib/auth";
 import { apiAuthGet } from "@/lib/api-auth";
 import type { Order } from "@/types/order";
 import type { PaginatedResult } from "@/types/product";
@@ -11,14 +9,14 @@ import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
+import { requireCustomerUser } from "@/lib/route-guards";
 
 export const metadata: Metadata = {
     title: "Orders",
 };
 
 export default async function OrdersPage() {
-    const user = await getCurrentUser();
-    if (!user) redirect(`${ROUTES.LOGIN}?callbackUrl=${ROUTES.ORDERS}`);
+    await requireCustomerUser(ROUTES.ORDERS);
 
     const result = await apiAuthGet<PaginatedResult<Order>>(API_ROUTES.ORDERS, {
         tags: ["orders"],

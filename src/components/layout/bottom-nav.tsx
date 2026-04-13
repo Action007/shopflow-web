@@ -2,21 +2,42 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Headphones, ShoppingCart, Store, User } from "lucide-react";
+import {
+    Headphones,
+    Heart,
+    ShoppingCart,
+    Shield,
+    Store,
+    User,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore, selectItemCount } from "@/stores/cart-store";
 import { ROUTES } from "@/lib/constants/routes";
+import type { User as AppUser } from "@/types/user";
+import { canAccessShopperFeatures, isAdmin } from "@/lib/roles";
 
-const items = [
-    { href: ROUTES.HOME, label: "Shop", icon: Store },
-    { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
-    { href: ROUTES.CART, label: "Cart", icon: ShoppingCart },
-    { href: ROUTES.PROFILE, label: "Profile", icon: User },
-] as const;
+interface BottomNavProps {
+    user: AppUser | null;
+}
 
-export function BottomNav() {
+export function BottomNav({ user }: BottomNavProps) {
     const pathname = usePathname();
     const itemCount = useCartStore(selectItemCount);
+    const shopperMode = canAccessShopperFeatures(user);
+    const adminMode = isAdmin(user);
+    const items = adminMode
+        ? [
+              { href: ROUTES.HOME, label: "Shop", icon: Store },
+              { href: ROUTES.ADMIN.ROOT, label: "Admin", icon: Shield },
+              { href: ROUTES.PROFILE, label: "Profile", icon: User },
+              { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
+          ]
+        : [
+              { href: ROUTES.HOME, label: "Shop", icon: Store },
+              { href: ROUTES.WISHLIST, label: "Wishlist", icon: Heart },
+              { href: ROUTES.CART, label: "Cart", icon: ShoppingCart },
+              { href: ROUTES.PROFILE, label: "Profile", icon: User },
+          ];
 
     return (
         <nav className="glass-header fixed inset-x-0 bottom-0 z-50 rounded-t-lg lg:hidden">
@@ -44,11 +65,13 @@ export function BottomNav() {
                                     isActive && "fill-current stroke-[1.75]",
                                 )}
                             />
-                            {item.href === ROUTES.CART && itemCount > 0 && (
+                            {shopperMode &&
+                            item.href === ROUTES.CART &&
+                            itemCount > 0 ? (
                                 <span className="absolute -right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-on-primary">
                                     {itemCount > 9 ? "9+" : itemCount}
                                 </span>
-                            )}
+                            ) : null}
                             <span className="mt-1 text-[10px] font-bold uppercase tracking-widest">
                                 {item.label}
                             </span>

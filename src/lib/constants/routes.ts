@@ -5,9 +5,17 @@ export const ROUTES = {
     PRODUCTS: "/products",
     SUPPORT: "/support",
     PROFILE: "/profile",
+    WISHLIST: "/wishlist",
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",
+    ADMIN: {
+        ROOT: "/admin",
+        PRODUCTS: "/admin/products",
+        CATEGORIES: "/admin/categories",
+        USERS: "/admin/users",
+        ORDERS: "/admin/orders",
+    },
 } as const;
 
 export const API_ROUTES = {
@@ -25,6 +33,7 @@ export const API_ROUTES = {
     USER: {
         ME: "/users/me",
     },
+    WISHLIST: "/wishlist",
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",
@@ -32,10 +41,12 @@ export const API_ROUTES = {
 } as const;
 
 export const PROTECTED_ROUTES = [
+    ROUTES.WISHLIST,
     ROUTES.CART,
     ROUTES.CHECKOUT,
     ROUTES.ORDERS,
     ROUTES.PROFILE,
+    ROUTES.ADMIN.ROOT,
 ] as const;
 
 export const AUTH_ROUTES = [ROUTES.LOGIN, ROUTES.REGISTER] as const;

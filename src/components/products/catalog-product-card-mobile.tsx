@@ -9,11 +9,13 @@ import { API_ROUTES } from "@/lib/constants/routes";
 interface CatalogProductCardMobileProps {
     product: Product;
     imagePriority?: boolean;
+    showPurchaseActions?: boolean;
 }
 
 export function CatalogProductCardMobile({
     product,
     imagePriority = false,
+    showPurchaseActions = true,
 }: CatalogProductCardMobileProps) {
     const inStock = product.stockQuantity > 0;
 
@@ -77,12 +79,18 @@ export function CatalogProductCardMobile({
                         </p>
                     </div>
 
-                    <AddToCartButton
-                        productId={product.id}
-                        disabled={!inStock}
-                        variant="card"
-                        className="h-10 rounded-lg px-4 py-2 text-xs uppercase tracking-widest"
-                    />
+                    {showPurchaseActions ? (
+                        <AddToCartButton
+                            productId={product.id}
+                            disabled={!inStock}
+                            variant="card"
+                            className="h-10 rounded-lg px-4 py-2 text-xs uppercase tracking-widest"
+                        />
+                    ) : (
+                        <div className="rounded-lg border border-outline-variant/15 px-4 py-3 text-center text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                            Admin view
+                        </div>
+                    )}
                 </div>
             </div>
         </article>

@@ -4,9 +4,13 @@ import { CatalogProductCardDesktop } from "@/components/products/catalog-product
 
 interface CatalogProductGridProps {
     products: Product[];
+    showPurchaseActions?: boolean;
 }
 
-export function CatalogProductGrid({ products }: CatalogProductGridProps) {
+export function CatalogProductGrid({
+    products,
+    showPurchaseActions = true,
+}: CatalogProductGridProps) {
     return (
         <>
             <div className="space-y-4 sm:hidden">
@@ -14,6 +18,7 @@ export function CatalogProductGrid({ products }: CatalogProductGridProps) {
                     <CatalogProductCardMobile
                         key={product.id}
                         product={product}
+                        showPurchaseActions={showPurchaseActions}
                         imagePriority={index === 0}
                     />
                 ))}
@@ -24,6 +29,7 @@ export function CatalogProductGrid({ products }: CatalogProductGridProps) {
                     <CatalogProductCardDesktop
                         key={product.id}
                         product={product}
+                        showPurchaseActions={showPurchaseActions}
                         imagePriority={index === 0}
                     />
                 ))}

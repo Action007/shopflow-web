@@ -1,9 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CreditCard, Truck } from "lucide-react";
-import { getCurrentUser } from "@/lib/auth";
 import { apiAuthGet } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import type { Order } from "@/types/order";
@@ -11,6 +10,7 @@ import { formatPrice } from "@/lib/utils";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { CancelOrderButton } from "@/components/order/cancel-order-button";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
+import { requireCustomerUser } from "@/lib/route-guards";
 
 interface OrderPageProps {
     params: Promise<{ id: string }>;
@@ -24,8 +24,7 @@ export async function generateMetadata({
 }
 
 export default async function OrderDetailPage({ params }: OrderPageProps) {
-    const user = await getCurrentUser();
-    if (!user) redirect(ROUTES.LOGIN);
+    await requireCustomerUser(ROUTES.ORDERS);
 
     const { id } = await params;
 

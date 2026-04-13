@@ -6,6 +6,7 @@ import { apiAuthGet } from "@/lib/api-auth";
 import type { Cart } from "@/types/cart";
 import { CartProvider } from "@/providers/cart-provider";
 import { API_ROUTES } from "@/lib/constants/routes";
+import { canAccessShopperFeatures } from "@/lib/roles";
 
 export default async function ShopLayout({
     children,
@@ -15,7 +16,7 @@ export default async function ShopLayout({
     const user = await getCurrentUser();
 
     let cart: Cart | null = null;
-    if (user) {
+    if (user && canAccessShopperFeatures(user)) {
         try {
             cart = await apiAuthGet<Cart>(API_ROUTES.CART, { tags: ["cart"] });
         } catch {
@@ -28,7 +29,7 @@ export default async function ShopLayout({
                 <Header />
                 <main className="flex-1 pt-16">{children}</main>
                 <Footer />
-                <BottomNav />
+                <BottomNav user={user} />
             </div>
         </CartProvider>
     );

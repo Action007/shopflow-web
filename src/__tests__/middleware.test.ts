@@ -55,6 +55,18 @@ describe("middleware", () => {
         expect(redirectUrl.toString()).toContain("callbackUrl=%2Fcheckout");
     });
 
+    it("redirects unauthenticated users from admin routes to login with callback", async () => {
+        const { proxy } = await import("../proxy");
+
+        await proxy(makeRequest("/admin/products") as never);
+
+        const redirectUrl = redirectMock.mock.calls[0][0];
+        expect(redirectUrl.toString()).toContain("/login");
+        expect(redirectUrl.toString()).toContain(
+            "callbackUrl=%2Fadmin%2Fproducts",
+        );
+    });
+
     it("redirects authenticated users away from auth routes", async () => {
         const { proxy } = await import("../proxy");
 

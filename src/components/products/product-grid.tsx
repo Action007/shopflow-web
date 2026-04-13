@@ -5,9 +5,14 @@ import { ProductCard } from "./product-card";
 interface ProductGridProps {
     products: Product[];
     className?: string;
+    showPurchaseActions?: boolean;
 }
 
-export function ProductGrid({ products, className }: ProductGridProps) {
+export function ProductGrid({
+    products,
+    className,
+    showPurchaseActions = true,
+}: ProductGridProps) {
     return (
         <div
             className={cn(
@@ -19,6 +24,7 @@ export function ProductGrid({ products, className }: ProductGridProps) {
                 <ProductCard
                     key={product.id}
                     product={product}
+                    showPurchaseActions={showPurchaseActions}
                     imagePriority={index < 10}
                 />
             ))}

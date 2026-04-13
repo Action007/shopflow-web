@@ -8,9 +8,14 @@ import { cn } from "@/lib/utils";
 interface ProductCardProps {
     product: Product;
     imagePriority?: boolean;
+    showPurchaseActions?: boolean;
 }
 
-export function ProductCard({ product, imagePriority = false }: ProductCardProps) {
+export function ProductCard({
+    product,
+    imagePriority = false,
+    showPurchaseActions = true,
+}: ProductCardProps) {
     const inStock = product.stockQuantity > 0;
 
     return (
@@ -64,12 +69,18 @@ export function ProductCard({ product, imagePriority = false }: ProductCardProps
                     <p className="text-2xl font-black tabular-nums text-primary mb-4">
                         {formatPrice(product.price)}
                     </p>
-                    <AddToCartButton
-                        productId={product.id}
-                        disabled={!inStock}
-                        variant="card"
-                        className="rounded-lg py-3 text-sm uppercase tracking-wider"
-                    />
+                    {showPurchaseActions ? (
+                        <AddToCartButton
+                            productId={product.id}
+                            disabled={!inStock}
+                            variant="card"
+                            className="rounded-lg py-3 text-sm uppercase tracking-wider"
+                        />
+                    ) : (
+                        <div className="rounded-lg border border-outline-variant/15 px-4 py-3 text-center text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                            Admin view
+                        </div>
+                    )}
                 </div>
             </div>
         </article>

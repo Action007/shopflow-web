@@ -9,11 +9,13 @@ import { API_ROUTES } from "@/lib/constants/routes";
 interface CatalogProductCardDesktopProps {
     product: Product;
     imagePriority?: boolean;
+    showPurchaseActions?: boolean;
 }
 
 export function CatalogProductCardDesktop({
     product,
     imagePriority = false,
+    showPurchaseActions = true,
 }: CatalogProductCardDesktopProps) {
     const inStock = product.stockQuantity > 0;
 
@@ -68,12 +70,18 @@ export function CatalogProductCardDesktop({
                     <p className="mb-4 text-2xl font-black tabular-nums text-primary">
                         {formatPrice(product.price)}
                     </p>
-                    <AddToCartButton
-                        productId={product.id}
-                        disabled={!inStock}
-                        variant="card"
-                        className="rounded-lg py-3 text-sm uppercase tracking-wider"
-                    />
+                    {showPurchaseActions ? (
+                        <AddToCartButton
+                            productId={product.id}
+                            disabled={!inStock}
+                            variant="card"
+                            className="rounded-lg py-3 text-sm uppercase tracking-wider"
+                        />
+                    ) : (
+                        <div className="rounded-lg border border-outline-variant/15 px-4 py-3 text-center text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                            Admin view
+                        </div>
+                    )}
                 </div>
             </div>
         </article>
