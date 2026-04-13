@@ -79,6 +79,10 @@ describe("auth actions", () => {
             expect(result.success).toBe(false);
             expect(result.fieldErrors?.email?.[0]).toBeTruthy();
             expect(result.fieldErrors?.password?.[0]).toBeTruthy();
+            expect(result.values).toEqual({
+                email: "bad-email",
+                password: "123",
+            });
             expect(apiPostMock).not.toHaveBeenCalled();
         });
 
@@ -98,6 +102,10 @@ describe("auth actions", () => {
             expect(result).toEqual({
                 success: false,
                 message: ERRORS.AUTH.INVALID_CREDENTIALS,
+                values: {
+                    email: "user@example.com",
+                    password: "123456",
+                },
             });
         });
 
@@ -135,6 +143,10 @@ describe("auth actions", () => {
             expect(result).toEqual({
                 success: false,
                 message: ERRORS.AUTH.GENERIC,
+                values: {
+                    email: "user@example.com",
+                    password: "123456",
+                },
             });
         });
     });
@@ -158,6 +170,13 @@ describe("auth actions", () => {
             expect(result.fieldErrors?.email?.[0]).toBeTruthy();
             expect(result.fieldErrors?.password?.[0]).toBeTruthy();
             expect(result.fieldErrors?.confirmPassword?.[0]).toBeTruthy();
+            expect(result.values).toEqual({
+                firstName: "",
+                lastName: "",
+                email: "bad-email",
+                password: "123",
+                confirmPassword: "456",
+            });
         });
 
         it("returns api field errors for conflict responses", async () => {
@@ -183,6 +202,13 @@ describe("auth actions", () => {
                 message: ERRORS.AUTH.EMAIL_ALREADY_EXISTS,
                 fieldErrors: {
                     email: [ERRORS.AUTH.EMAIL_ALREADY_EXISTS],
+                },
+                values: {
+                    firstName: "Jane",
+                    lastName: "Doe",
+                    email: "jane@example.com",
+                    password: "password123",
+                    confirmPassword: "password123",
                 },
             });
         });
@@ -226,6 +252,13 @@ describe("auth actions", () => {
             expect(result).toEqual({
                 success: false,
                 message: ERRORS.AUTH.GENERIC,
+                values: {
+                    firstName: "Jane",
+                    lastName: "Doe",
+                    email: "jane@example.com",
+                    password: "password123",
+                    confirmPassword: "password123",
+                },
             });
         });
     });

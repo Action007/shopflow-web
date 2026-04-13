@@ -58,6 +58,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
                                 name="email"
                                 type="email"
                                 placeholder="name@example.com"
+                                defaultValue={state.values?.email ?? ""}
                                 required
                             />
                             {state.fieldErrors?.email && (
@@ -83,6 +84,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
                                 name="password"
                                 type="password"
                                 placeholder="••••••••"
+                                defaultValue={state.values?.password ?? ""}
                                 required
                             />
                             {state.fieldErrors?.password && (

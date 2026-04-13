@@ -132,7 +132,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                                     {product.name}
                                 </h1>
                                 <div
-                                    className={`w-full max-w-[110px] flex items-center gap-1 rounded-md px-2 py-1 ${
+                                    className={`justify-center w-full max-w-[110px] flex items-center gap-1 rounded-md px-2 py-1 ${
                                         inStock
                                             ? "bg-tertiary/10"
                                             : "bg-destructive/10"

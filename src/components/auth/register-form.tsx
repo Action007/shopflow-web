@@ -63,6 +63,7 @@ export function RegisterForm({ callbackUrl }: RegisterFormProps) {
                             id="firstName"
                             name="firstName"
                             placeholder="John"
+                            defaultValue={state.values?.firstName ?? ""}
                             required
                         />
                     </Field>
@@ -74,6 +75,7 @@ export function RegisterForm({ callbackUrl }: RegisterFormProps) {
                             id="lastName"
                             name="lastName"
                             placeholder="Doe"
+                            defaultValue={state.values?.lastName ?? ""}
                             required
                         />
                     </Field>
@@ -85,6 +87,7 @@ export function RegisterForm({ callbackUrl }: RegisterFormProps) {
                         name="email"
                         type="email"
                         placeholder="name@example.com"
+                        defaultValue={state.values?.email ?? ""}
                         required
                     />
                 </Field>
@@ -99,6 +102,7 @@ export function RegisterForm({ callbackUrl }: RegisterFormProps) {
                             name="password"
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
+                            defaultValue={state.values?.password ?? ""}
                             required
                         />
                         <button
@@ -124,6 +128,7 @@ export function RegisterForm({ callbackUrl }: RegisterFormProps) {
                         name="confirmPassword"
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
+                        defaultValue={state.values?.confirmPassword ?? ""}
                         required
                     />
                 </Field>

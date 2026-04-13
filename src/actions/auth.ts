@@ -15,6 +15,7 @@ export interface ActionResult {
     success: boolean;
     message?: string;
     fieldErrors?: Record<string, string[]>;
+    values?: Record<string, string>;
 }
 
 export async function loginAction(
@@ -35,6 +36,7 @@ export async function loginAction(
                 string,
                 string[]
             >,
+            values: raw,
         };
     }
 
@@ -49,11 +51,13 @@ export async function loginAction(
                     error.statusCode === 401
                         ? ERRORS.AUTH.INVALID_CREDENTIALS
                         : error.message,
+                values: raw,
             };
         }
         return {
             success: false,
             message: ERRORS.AUTH.GENERIC,
+            values: raw,
         };
     }
 
@@ -82,6 +86,7 @@ export async function registerAction(
                 string,
                 string[]
             >,
+            values: raw,
         };
     }
 
@@ -102,11 +107,13 @@ export async function registerAction(
                         ? ERRORS.AUTH.EMAIL_ALREADY_EXISTS
                         : error.message,
                 fieldErrors: error.fieldErrors,
+                values: raw,
             };
         }
         return {
             success: false,
             message: ERRORS.AUTH.GENERIC,
+            values: raw,
         };
     }
 
