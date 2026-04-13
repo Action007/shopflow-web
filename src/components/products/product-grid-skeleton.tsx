@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-function CatalogProductCardDesktopSkeleton() {
+function ProductCardDesktopSkeleton() {
     return (
         <article className="overflow-hidden rounded-xl bg-surface-low">
             <div className="relative aspect-square w-full overflow-hidden bg-surface-highest">
@@ -24,7 +24,7 @@ function CatalogProductCardDesktopSkeleton() {
     );
 }
 
-function CatalogProductCardMobileSkeleton() {
+function ProductCardMobileSkeleton() {
     return (
         <article className="overflow-hidden rounded-xl bg-surface-low">
             <div className="flex gap-4 p-4">
@@ -55,25 +55,21 @@ function CatalogProductCardMobileSkeleton() {
 }
 
 interface ProductGridSkeletonProps {
-    mobileCount?: number;
-    desktopCount?: number;
+    count?: number;
 }
 
-export function ProductGridSkeleton({
-    mobileCount = 4,
-    desktopCount = 6,
-}: ProductGridSkeletonProps) {
+export function ProductGridSkeleton({ count = 6 }: ProductGridSkeletonProps) {
     return (
         <>
             <div className="space-y-4 sm:hidden">
-                {Array.from({ length: mobileCount }).map((_, index) => (
-                    <CatalogProductCardMobileSkeleton key={index} />
+                {Array.from({ length: count }).map((_, index) => (
+                    <ProductCardMobileSkeleton key={index} />
                 ))}
             </div>
 
             <div className="hidden gap-4 sm:grid sm:grid-cols-2 xl:gap-6 md:grid-cols-3">
-                {Array.from({ length: desktopCount }).map((_, index) => (
-                    <CatalogProductCardDesktopSkeleton key={index} />
+                {Array.from({ length: count }).map((_, index) => (
+                    <ProductCardDesktopSkeleton key={index} />
                 ))}
             </div>
         </>

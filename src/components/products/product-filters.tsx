@@ -148,7 +148,10 @@ export function ProductFilters({
             <div className="fixed bottom-16 left-1/2 z-40 -translate-x-1/2 lg:hidden">
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
-                        <Button className="rounded-full px-6 py-3 text-on-primary">
+                        <Button
+                            variant="secondary"
+                            className="rounded-full px-6 py-3"
+                        >
                             <Filter className="h-4 w-4" />
                             Filters
                         </Button>

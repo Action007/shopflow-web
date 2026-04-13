@@ -38,6 +38,14 @@ vi.mock("@/components/cart/add-to-cart-button", () => ({
     ),
 }));
 
+vi.mock("@/components/wishlist/wishlist-toggle-button", () => ({
+    WishlistToggleButton: ({
+        productId,
+    }: {
+        productId: string;
+    }) => <button data-product-id={productId}>Wishlist</button>,
+}));
+
 const baseProduct: Product = {
     id: "prod-1",
     name: "Test Laptop",
@@ -66,7 +74,7 @@ describe("ProductCard", () => {
     it("renders category name", () => {
         render(<ProductCard product={baseProduct} />);
 
-        expect(screen.getByText("Electronics")).toBeInTheDocument();
+        expect(screen.getAllByText("Electronics")).toHaveLength(2);
     });
 
     it("links to product detail page from the image and title", () => {
@@ -82,14 +90,14 @@ describe("ProductCard", () => {
     it("shows in stock badge when stockQuantity is above 0", () => {
         render(<ProductCard product={baseProduct} />);
 
-        expect(screen.getByText("In Stock")).toBeInTheDocument();
+        expect(screen.getAllByText("In Stock")).toHaveLength(2);
         expect(screen.queryByText("Out of Stock")).not.toBeInTheDocument();
     });
 
     it("shows out of stock badge and disables add to cart when stockQuantity is 0", () => {
         render(<ProductCard product={{ ...baseProduct, stockQuantity: 0 }} />);
 
-        expect(screen.getByText("Out of Stock")).toBeInTheDocument();
+        expect(screen.getAllByText("Out of Stock")).toHaveLength(2);
         expect(
             screen.getByRole("button", { name: "Add to cart" }),
         ).toBeDisabled();

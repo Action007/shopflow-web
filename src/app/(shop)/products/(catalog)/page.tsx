@@ -9,7 +9,7 @@ import type {
     Category,
     ProductSearchParams,
 } from "@/types/product";
-import { CatalogProductGrid } from "@/components/products/catalog-product-grid";
+import { ProductGrid } from "@/components/products/product-grid";
 import { ProductFilters } from "@/components/products/product-filters";
 import { ProductsToolbar } from "@/components/products/products-toolbar";
 import { Pagination } from "@/components/shared/pagination";
@@ -138,7 +138,7 @@ async function ProductsResults({
 
     return (
         <>
-            <CatalogProductGrid
+            <ProductGrid
                 products={result.items}
                 showPurchaseActions={showPurchaseActions}
                 wishlistProductIds={wishlistProductIds}

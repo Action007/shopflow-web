@@ -162,14 +162,6 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
                 </Field>
             </div>
 
-            <Field label="Email Address" error={errors.email?.message}>
-                <input
-                    type="email"
-                    className="h-12 w-full rounded-lg border-b-2 border-transparent bg-surface-highest px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 ease-fluid placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
-                    {...register("email")}
-                />
-            </Field>
-
             {serverError ? (
                 <p className="text-sm text-destructive">{serverError}</p>
             ) : null}

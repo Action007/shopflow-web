@@ -18,7 +18,7 @@ export function ProductGrid({
     return (
         <div
             className={cn(
-                "grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3",
+                "grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:gap-6",
                 className,
             )}
         >
@@ -28,7 +28,7 @@ export function ProductGrid({
                     product={product}
                     showPurchaseActions={showPurchaseActions}
                     isWishlisted={wishlistProductIds.includes(product.id)}
-                    imagePriority={index < 10}
+                    imagePriority={index === 0}
                 />
             ))}
         </div>

@@ -98,7 +98,6 @@ export function ProductPurchasePanel({
             <WishlistToggleButton
                 productId={productId}
                 initialIsWishlisted={initialIsWishlisted}
-                variant="full"
             />
         </section>
     );
