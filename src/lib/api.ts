@@ -53,10 +53,11 @@ export async function api<T>(
     if (tags) nextConfig.tags = tags;
     if (revalidate !== undefined) nextConfig.revalidate = revalidate;
 
+    const isFormDataBody = fetchOptions.body instanceof FormData;
     const res = await fetch(url, {
         ...fetchOptions,
         headers: {
-            "Content-Type": "application/json",
+            ...(isFormDataBody ? {} : { "Content-Type": "application/json" }),
             ...headers,
         },
         ...(Object.keys(nextConfig).length > 0 && { next: nextConfig }),

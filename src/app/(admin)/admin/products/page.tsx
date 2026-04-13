@@ -1,11 +1,21 @@
-import { AdminPlaceholder } from "@/components/admin/admin-placeholder";
+import { apiGet } from "@/lib/api";
+import { API_ROUTES } from "@/lib/constants/routes";
+import { AdminProductManager } from "@/components/admin/admin-product-manager";
+import type { Category, PaginatedResult, Product } from "@/types/product";
 
-export default function AdminProductsPage() {
+export default async function AdminProductsPage() {
+    const [products, categories] = await Promise.all([
+        apiGet<PaginatedResult<Product>>(
+            `${API_ROUTES.PRODUCTS.LIST}?limit=100&sortBy=createdAt&sortOrder=desc`,
+            { revalidate: 300, tags: ["products"] },
+        ),
+        apiGet<Category[]>(API_ROUTES.CATEGORIES, { revalidate: 300 }),
+    ]);
+
     return (
-        <AdminPlaceholder
-            eyebrow="Products"
-            title="Product management starts here."
-            description="This section is reserved for the admin catalog workflow. In the next implementation step, we will wire creation, updates, image upload, and management actions into this dedicated space."
+        <AdminProductManager
+            products={products.items}
+            categories={categories}
         />
     );
 }

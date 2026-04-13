@@ -10,6 +10,24 @@ export interface Product {
     createdAt: string;
 }
 
+export interface CreateProductInput {
+    name: string;
+    description?: string;
+    imageUploadId: string;
+    price: string;
+    stockQuantity: number;
+    categoryId: string;
+}
+
+export interface UpdateProductInput {
+    name?: string;
+    description?: string;
+    imageUploadId?: string;
+    price?: string;
+    stockQuantity?: number;
+    categoryId?: string;
+}
+
 export interface Category {
     id: string;
     name: string;

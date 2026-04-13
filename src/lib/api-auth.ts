@@ -69,3 +69,16 @@ export async function apiAuthDelete<T>(
         cache: "no-store",
     });
 }
+
+export async function apiAuthPostForm<T>(
+    endpoint: string,
+    data: FormData,
+    options: FetchOptions = {},
+): Promise<T> {
+    return api<T>(endpoint, {
+        ...(await withAuth(options)),
+        method: "POST",
+        body: data,
+        cache: "no-store",
+    });
+}

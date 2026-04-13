@@ -33,6 +33,10 @@ export const API_ROUTES = {
     USER: {
         ME: "/users/me",
     },
+    UPLOADS: {
+        IMAGES: "/uploads/images",
+        DETAIL: (id: string) => `/uploads/${id}`,
+    },
     WISHLIST: "/wishlist",
     CART: "/cart",
     CHECKOUT: "/checkout",
