@@ -35,6 +35,21 @@ export const ERRORS = {
         GENERIC: "Cart operation failed",
     },
 
+    PROFILE: {
+        UPDATE_FAILED: "Could not update profile",
+        UPDATE_SUCCESS: "Profile updated",
+        IMAGE_HELP:
+            "Upload a profile image first, then save your account changes.",
+    },
+
+    WISHLIST: {
+        ADD_FAILED: "Could not save to wishlist",
+        REMOVE_FAILED: "Could not remove from wishlist",
+        ADDED: "Saved to wishlist",
+        REMOVED: "Removed from wishlist",
+        EMPTY: "Your wishlist is still empty.",
+    },
+
     CHECKOUT: {
         SHIPPING_ADDRESS_INVALID: "Please enter a full shipping address",
         CITY_REQUIRED: "City is required",

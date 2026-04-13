@@ -32,6 +32,7 @@ export const API_ROUTES = {
     CATEGORIES: "/categories",
     USER: {
         ME: "/users/me",
+        DETAIL: (id: string) => `/users/${id}`,
     },
     UPLOADS: {
         IMAGES: "/uploads/images",

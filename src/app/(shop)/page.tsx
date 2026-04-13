@@ -18,6 +18,7 @@ import type { PaginatedResult, Product, Category } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
 import { getCurrentUser } from "@/lib/auth";
 import { canAccessShopperFeatures } from "@/lib/roles";
+import { getWishlistProductIds } from "@/lib/wishlist";
 
 const categoryIcons = [Smartphone, Laptop, Headphones, Watch, Cable];
 const assuranceItems = [
@@ -44,7 +45,7 @@ const assuranceItems = [
 export default async function HomePage() {
     const currentUser = await getCurrentUser();
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
-    const [productsResult, categories] = await Promise.all([
+    const [productsResult, categories, wishlistProductIds] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
             "/products?limit=4&sortBy=createdAt&sortOrder=desc",
             {
@@ -53,6 +54,7 @@ export default async function HomePage() {
             },
         ),
         apiGet<Category[]>("/categories", { revalidate: 300 }),
+        getWishlistProductIds(currentUser),
     ]);
 
     const displayCategories = categories.slice(0, 5);
@@ -122,6 +124,7 @@ export default async function HomePage() {
                     <ProductGrid
                         products={productsResult.items}
                         showPurchaseActions={showPurchaseActions}
+                        wishlistProductIds={wishlistProductIds}
                         className="grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
                     />
                 </section>

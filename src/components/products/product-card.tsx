@@ -3,18 +3,21 @@ import Link from "next/link";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { WishlistToggleButton } from "@/components/wishlist/wishlist-toggle-button";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
     product: Product;
     imagePriority?: boolean;
     showPurchaseActions?: boolean;
+    isWishlisted?: boolean;
 }
 
 export function ProductCard({
     product,
     imagePriority = false,
     showPurchaseActions = true,
+    isWishlisted = false,
 }: ProductCardProps) {
     const inStock = product.stockQuantity > 0;
 
@@ -70,12 +73,19 @@ export function ProductCard({
                         {formatPrice(product.price)}
                     </p>
                     {showPurchaseActions ? (
-                        <AddToCartButton
-                            productId={product.id}
-                            disabled={!inStock}
-                            variant="card"
-                            className="rounded-lg py-3 text-sm uppercase tracking-wider"
-                        />
+                        <div className="flex items-center gap-2">
+                            <AddToCartButton
+                                productId={product.id}
+                                disabled={!inStock}
+                                variant="card"
+                                className="rounded-lg py-3 text-sm uppercase tracking-wider"
+                            />
+                            <WishlistToggleButton
+                                productId={product.id}
+                                initialIsWishlisted={isWishlisted}
+                                className="h-12 w-12 rounded-lg"
+                            />
+                        </div>
                     ) : (
                         <div className="rounded-lg border border-outline-variant/15 px-4 py-3 text-center text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
                             Admin view

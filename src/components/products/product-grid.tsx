@@ -6,12 +6,14 @@ interface ProductGridProps {
     products: Product[];
     className?: string;
     showPurchaseActions?: boolean;
+    wishlistProductIds?: string[];
 }
 
 export function ProductGrid({
     products,
     className,
     showPurchaseActions = true,
+    wishlistProductIds = [],
 }: ProductGridProps) {
     return (
         <div
@@ -25,6 +27,7 @@ export function ProductGrid({
                     key={product.id}
                     product={product}
                     showPurchaseActions={showPurchaseActions}
+                    isWishlisted={wishlistProductIds.includes(product.id)}
                     imagePriority={index < 10}
                 />
             ))}

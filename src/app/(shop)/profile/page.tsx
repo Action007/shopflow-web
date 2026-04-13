@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
     ArrowUpRight,
+    Heart,
     Headphones,
     Package,
     Shield,
     ShoppingBag,
-    ShoppingCart,
     UserRound,
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
@@ -19,6 +20,7 @@ import type { PaginatedResult } from "@/types/product";
 import type { Order } from "@/types/order";
 import { formatPrice } from "@/lib/utils";
 import { isAdmin } from "@/lib/roles";
+import { ProfileSettingsForm } from "@/components/profile/profile-settings-form";
 
 export const metadata: Metadata = {
     title: "Profile",
@@ -44,10 +46,10 @@ const quickLinks = [
         icon: Headphones,
     },
     {
-        title: "Cart",
-        description: "Return to the items you are preparing to buy.",
-        href: ROUTES.CART,
-        icon: ShoppingCart,
+        title: "Wishlist",
+        description: "Keep track of products you want to revisit.",
+        href: ROUTES.WISHLIST,
+        icon: Heart,
     },
 ] as const;
 
@@ -111,8 +113,18 @@ export default async function ProfilePage() {
                 <aside className="lg:sticky lg:top-24">
                     <div className="rounded-[28px] bg-surface-low p-8 shadow-[0_0_60px_rgba(229,225,228,0.04)]">
                         <div className="flex flex-col items-center text-center">
-                            <div className="lithium-glow mb-6 flex h-24 w-24 items-center justify-center rounded-full text-3xl font-black text-on-primary-container">
-                                {initials}
+                            <div className="lithium-glow relative mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-3xl font-black text-on-primary-container">
+                                {user.profileImageUrl ? (
+                                    <Image
+                                        src={user.profileImageUrl}
+                                        alt={`${user.firstName} ${user.lastName}`}
+                                        fill
+                                        sizes="96px"
+                                        className="object-cover"
+                                    />
+                                ) : (
+                                    initials
+                                )}
                             </div>
                             <h1 className="font-headline text-[2rem] font-black tracking-[-0.03em] text-on-surface">
                                 {user.firstName} {user.lastName}
@@ -178,10 +190,13 @@ export default async function ProfilePage() {
                         </div>
                     </section>
 
-                    <section className="overflow-hidden rounded-[28px] bg-surface-low shadow-[0_0_60px_rgba(229,225,228,0.04)]">
+                    <section className="space-y-4">
+                        <ProfileSettingsForm user={user} />
+
+                        <div className="overflow-hidden rounded-[28px] bg-surface-low shadow-[0_0_60px_rgba(229,225,228,0.04)]">
                             <div className="px-6 py-5">
                                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
-                                    Account Details
+                                    Account Snapshot
                                 </p>
                             </div>
                             <div className="space-y-2 px-3 pb-3">
@@ -212,6 +227,7 @@ export default async function ProfilePage() {
                                     </div>
                                 ))}
                             </div>
+                        </div>
                     </section>
 
                     <section>

@@ -1,21 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { Minus, Plus, Heart } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
-import { Button } from "@/components/ui/button";
+import { WishlistToggleButton } from "@/components/wishlist/wishlist-toggle-button";
 import { useCartStore } from "@/stores/cart-store";
 
 interface ProductPurchasePanelProps {
     productId: string;
     inStock: boolean;
     stockQuantity: number;
+    initialIsWishlisted?: boolean;
 }
 
 export function ProductPurchasePanel({
     productId,
     inStock,
     stockQuantity,
+    initialIsWishlisted = false,
 }: ProductPurchasePanelProps) {
     const [quantity, setQuantity] = useState(1);
 
@@ -93,13 +95,11 @@ export function ProductPurchasePanel({
                     onAdded={() => setQuantity(1)}
                 />
             </div>
-            <Button
-                variant="outline"
-                className="w-full justify-center gap-2 py-4 text-xs uppercase tracking-widest"
-            >
-                <Heart className="h-[18px] w-[18px]" />
-                Save to Wishlist
-            </Button>
+            <WishlistToggleButton
+                productId={productId}
+                initialIsWishlisted={initialIsWishlisted}
+                variant="full"
+            />
         </section>
     );
 }

@@ -20,6 +20,7 @@ import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { ERRORS } from "@/lib/constants/errors";
 import { getCurrentUser } from "@/lib/auth";
 import { canAccessShopperFeatures } from "@/lib/roles";
+import { getWishlistProductIds } from "@/lib/wishlist";
 
 export const metadata: Metadata = {
     title: "Products",
@@ -35,6 +36,7 @@ export default async function ProductsPage({
 }: ProductsPageProps) {
     const currentUser = await getCurrentUser();
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
+    const wishlistProductIds = await getWishlistProductIds(currentUser);
     const params = await searchParams;
     const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES, {
         revalidate: 300,
@@ -66,6 +68,7 @@ export default async function ProductsPage({
                     <ProductsResults
                         params={params}
                         showPurchaseActions={showPurchaseActions}
+                        wishlistProductIds={wishlistProductIds}
                     />
                 </Suspense>
             </div>
@@ -86,9 +89,11 @@ async function ProductsToolbarData({
 async function ProductsResults({
     params,
     showPurchaseActions,
+    wishlistProductIds,
 }: {
     params: ProductSearchParams;
     showPurchaseActions: boolean;
+    wishlistProductIds: string[];
 }) {
     const state = await getProductsState(params);
 
@@ -136,6 +141,7 @@ async function ProductsResults({
             <CatalogProductGrid
                 products={result.items}
                 showPurchaseActions={showPurchaseActions}
+                wishlistProductIds={wishlistProductIds}
             />
 
             <div className="mt-16">

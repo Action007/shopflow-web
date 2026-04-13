@@ -5,11 +5,13 @@ import { CatalogProductCardDesktop } from "@/components/products/catalog-product
 interface CatalogProductGridProps {
     products: Product[];
     showPurchaseActions?: boolean;
+    wishlistProductIds?: string[];
 }
 
 export function CatalogProductGrid({
     products,
     showPurchaseActions = true,
+    wishlistProductIds = [],
 }: CatalogProductGridProps) {
     return (
         <>
@@ -19,6 +21,7 @@ export function CatalogProductGrid({
                         key={product.id}
                         product={product}
                         showPurchaseActions={showPurchaseActions}
+                        isWishlisted={wishlistProductIds.includes(product.id)}
                         imagePriority={index === 0}
                     />
                 ))}
@@ -30,6 +33,7 @@ export function CatalogProductGrid({
                         key={product.id}
                         product={product}
                         showPurchaseActions={showPurchaseActions}
+                        isWishlisted={wishlistProductIds.includes(product.id)}
                         imagePriority={index === 0}
                     />
                 ))}

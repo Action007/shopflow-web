@@ -16,6 +16,7 @@ import { ProductPurchasePanel } from "@/components/products/product-purchase-pan
 import { ROUTES } from "@/lib/constants/routes";
 import { getCurrentUser } from "@/lib/auth";
 import { isAdmin } from "@/lib/roles";
+import { getWishlistProductIds } from "@/lib/wishlist";
 
 interface ProductPageProps {
     params: Promise<{ id: string }>;
@@ -60,6 +61,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params;
     const currentUser = await getCurrentUser();
     const adminMode = isAdmin(currentUser);
+    const wishlistProductIds = await getWishlistProductIds(currentUser);
 
     let product: Product;
     try {
@@ -241,6 +243,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             productId={product.id}
                             inStock={inStock}
                             stockQuantity={product.stockQuantity}
+                            initialIsWishlisted={wishlistProductIds.includes(
+                                product.id,
+                            )}
                         />
                     )}
                 </div>
