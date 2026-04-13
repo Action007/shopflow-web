@@ -30,7 +30,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
 
     let order: Order;
     try {
-        order = await apiAuthGet<Order>(`${API_ROUTES.ORDERS}/${id}`);
+        order = await apiAuthGet<Order>(`${API_ROUTES.ORDERS}/${id}`, { tags: ["orders"] });
     } catch (error) {
         if (error instanceof ApiClientError && error.statusCode === 404) {
             notFound();
