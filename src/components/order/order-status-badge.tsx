@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { formatOrderStatusLabel, normalizeOrderStatus } from "@/lib/order";
 import type { Order } from "@/types/order";
 
 const statusClasses: Record<Order["status"], string> = {
@@ -19,15 +20,19 @@ export function OrderStatusBadge({
     status,
     className,
 }: OrderStatusBadgeProps) {
+    const normalizedStatus = normalizeOrderStatus(status);
+
     return (
         <span
             className={cn(
                 "rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest",
-                statusClasses[status],
+                normalizedStatus
+                    ? statusClasses[normalizedStatus]
+                    : "text-neutral-400 ring-1 ring-neutral-700",
                 className,
             )}
         >
-            {status}
+            {formatOrderStatusLabel(status)}
         </span>
     );
 }

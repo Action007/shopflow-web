@@ -42,6 +42,7 @@ export const API_ROUTES = {
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",
+    ORDER_STATUS: (id: string) => `/orders/${id}/status`,
     CANCEL: "/cancel"
 } as const;
 
