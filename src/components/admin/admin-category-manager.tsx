@@ -7,6 +7,7 @@ import { deleteAdminCategoryAction } from "@/actions/admin-category";
 import type { Category } from "@/types/product";
 import { AdminCategoryForm } from "./admin-category-form";
 import { AdminCategoryList } from "./admin-category-list";
+import { AdminSectionShell } from "./admin-section-shell";
 import { AdminWorkspaceHeader } from "./admin-workspace-header";
 
 interface AdminCategoryManagerProps {
@@ -69,19 +70,11 @@ export function AdminCategoryManager({
 
             <AdminCategoryForm mode="create" categories={categories} />
 
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
-                    Category Inventory
-                </p>
-                <h2 className="mt-2 font-headline text-3xl font-black tracking-[-0.03em] text-on-surface">
-                    Existing categories
-                </h2>
-                <p className="mt-2 text-sm text-on-surface-variant">
-                    {categories.length} categor{categories.length === 1 ? "y" : "ies"} in
-                    the current structure, with {stats.described} carrying
-                    editorial descriptions.
-                </p>
-            </section>
+            <AdminSectionShell
+                eyebrow="Category Inventory"
+                title="Existing categories"
+                description={`${categories.length} categor${categories.length === 1 ? "y" : "ies"} in the current structure, with ${stats.described} carrying editorial descriptions.`}
+            />
 
             <AdminCategoryList
                 categories={categories}

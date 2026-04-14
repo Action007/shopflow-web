@@ -4,6 +4,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Category } from "@/types/product";
 import { AdminCategoryForm } from "./admin-category-form";
+import { AdminEmptyState } from "./admin-empty-state";
+import { AdminMetaBadge } from "./admin-meta-badge";
+import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminCategoryListProps {
     categories: Category[];
@@ -26,9 +29,10 @@ export function AdminCategoryList({
 
     if (categories.length === 0) {
         return (
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-8 text-on-surface-variant">
-                No categories yet.
-            </section>
+            <AdminEmptyState
+                title="No categories yet"
+                description="Create a top-level category or a child category to start shaping storefront navigation and browse paths."
+            />
         );
     }
 
@@ -78,7 +82,7 @@ function CategoryBranch({
     const depth = getCategoryDepth(allCategories, category.id);
 
     return (
-        <article className="overflow-hidden rounded-[28px] border border-outline-variant/15 bg-surface-low">
+        <AdminRecordShell>
             <div className="space-y-4 p-5">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
@@ -104,8 +108,11 @@ function CategoryBranch({
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                            <Badge label="Path" value={buildCategoryPath(allCategories, category.id)} />
-                            <Badge
+                            <AdminMetaBadge
+                                label="Path"
+                                value={buildCategoryPath(allCategories, category.id)}
+                            />
+                            <AdminMetaBadge
                                 label="Children"
                                 value={String(node.children.length)}
                             />
@@ -164,16 +171,7 @@ function CategoryBranch({
                     />
                 </div>
             ) : null}
-        </article>
-    );
-}
-
-function Badge({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1.5 text-xs">
-            <span className="font-bold text-on-surface">{value}</span>
-            <span className="ml-2 text-on-surface-variant">{label}</span>
-        </div>
+        </AdminRecordShell>
     );
 }
 

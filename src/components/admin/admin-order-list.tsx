@@ -14,6 +14,9 @@ import { shouldBypassImageOptimization } from "@/lib/image";
 import { formatOrderStatusLabel, normalizeOrderStatus } from "@/lib/order";
 import { formatPrice } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/types/order";
+import { AdminEmptyState } from "./admin-empty-state";
+import { AdminMetaBadge } from "./admin-meta-badge";
+import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminOrderListProps {
     orders: Order[];
@@ -24,9 +27,10 @@ export function AdminOrderList({ orders }: AdminOrderListProps) {
 
     if (orders.length === 0) {
         return (
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-8 text-on-surface-variant">
-                No orders found for the current view.
-            </section>
+            <AdminEmptyState
+                title="No orders found"
+                description="Try a different status or search term to inspect another part of the order queue."
+            />
         );
     }
 
@@ -106,7 +110,7 @@ function AdminOrderCard({
     };
 
     return (
-        <article className="overflow-hidden rounded-[28px] border border-outline-variant/15 bg-surface-low">
+        <AdminRecordShell>
             <div className="space-y-5 p-5">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
@@ -127,9 +131,15 @@ function AdminOrderCard({
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                            <Badge label="Total" value={formatPrice(order.totalAmount)} />
-                            <Badge label="Items" value={String(itemCount)} />
-                            <Badge
+                            <AdminMetaBadge
+                                label="Total"
+                                value={formatPrice(order.totalAmount)}
+                            />
+                            <AdminMetaBadge
+                                label="Items"
+                                value={String(itemCount)}
+                            />
+                            <AdminMetaBadge
                                 label="Created"
                                 value={new Date(order.createdAt).toLocaleDateString()}
                             />
@@ -287,16 +297,7 @@ function AdminOrderCard({
                     </div>
                 </div>
             ) : null}
-        </article>
-    );
-}
-
-function Badge({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1.5 text-xs">
-            <span className="font-bold text-on-surface">{value}</span>
-            <span className="ml-2 text-on-surface-variant">{label}</span>
-        </div>
+        </AdminRecordShell>
     );
 }
 

@@ -1,11 +1,27 @@
-import { Boxes, ClipboardList, ImageUp, Tags, Users } from "lucide-react";
+import Link from "next/link";
+import {
+    ArrowRight,
+    Boxes,
+    ClipboardList,
+    ImageUp,
+    Tags,
+    Users,
+} from "lucide-react";
+import { ROUTES } from "@/lib/constants/routes";
+import { AdminMetaBadge } from "@/components/admin/admin-meta-badge";
+import { AdminSectionShell } from "@/components/admin/admin-section-shell";
+import { AdminWorkspaceHeader } from "@/components/admin/admin-workspace-header";
+import { AdminRecordShell } from "@/components/admin/admin-record-shell";
 
 const adminGuides = [
     {
         title: "Products",
+        href: ROUTES.ADMIN.PRODUCTS,
         description:
             "Manage the storefront catalog with paginated search, category filtering, create and edit flows, stock updates, soft delete, and image replacement through imageUploadId.",
         icon: Boxes,
+        statLabel: "Focus",
+        statValue: "Catalog",
         bullets: [
             "Use the Products page to create and maintain catalog items.",
             "Upload images first, then attach them with imageUploadId.",
@@ -14,9 +30,12 @@ const adminGuides = [
     },
     {
         title: "Categories",
+        href: ROUTES.ADMIN.CATEGORIES,
         description:
             "Maintain taxonomy structure with name, optional description, and optional parent category relationships for nested organization.",
         icon: Tags,
+        statLabel: "Focus",
+        statValue: "Taxonomy",
         bullets: [
             "Categories support list, create, update, and soft delete.",
             "Parent-child relationships shape storefront discovery.",
@@ -25,9 +44,12 @@ const adminGuides = [
     },
     {
         title: "Users",
+        href: ROUTES.ADMIN.USERS,
         description:
             "Review the paginated user list and maintain safe profile fields without implying that email or password can be changed from admin.",
         icon: Users,
+        statLabel: "Focus",
+        statValue: "Accounts",
         bullets: [
             "User listing is paginated at the API level.",
             "Profile updates allow firstName, lastName, and optional imageUploadId only.",
@@ -36,9 +58,12 @@ const adminGuides = [
     },
     {
         title: "Orders",
+        href: ROUTES.ADMIN.ORDERS,
         description:
             "Use the orders workspace as an operations surface for status updates, item review, shipping details, and fulfillment flow.",
         icon: ClipboardList,
+        statLabel: "Focus",
+        statValue: "Fulfillment",
         bullets: [
             "Orders expose order number, totals, item count, and shipping address.",
             "Admins can update status only through valid transitions.",
@@ -50,95 +75,78 @@ const adminGuides = [
 export default function AdminDashboardPage() {
     return (
         <div className="space-y-8">
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-8">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
-                    Admin Console
-                </p>
-                <h1 className="mt-3 font-headline text-4xl font-black tracking-[-0.03em] text-on-surface">
-                    Operations are now separated from the shopper flow.
-                </h1>
-                <p className="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-on-surface-variant">
-                    Use the sidebar to move between admin workspaces. This
-                    overview explains what each section is responsible for and
-                    what the backend actually supports today.
-                </p>
-            </section>
+            <AdminWorkspaceHeader
+                eyebrow="Admin Console"
+                title="Run catalog, taxonomy, fulfillment, and account operations from one control surface."
+                description="This overview is the front door to the admin area. It points to the four working admin sections and summarizes the guardrails the current backend contract actually supports."
+                stats={[
+                    { label: "Workspaces", value: "4" },
+                    { label: "Admin-safe flows", value: "Users, Orders" },
+                    { label: "Content areas", value: "Products, Categories" },
+                ]}
+                maxWidthClassName="max-w-[60ch]"
+            />
 
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-6 sm:p-8">
-                <div className="max-w-[60ch]">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
-                        How To Use Admin
-                    </p>
-                    <h2 className="mt-2 font-headline text-3xl font-black tracking-[-0.03em] text-on-surface">
-                        Each section has a clear responsibility.
-                    </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
-                        The sidebar already covers navigation, so this page
-                        focuses on guidance instead of repeating the same links.
-                    </p>
-                </div>
-
-                <div className="mt-6 grid gap-4 xl:grid-cols-2">
+            <AdminSectionShell
+                eyebrow="Workspace Guide"
+                title="Choose the surface that matches the job."
+                description="Each admin route has a focused responsibility. Use this page as an orientation layer, then jump into the workspace that best matches the task at hand."
+                contentClassName="mt-6"
+            >
+                <div className="grid gap-4 xl:grid-cols-2">
                     {adminGuides.map((guide) => {
                         const Icon = guide.icon;
 
                         return (
-                            <article
+                            <AdminRecordShell
                                 key={guide.title}
-                                className="rounded-[24px] border border-outline-variant/15 bg-surface-high/50 p-6"
+                                className="bg-surface-high/50"
                             >
-                                <div className="flex items-start gap-4">
-                                    <div className="rounded-2xl bg-background p-3 text-primary">
-                                        <Icon className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-headline text-2xl font-bold tracking-[-0.02em] text-on-surface">
-                                            {guide.title}
-                                        </h3>
-                                        <p className="mt-3 text-[15px] leading-relaxed text-on-surface-variant">
-                                            {guide.description}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="mt-5 space-y-3">
-                                    {guide.bullets.map((bullet) => (
-                                        <div
-                                            key={bullet}
-                                            className="rounded-[18px] border border-outline-variant/10 bg-background/60 px-4 py-3 text-sm leading-relaxed text-on-surface-variant"
-                                        >
-                                            {bullet}
+                                <div className="space-y-5 p-6">
+                                    <div className="flex items-start gap-4">
+                                        <div className="rounded-2xl bg-background p-3 text-primary">
+                                            <Icon className="h-5 w-5" />
                                         </div>
-                                    ))}
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <h3 className="font-headline text-2xl font-bold tracking-[-0.02em] text-on-surface">
+                                                    {guide.title}
+                                                </h3>
+                                                <AdminMetaBadge
+                                                    label={guide.statLabel}
+                                                    value={guide.statValue}
+                                                />
+                                            </div>
+                                            <p className="mt-3 text-[15px] leading-relaxed text-on-surface-variant">
+                                                {guide.description}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {guide.bullets.map((bullet) => (
+                                            <div
+                                                key={bullet}
+                                                className="rounded-[18px] border border-outline-variant/10 bg-background/60 px-4 py-3 text-sm leading-relaxed text-on-surface-variant"
+                                            >
+                                                {bullet}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <Link
+                                        href={guide.href}
+                                        className="inline-flex items-center gap-2 text-sm font-semibold text-primary transition-opacity duration-300 hover:opacity-80"
+                                    >
+                                        Open {guide.title}
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
                                 </div>
-                            </article>
+                            </AdminRecordShell>
                         );
                     })}
                 </div>
-            </section>
-
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                    <div className="rounded-2xl bg-surface-high p-3 text-primary">
-                        <ImageUp className="h-5 w-5" />
-                    </div>
-                    <div className="max-w-[62ch]">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
-                            Upload Flow
-                        </p>
-                        <h2 className="mt-2 font-headline text-2xl font-black tracking-[-0.03em] text-on-surface">
-                            Images are a two-step workflow.
-                        </h2>
-                        <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
-                            Uploads create a pending image first. The returned
-                            upload id is then attached to a product or user
-                            profile as <code>imageUploadId</code>. Pending
-                            uploads can be removed directly, while used uploads
-                            become part of the stored record.
-                        </p>
-                    </div>
-                </div>
-            </section>
+            </AdminSectionShell>
         </div>
     );
 }

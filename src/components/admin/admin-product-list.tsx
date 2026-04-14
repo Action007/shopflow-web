@@ -5,7 +5,10 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import type { Category, Product } from "@/types/product";
+import { AdminEmptyState } from "./admin-empty-state";
+import { AdminMetaBadge } from "./admin-meta-badge";
 import { AdminProductForm } from "./admin-product-form";
+import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminProductListProps {
     products: Product[];
@@ -29,9 +32,10 @@ export function AdminProductList({
     return (
         <section className="space-y-4">
             {products.length === 0 ? (
-                <div className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-8 text-on-surface-variant">
-                    No products yet.
-                </div>
+                <AdminEmptyState
+                    title="No products yet"
+                    description="Create the first catalog item to start managing price, stock, category, and imagery from this workspace."
+                />
             ) : (
                 <div className="space-y-4">
                     {products.map((product) => {
@@ -41,9 +45,8 @@ export function AdminProductList({
                         const isOutOfStock = product.stockQuantity === 0;
 
                         return (
-                            <article
+                            <AdminRecordShell
                                 key={product.id}
-                                className="overflow-hidden rounded-[28px] border border-outline-variant/15 bg-surface-low"
                             >
                                 <div className="grid gap-5 p-5 xl:grid-cols-[112px_minmax(0,1fr)_auto] xl:items-start">
                                     <div className="relative h-28 w-28 overflow-hidden rounded-[22px] bg-surface-highest">
@@ -109,12 +112,14 @@ export function AdminProductList({
                                         </div>
 
                                         <div className="flex flex-wrap gap-2">
-                                            <div className="rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1.5 text-xs font-bold text-primary">
-                                                {formatPrice(product.price)}
-                                            </div>
-                                            <div className="rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1.5 text-xs font-bold text-on-surface">
-                                                Stock: {product.stockQuantity}
-                                            </div>
+                                            <AdminMetaBadge
+                                                label="Price"
+                                                value={formatPrice(product.price)}
+                                            />
+                                            <AdminMetaBadge
+                                                label="Stock"
+                                                value={String(product.stockQuantity)}
+                                            />
                                             <div
                                                 className={`rounded-full px-3 py-1.5 text-xs font-bold ${
                                                     isOutOfStock
@@ -170,7 +175,7 @@ export function AdminProductList({
                                         />
                                     </div>
                                 ) : null}
-                            </article>
+                            </AdminRecordShell>
                         );
                     })}
                 </div>

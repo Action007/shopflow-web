@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ProductSearch } from "@/components/products/product-search";
 import { FormSelect } from "@/components/shared/form-select";
 import { ROUTES } from "@/lib/constants/routes";
-import type { OrderStatus } from "@/types/order";
+import { AdminToolbarShell } from "./admin-toolbar-shell";
 
 interface AdminOrdersToolbarProps {
     total: number;
@@ -45,35 +45,24 @@ export function AdminOrdersToolbar({
     };
 
     return (
-        <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-5">
-            <div className="flex flex-col gap-4">
-                <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
-                        Order Queue
-                    </p>
-                    <h2 className="mt-2 font-headline text-3xl font-black tracking-[-0.03em] text-on-surface">
-                        Existing orders
-                    </h2>
-                    <p className="mt-2 text-sm text-on-surface-variant">
-                        {total} order{total === 1 ? "" : "s"} matching the
-                        current view
-                    </p>
-                </div>
-
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_220px]">
-                    <ProductSearch
-                        basePath={ROUTES.ADMIN.ORDERS}
-                        placeholder="Search by order number or customer..."
-                        ariaLabel="Search admin orders"
-                    />
-                    <FormSelect
-                        value={currentStatus ?? ""}
-                        onChange={updateStatus}
-                        options={statusOptions}
-                        ariaLabel="Filter by order status"
-                    />
-                </div>
+        <AdminToolbarShell
+            eyebrow="Order Queue"
+            title="Existing orders"
+            description={`${total} order${total === 1 ? "" : "s"} matching the current view`}
+        >
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_220px]">
+                <ProductSearch
+                    basePath={ROUTES.ADMIN.ORDERS}
+                    placeholder="Search by order number or customer..."
+                    ariaLabel="Search admin orders"
+                />
+                <FormSelect
+                    value={currentStatus ?? ""}
+                    onChange={updateStatus}
+                    options={statusOptions}
+                    ariaLabel="Filter by order status"
+                />
             </div>
-        </section>
+        </AdminToolbarShell>
     );
 }

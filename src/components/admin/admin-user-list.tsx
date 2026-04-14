@@ -3,12 +3,15 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Trash2, UserRound } from "lucide-react";
+import { Trash2, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { deleteAdminUserAction } from "@/actions/admin-user";
 import { Button } from "@/components/ui/button";
 import { shouldBypassImageOptimization } from "@/lib/image";
 import type { User } from "@/types/user";
+import { AdminEmptyState } from "./admin-empty-state";
+import { AdminMetaBadge } from "./admin-meta-badge";
+import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminUserListProps {
     users: User[];
@@ -44,9 +47,10 @@ export function AdminUserList({ users }: AdminUserListProps) {
 
     if (users.length === 0) {
         return (
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-8 text-on-surface-variant">
-                No users found for the current page.
-            </section>
+            <AdminEmptyState
+                title="No users found"
+                description="This page does not currently have any accounts in the selected admin result set."
+            />
         );
     }
 
@@ -58,9 +62,8 @@ export function AdminUserList({ users }: AdminUserListProps) {
                 const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`;
 
                 return (
-                    <article
+                    <AdminRecordShell
                         key={user.id}
-                        className="overflow-hidden rounded-[28px] border border-outline-variant/15 bg-surface-low"
                     >
                         <div className="grid gap-5 p-5 xl:grid-cols-[88px_minmax(0,1fr)_auto] xl:items-start">
                             <div className="relative flex h-22 w-22 items-center justify-center overflow-hidden rounded-[22px] bg-surface-highest text-xl font-black text-on-primary-container">
@@ -110,11 +113,14 @@ export function AdminUserList({ users }: AdminUserListProps) {
                                 </div>
 
                                 <div className="flex flex-wrap gap-2">
-                                    <Badge
+                                    <AdminMetaBadge
                                         label="Created"
                                         value={new Date(user.createdAt).toLocaleDateString()}
                                     />
-                                    <Badge label="User ID" value={user.id.slice(0, 8)} />
+                                    <AdminMetaBadge
+                                        label="User ID"
+                                        value={user.id.slice(0, 8)}
+                                    />
                                 </div>
                             </div>
 
@@ -130,18 +136,9 @@ export function AdminUserList({ users }: AdminUserListProps) {
                                 </Button>
                             </div>
                         </div>
-                    </article>
+                    </AdminRecordShell>
                 );
             })}
         </section>
-    );
-}
-
-function Badge({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="rounded-full border border-outline-variant/15 bg-surface-high px-3 py-1.5 text-xs">
-            <span className="font-bold text-on-surface">{value}</span>
-            <span className="ml-2 text-on-surface-variant">{label}</span>
-        </div>
     );
 }

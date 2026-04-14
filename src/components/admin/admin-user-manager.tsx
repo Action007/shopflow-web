@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "@/types/user";
+import { AdminSectionShell } from "./admin-section-shell";
 import { AdminWorkspaceHeader } from "./admin-workspace-header";
 import { AdminUserList } from "./admin-user-list";
 
@@ -29,18 +30,11 @@ export function AdminUserManager({
                 ]}
             />
 
-            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
-                    Account Inventory
-                </p>
-                <h2 className="mt-2 font-headline text-3xl font-black tracking-[-0.03em] text-on-surface">
-                    Existing users
-                </h2>
-                <p className="mt-2 text-sm text-on-surface-variant">
-                    {totalUsers} account{totalUsers === 1 ? "" : "s"} available
-                    in the current admin view.
-                </p>
-            </section>
+            <AdminSectionShell
+                eyebrow="Account Inventory"
+                title="Existing users"
+                description={`${totalUsers} account${totalUsers === 1 ? "" : "s"} available in the current admin view.`}
+            />
 
             <AdminUserList users={users} />
         </div>
