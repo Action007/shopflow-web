@@ -12,7 +12,6 @@ export const updateProfileSchema = v.object({
         v.trim(),
         v.minLength(1, ERRORS.VALIDATION.LAST_NAME.REQUIRED),
     ),
-    email: v.pipe(v.string(), v.trim(), v.email(ERRORS.VALIDATION.EMAIL.INVALID)),
     imageUploadId: v.optional(v.string()),
 });
 

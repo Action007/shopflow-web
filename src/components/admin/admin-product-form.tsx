@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
-import { ChevronDown, Pencil, Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { toast } from "sonner";
 import {
     createAdminProductAction,
@@ -24,6 +24,7 @@ import {
     ImageUploadField,
     type ImageUploadValue,
 } from "@/components/shared/image-upload-field";
+import { ExpandableFormShell } from "@/components/shared/expandable-form-shell";
 import { Button } from "@/components/ui/button";
 
 interface AdminProductFormProps {
@@ -81,7 +82,6 @@ export function AdminProductForm({
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [serverError, setServerError] = useState<string | null>(null);
-    const [isExpanded, setIsExpanded] = useState(mode !== "create");
     const [uploadValue, setUploadValue] = useState<ImageUploadValue>({
         uploadId: null,
         previewUrl: null,
@@ -186,56 +186,22 @@ export function AdminProductForm({
     });
 
     return (
-        <form
-            onSubmit={onSubmit}
-            className="space-y-5 rounded-[28px] border border-outline-variant/15 bg-surface-low p-6"
-        >
-            {mode === "create" ? (
-                <button
-                    type="button"
-                    onClick={() => setIsExpanded((current) => !current)}
-                    className="flex w-full items-start justify-between gap-4 text-left"
-                >
-                    <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
-                            New Product
-                        </p>
-                        <h2 className="mt-2 font-headline text-2xl font-black tracking-[-0.03em] text-on-surface">
-                            Create a new catalog item
-                        </h2>
-                        <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
-                            Add a product with image, category, pricing, and
-                            stock in one compact flow.
-                        </p>
-                    </div>
-
-                    <span className="mt-1 inline-flex rounded-full bg-surface-high p-2 text-on-surface-variant">
-                        <ChevronDown
-                            className={`h-5 w-5 transition-transform duration-300 ${
-                                isExpanded ? "rotate-180" : ""
-                            }`}
-                        />
-                    </span>
-                </button>
-            ) : (
-                <div className="flex items-start justify-between gap-4">
-                    <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
-                            Edit Product
-                        </p>
-                        <h2 className="mt-2 font-headline text-2xl font-black tracking-[-0.03em] text-on-surface">
-                            {initialProduct?.name}
-                        </h2>
-                        <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
-                            Update product details without leaving the current
-                            inventory view.
-                        </p>
-                    </div>
-                </div>
-            )}
-
-            {isExpanded ? (
-                <>
+        <form onSubmit={onSubmit}>
+            <ExpandableFormShell
+                eyebrow={mode === "create" ? "New Product" : "Edit Product"}
+                title={
+                    mode === "create"
+                        ? "Create a new catalog item"
+                        : (initialProduct?.name ?? "Edit product")
+                }
+                description={
+                    mode === "create"
+                        ? "Add a product with image, category, pricing, and stock in one compact flow."
+                        : "Update product details without leaving the current inventory view."
+                }
+                defaultExpanded={mode !== "create"}
+                collapsible={mode === "create"}
+            >
                     <ImageUploadField
                         label="Product Image"
                         helpText="Upload first, then submit with the returned image upload id."
@@ -329,8 +295,7 @@ export function AdminProductForm({
                             </Button>
                         ) : null}
                     </div>
-                </>
-            ) : null}
+            </ExpandableFormShell>
         </form>
     );
 }

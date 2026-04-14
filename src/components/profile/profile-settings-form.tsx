@@ -1,17 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
-import { Camera, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { updateProfileAction } from "@/actions/user";
 import {
     ImageUploadField,
     type ImageUploadValue,
 } from "@/components/shared/image-upload-field";
+import { ExpandableFormShell } from "@/components/shared/expandable-form-shell";
 import { Button } from "@/components/ui/button";
 import { ERRORS } from "@/lib/constants/errors";
 import {
@@ -39,7 +39,6 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
         defaultValues: {
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email,
             imageUploadId: "",
         },
     });
@@ -51,9 +50,6 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
         formState: { errors },
     } = form;
 
-    const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`;
-    const displayAvatar = uploadValue.previewUrl ?? uploadValue.existingUrl ?? null;
-
     const onSubmit = handleSubmit((values) => {
         setServerError(null);
 
@@ -62,7 +58,6 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
                 ...values,
                 firstName: values.firstName.trim(),
                 lastName: values.lastName.trim(),
-                email: values.email.trim(),
                 imageUploadId: uploadValue.uploadId ?? undefined,
             });
 
@@ -93,60 +88,62 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
     });
 
     return (
-        <form
-            onSubmit={onSubmit}
-            className="space-y-5 rounded-[28px] bg-surface-low p-6 shadow-[0_0_60px_rgba(229,225,228,0.04)]"
-        >
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/80">
-                        Profile Settings
-                    </p>
-                    <h2 className="mt-2 font-headline text-2xl font-black tracking-[-0.03em] text-on-surface">
-                        Update your account details
-                    </h2>
+        <form onSubmit={onSubmit}>
+            <ExpandableFormShell
+                eyebrow="Profile Settings"
+                title="Update your account details"
+                description="Edit your name and profile image without opening the full form by default."
+                defaultExpanded={false}
+            >
+                <ImageUploadField
+                    label="Profile Image"
+                    helpText={ERRORS.PROFILE.IMAGE_HELP}
+                    value={uploadValue}
+                    disabled={isPending}
+                    onChange={(nextValue) => {
+                        setUploadValue(nextValue);
+                        setValue("imageUploadId", nextValue.uploadId ?? "", {
+                            shouldValidate: true,
+                        });
+                    }}
+                />
+
+                <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="First Name" error={errors.firstName?.message}>
+                        <input
+                            className="h-12 w-full rounded-lg border-b-2 border-transparent bg-surface-highest px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 ease-fluid placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
+                            {...register("firstName")}
+                        />
+                    </Field>
+
+                    <Field label="Last Name" error={errors.lastName?.message}>
+                        <input
+                            className="h-12 w-full rounded-lg border-b-2 border-transparent bg-surface-highest px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 ease-fluid placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
+                            {...register("lastName")}
+                        />
+                    </Field>
                 </div>
-            </div>
 
-            <ImageUploadField
-                label="Profile Image"
-                helpText={ERRORS.PROFILE.IMAGE_HELP}
-                value={uploadValue}
-                disabled={isPending}
-                onChange={(nextValue) => {
-                    setUploadValue(nextValue);
-                    setValue("imageUploadId", nextValue.uploadId ?? "", {
-                        shouldValidate: true,
-                    });
-                }}
-            />
-
-            <div className="grid gap-4 md:grid-cols-2">
-                <Field label="First Name" error={errors.firstName?.message}>
-                    <input
-                        className="h-12 w-full rounded-lg border-b-2 border-transparent bg-surface-highest px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 ease-fluid placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
-                        {...register("firstName")}
-                    />
+                <Field label="Email">
+                    <div className="flex min-h-12 items-center rounded-lg border border-outline-variant/15 bg-surface-highest px-4 text-sm text-on-surface-variant">
+                        {user.email}
+                    </div>
+                    <p className="text-[10px] font-medium text-on-surface-variant">
+                        Email changes are not available from this form.
+                    </p>
                 </Field>
 
-                <Field label="Last Name" error={errors.lastName?.message}>
-                    <input
-                        className="h-12 w-full rounded-lg border-b-2 border-transparent bg-surface-highest px-4 py-3 text-sm text-on-surface outline-none transition-all duration-300 ease-fluid placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
-                        {...register("lastName")}
-                    />
-                </Field>
-            </div>
+                {serverError ? (
+                    <p className="text-sm text-destructive">{serverError}</p>
+                ) : null}
 
-            {serverError ? (
-                <p className="text-sm text-destructive">{serverError}</p>
-            ) : null}
-
-            <div className="flex flex-wrap gap-3">
-                <Button type="submit" disabled={isPending}>
-                    <Save />
-                    {isPending ? "Saving..." : "Save Changes"}
-                </Button>
-            </div>
+                <div className="flex flex-wrap gap-3">
+                    <Button type="submit" disabled={isPending}>
+                        <Save />
+                        {isPending ? "Saving..." : "Save Changes"}
+                    </Button>
+                </div>
+            </ExpandableFormShell>
         </form>
     );
 }

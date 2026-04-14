@@ -17,6 +17,5 @@ export interface AuthResponse {
 export interface UpdateProfileInput {
     firstName?: string;
     lastName?: string;
-    email?: string;
     imageUploadId?: string;
 }
