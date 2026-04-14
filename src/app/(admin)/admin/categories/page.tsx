@@ -1,11 +1,17 @@
-import { AdminPlaceholder } from "@/components/admin/admin-placeholder";
+import type { Metadata } from "next";
+import { apiGet } from "@/lib/api";
+import { API_ROUTES } from "@/lib/constants/routes";
+import type { Category } from "@/types/product";
+import { AdminCategoryManager } from "@/components/admin/admin-category-manager";
 
-export default function AdminCategoriesPage() {
-    return (
-        <AdminPlaceholder
-            eyebrow="Categories"
-            title="Category management has its own workspace."
-            description="This page will host the taxonomy tools for creating, editing, and organizing categories without mixing those controls into the public storefront."
-        />
-    );
+export const metadata: Metadata = {
+    title: "Admin Categories",
+};
+
+export default async function AdminCategoriesPage() {
+    const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES, {
+        revalidate: 300,
+    });
+
+    return <AdminCategoryManager categories={categories} />;
 }

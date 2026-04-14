@@ -37,6 +37,18 @@ export interface Category {
     children?: Category[];
 }
 
+export interface CreateCategoryInput {
+    name: string;
+    description?: string;
+    parentId?: string | null;
+}
+
+export interface UpdateCategoryInput {
+    name: string;
+    description?: string;
+    parentId?: string | null;
+}
+
 export interface PaginatedResult<T> {
     items: T[];
     meta: {
