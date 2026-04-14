@@ -6,7 +6,6 @@ import { ImagePlus, LoaderCircle, Trash2, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteUploadAction, uploadImageAction } from "@/actions/upload";
-import type { UploadResource } from "@/types/upload";
 
 const ALLOWED_IMAGE_TYPES = new Set([
     "image/jpeg",
@@ -143,7 +142,9 @@ export function ImageUploadField({
             </div>
 
             <div className="overflow-hidden rounded-[24px] border border-outline-variant/15 bg-surface-low">
-                <div className="relative aspect-[4/3] w-full bg-surface-highest">
+                <div
+                    className="relative aspect-[4/3] w-full bg-surface-highest"
+                >
                     {displayUrl ? (
                         <Image
                             src={displayUrl}
@@ -153,7 +154,7 @@ export function ImageUploadField({
                             className="object-cover"
                         />
                     ) : (
-                        <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-on-surface-variant">
+                        <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center text-on-surface-variant">
                             <ImagePlus className="h-8 w-8 text-primary" />
                             <div>
                                 <p className="font-bold text-on-surface">
@@ -165,63 +166,63 @@ export function ImageUploadField({
                             </div>
                         </div>
                     )}
-                </div>
 
-                <div className="flex flex-wrap gap-3 p-4">
-                    <input
-                        ref={inputRef}
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        className="hidden"
-                        disabled={disabled || isUploading || isDeleting}
-                        onChange={(event) => {
-                            const file = event.target.files?.[0];
+                    <div className="flex flex-wrap items-center gap-3 p-4">
+                        <input
+                            ref={inputRef}
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            className="hidden"
+                            disabled={disabled || isUploading || isDeleting}
+                            onChange={(event) => {
+                                const file = event.target.files?.[0];
 
-                            if (file) {
-                                void handleUpload(file);
-                            }
-                        }}
-                    />
+                                if (file) {
+                                    void handleUpload(file);
+                                }
+                            }}
+                        />
 
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        disabled={disabled || isUploading || isDeleting}
-                        onClick={() => inputRef.current?.click()}
-                    >
-                        {isUploading ? (
-                            <>
-                                <LoaderCircle className="animate-spin" />
-                                Uploading...
-                            </>
-                        ) : (
-                            <>
-                                <UploadCloud />
-                                {displayUrl ? "Replace Image" : "Upload Image"}
-                            </>
-                        )}
-                    </Button>
-
-                    {value.uploadId ? (
                         <Button
                             type="button"
-                            variant="outline"
+                            variant="secondary"
                             disabled={disabled || isUploading || isDeleting}
-                            onClick={() => void handleRemovePendingUpload()}
+                            onClick={() => inputRef.current?.click()}
                         >
-                            {isDeleting ? (
+                            {isUploading ? (
                                 <>
                                     <LoaderCircle className="animate-spin" />
-                                    Removing...
+                                    Uploading...
                                 </>
                             ) : (
                                 <>
-                                    <Trash2 />
-                                    Remove Pending Upload
+                                    <UploadCloud />
+                                    {displayUrl ? "Replace Image" : "Upload Image"}
                                 </>
                             )}
                         </Button>
-                    ) : null}
+
+                        {value.uploadId ? (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                disabled={disabled || isUploading || isDeleting}
+                                onClick={() => void handleRemovePendingUpload()}
+                            >
+                                {isDeleting ? (
+                                    <>
+                                        <LoaderCircle className="animate-spin" />
+                                        Removing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Trash2 />
+                                        Remove Pending Upload
+                                    </>
+                                )}
+                            </Button>
+                        ) : null}
+                    </div>
                 </div>
             </div>
         </div>
