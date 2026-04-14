@@ -10,9 +10,17 @@ import { cn } from "@/lib/utils";
 
 interface ProductSearchProps {
     className?: string;
+    basePath?: string;
+    placeholder?: string;
+    ariaLabel?: string;
 }
 
-export function ProductSearch({ className }: ProductSearchProps) {
+export function ProductSearch({
+    className,
+    basePath = ROUTES.PRODUCTS,
+    placeholder = "Search products...",
+    ariaLabel = "Search products",
+}: ProductSearchProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [searchValue, setSearchValue] = useState(searchParams.get("search") ?? "");
@@ -30,26 +38,26 @@ export function ProductSearch({ className }: ProductSearchProps) {
         params.delete("page");
         router.push(
             params.toString()
-                ? `${ROUTES.PRODUCTS}?${params.toString()}`
-                : ROUTES.PRODUCTS,
+                ? `${basePath}?${params.toString()}`
+                : basePath,
         );
     };
 
     return (
         <form className={cn("relative", className)} onSubmit={submitSearch}>
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
+            <Search className="absolute left-4 top-6 h-4 w-4 -translate-y-1/2 text-outline md:top-1/2" />
             <Input
-                placeholder="Search products..."
+                placeholder={placeholder}
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                className="h-12 rounded-lg border border-outline-variant/20 bg-surface-high pl-11 pr-28"
-                aria-label="Search products"
+                className="h-12 rounded-lg border border-outline-variant/20 bg-surface-high pl-11 pr-4 md:pr-28"
+                aria-label={ariaLabel}
             />
-            <div className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
+            <div className="flex items-center justify-end gap-1 absolute right-1.5 top-1/2 -translate-y-1/2">
                 <Button
                     type="submit"
                     variant="secondary"
-                    className="h-9 rounded-lg px-3 py-2 text-[10px] font-bold uppercase tracking-widest"
+                    className="h-9 w-full rounded-lg px-3 py-2 text-[10px] font-bold uppercase tracking-widest sm:w-auto"
                 >
                     Search
                 </Button>

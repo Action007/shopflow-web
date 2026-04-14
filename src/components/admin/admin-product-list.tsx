@@ -28,17 +28,6 @@ export function AdminProductList({
 }: AdminProductListProps) {
     return (
         <section className="space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
-                        Catalog Inventory
-                    </p>
-                    <h2 className="mt-2 font-headline text-3xl font-black tracking-[-0.03em] text-on-surface">
-                        Existing products
-                    </h2>
-                </div>
-            </div>
-
             {products.length === 0 ? (
                 <div className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-8 text-on-surface-variant">
                     No products yet.
@@ -74,7 +63,7 @@ export function AdminProductList({
                                     </div>
 
                                     <div className="space-y-3">
-                                        <div className="flex flex-wrap items-start justify-between gap-3">
+                                        <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
                                             <div className="space-y-2">
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <h3 className="font-headline text-2xl font-bold tracking-[-0.02em] text-on-surface">
@@ -92,7 +81,7 @@ export function AdminProductList({
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-wrap gap-2 xl:hidden">
+                                            <div className="flex gap-2 xl:hidden">
                                                 <Button
                                                     type="button"
                                                     variant="secondary"

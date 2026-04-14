@@ -106,31 +106,6 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
                         Update your account details
                     </h2>
                 </div>
-
-                <div className="flex items-center gap-4 rounded-full border border-outline-variant/15 bg-surface-high px-4 py-3">
-                    <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-sm font-black text-primary">
-                        {displayAvatar ? (
-                            <Image
-                                src={displayAvatar}
-                                alt={`${user.firstName} ${user.lastName}`}
-                                fill
-                                sizes="56px"
-                                className="object-cover"
-                            />
-                        ) : (
-                            initials
-                        )}
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-                            Profile Image
-                        </p>
-                        <p className="mt-1 text-sm text-on-surface">
-                            Add or replace your avatar.
-                        </p>
-                    </div>
-                    <Camera className="hidden h-4 w-4 text-primary sm:block" />
-                </div>
             </div>
 
             <ImageUploadField

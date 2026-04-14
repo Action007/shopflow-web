@@ -13,9 +13,13 @@ interface PaginationProps {
         hasNext: boolean;
         hasPrevious: boolean;
     };
+    basePath?: string;
 }
 
-export function Pagination({ meta }: PaginationProps) {
+export function Pagination({
+    meta,
+    basePath = ROUTES.PRODUCTS,
+}: PaginationProps) {
     const searchParams = useSearchParams();
 
     if (meta.totalPages <= 1) return null;
@@ -23,7 +27,7 @@ export function Pagination({ meta }: PaginationProps) {
     const createPageUrl = (page: number) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set("page", String(page));
-        return `${ROUTES.PRODUCTS}?${params.toString()}`;
+        return `${basePath}?${params.toString()}`;
     };
 
     const getPages = (): (number | "...")[] => {

@@ -1,21 +1,65 @@
+import type { Metadata } from "next";
 import { apiGet } from "@/lib/api";
-import { API_ROUTES } from "@/lib/constants/routes";
+import { buildQueryString } from "@/lib/utils";
+import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { AdminProductManager } from "@/components/admin/admin-product-manager";
+import { Pagination } from "@/components/shared/pagination";
 import type { Category, PaginatedResult, Product } from "@/types/product";
+import type { ProductSearchParams } from "@/types/product";
 
-export default async function AdminProductsPage() {
+export const metadata: Metadata = {
+    title: "Admin Products",
+};
+
+interface AdminProductsPageProps {
+    searchParams: Promise<ProductSearchParams>;
+}
+
+export default async function AdminProductsPage({
+    searchParams,
+}: AdminProductsPageProps) {
+    const params = await searchParams;
+    const effectiveParams = {
+        ...params,
+        limit: params.limit ?? "12",
+        sortBy: params.sortBy ?? "createdAt",
+        sortOrder: params.sortOrder ?? "desc",
+    };
+    const queryString = buildQueryString(effectiveParams);
     const [products, categories] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
-            `${API_ROUTES.PRODUCTS.LIST}?limit=100&sortBy=createdAt&sortOrder=desc`,
+            `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
             { revalidate: 300, tags: ["products"] },
         ),
         apiGet<Category[]>(API_ROUTES.CATEGORIES, { revalidate: 300 }),
     ]);
 
+    const sortValue =
+        effectiveParams.sortBy === "price" && effectiveParams.sortOrder === "asc"
+            ? "price-asc"
+            : effectiveParams.sortBy === "price" &&
+                effectiveParams.sortOrder === "desc"
+              ? "price-desc"
+              : effectiveParams.sortBy === "name"
+                ? "name-asc"
+                : effectiveParams.sortBy === "createdAt"
+                  ? "newest"
+                  : "featured";
+
     return (
-        <AdminProductManager
-            products={products.items}
-            categories={categories}
-        />
+        <div className="space-y-6">
+            <AdminProductManager
+                products={products.items}
+                categories={categories}
+                totalProducts={products.meta.total}
+                sortValue={sortValue}
+                currentCategory={effectiveParams.categoryId}
+            />
+
+            <Pagination
+                meta={products.meta}
+                basePath={ROUTES.ADMIN.PRODUCTS}
+            />
+        </div>
     );
 }

@@ -24,6 +24,8 @@ interface ProductFiltersProps {
     currentOrder?: string;
     minPrice?: string;
     maxPrice?: string;
+    basePath?: string;
+    desktopLayout?: "sidebar" | "inline";
 }
 
 export function ProductFilters({
@@ -33,6 +35,8 @@ export function ProductFilters({
     currentOrder,
     minPrice,
     maxPrice,
+    basePath = ROUTES.PRODUCTS,
+    desktopLayout = "sidebar",
 }: ProductFiltersProps) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -47,13 +51,13 @@ export function ProductFilters({
         setOpen(false);
         router.push(
             params.toString()
-                ? `${ROUTES.PRODUCTS}?${params.toString()}`
-                : ROUTES.PRODUCTS,
+                ? `${basePath}?${params.toString()}`
+                : basePath,
         );
     };
 
     const clearAllFilters = () => {
-        router.push(ROUTES.PRODUCTS);
+        router.push(basePath);
         setOpen(false);
     };
 
@@ -113,6 +117,7 @@ export function ProductFilters({
                     key={`${minPrice ?? ""}-${maxPrice ?? ""}`}
                     initialMinPrice={minPrice}
                     initialMaxPrice={maxPrice}
+                    basePath={basePath}
                     onApply={() => setOpen(false)}
                 />
             </section>
@@ -124,6 +129,7 @@ export function ProductFilters({
                 <ProductSortSelect
                     value={sortValue}
                     className="w-full"
+                    basePath={basePath}
                     onChangeComplete={() => setOpen(false)}
                 />
             </section>
@@ -141,9 +147,15 @@ export function ProductFilters({
 
     return (
         <>
-            <aside className="hidden lg:block lg:w-60 lg:shrink-0 lg:self-start lg:rounded-xl lg:bg-surface-low lg:p-6 lg:sticky lg:top-24">
-                {filterPanel}
-            </aside>
+            {desktopLayout === "sidebar" ? (
+                <aside className="hidden lg:block lg:w-60 lg:shrink-0 lg:self-start lg:rounded-xl lg:bg-surface-low lg:p-6 lg:sticky lg:top-24">
+                    {filterPanel}
+                </aside>
+            ) : (
+                <section className="hidden rounded-[28px] border border-outline-variant/15 bg-surface-low p-5 lg:block">
+                    {filterPanel}
+                </section>
+            )}
 
             <div className="fixed bottom-16 left-1/2 z-40 -translate-x-1/2 lg:hidden">
                 <Sheet open={open} onOpenChange={setOpen}>

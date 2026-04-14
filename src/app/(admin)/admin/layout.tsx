@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { CircleUserRound, Store } from "lucide-react";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { Button } from "@/components/ui/button";
 import { AdminSidebarNav } from "@/components/admin/admin-sidebar-nav";
 import { requireAdminUser } from "@/lib/route-guards";
 import { ROUTES } from "@/lib/constants/routes";
@@ -52,7 +54,7 @@ export default async function AdminLayout({
     return (
         <div className="min-h-screen bg-background">
             <header className="border-b border-outline-variant/10 bg-surface-low/80 backdrop-blur-xl">
-                <div className="site-container flex flex-col gap-4 py-5 flex-wrap flex-row items-center justify-between">
+                <div className="site-container flex flex-row flex-wrap items-center justify-between gap-4 py-5">
                     <div>
                         <Link
                             href={ROUTES.ADMIN.ROOT}
@@ -65,20 +67,35 @@ export default async function AdminLayout({
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3">
-                        <Link
-                            href={ROUTES.PROFILE}
-                            className="text-sm font-bold text-primary"
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <Button
+                            asChild
+                            variant="secondary"
+                            className="h-10 rounded-full px-4 text-on-surface"
                         >
-                            Profile
-                        </Link>
-                        <Link
-                            href={ROUTES.PRODUCTS}
-                            className="text-sm font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
+                            <Link href={ROUTES.PROFILE}>
+                                <CircleUserRound className="h-4 w-4" />
+                                <span className="text-xs font-bold uppercase tracking-widest sm:hidden">
+                                    Me
+                                </span>
+                                <span className="hidden text-xs font-bold uppercase tracking-widest sm:inline">
+                                    Profile
+                                </span>
+                            </Link>
+                        </Button>
+                        <Button
+                            asChild
+                            variant="outline"
+                            className="h-10 rounded-full px-4"
                         >
-                            Storefront
-                        </Link>
-                        <LogoutButton />
+                            <Link href={ROUTES.PRODUCTS}>
+                                <Store className="h-4 w-4" />
+                                <span className="text-xs font-bold uppercase tracking-widest">
+                                    Store
+                                </span>
+                            </Link>
+                        </Button>
+                        <LogoutButton compactLabel="Exit" />
                     </div>
                 </div>
             </header>

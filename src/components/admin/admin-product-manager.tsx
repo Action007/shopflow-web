@@ -7,15 +7,22 @@ import { deleteAdminProductAction } from "@/actions/admin-product";
 import type { Category, Product } from "@/types/product";
 import { AdminProductForm } from "./admin-product-form";
 import { AdminProductList } from "./admin-product-list";
+import { AdminProductsToolbar } from "./admin-products-toolbar";
 
 interface AdminProductManagerProps {
     products: Product[];
     categories: Category[];
+    totalProducts: number;
+    sortValue: string;
+    currentCategory?: string;
 }
 
 export function AdminProductManager({
     products,
     categories,
+    totalProducts,
+    sortValue,
+    currentCategory,
 }: AdminProductManagerProps) {
     const router = useRouter();
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -26,10 +33,7 @@ export function AdminProductManager({
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
-    const totalProducts = sortedProducts.length;
-    const outOfStockCount = sortedProducts.filter(
-        (product) => product.stockQuantity === 0,
-    ).length;
+    const visibleProducts = sortedProducts.length;
 
     const handleDelete = async (product: Product) => {
         const confirmed = window.confirm(
@@ -72,16 +76,19 @@ export function AdminProductManager({
                         </h1>
                         <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
                             The create panel stays compact while the inventory
-                            list remains easy to scan for price, category, stock,
-                            and quick actions.
+                            list remains easy to scan for price, category,
+                            stock, and quick actions.
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                        <StatCard label="Products" value={String(totalProducts)} />
                         <StatCard
-                            label="Out of Stock"
-                            value={String(outOfStockCount)}
+                            label="Products"
+                            value={String(totalProducts)}
+                        />
+                        <StatCard
+                            label="Visible"
+                            value={String(visibleProducts)}
                         />
                     </div>
                 </div>
@@ -89,30 +96,31 @@ export function AdminProductManager({
 
             <AdminProductForm mode="create" categories={categories} />
 
-                <AdminProductList
-                    products={sortedProducts}
-                    categories={categories}
-                    editingId={editingId}
-                    deletingId={deletingId}
-                    onEditToggle={(productId) =>
-                        setEditingId((current) =>
-                            current === productId ? null : productId,
-                        )
-                    }
-                    onDelete={handleDelete}
-                    onEditComplete={() => setEditingId(null)}
-                />
+            <AdminProductsToolbar
+                total={totalProducts}
+                sortValue={sortValue}
+                categories={categories}
+                currentCategory={currentCategory}
+            />
+
+            <AdminProductList
+                products={sortedProducts}
+                categories={categories}
+                editingId={editingId}
+                deletingId={deletingId}
+                onEditToggle={(productId) =>
+                    setEditingId((current) =>
+                        current === productId ? null : productId,
+                    )
+                }
+                onDelete={handleDelete}
+                onEditComplete={() => setEditingId(null)}
+            />
         </div>
     );
 }
 
-function StatCard({
-    label,
-    value,
-}: {
-    label: string;
-    value: string;
-}) {
+function StatCard({ label, value }: { label: string; value: string }) {
     return (
         <div className="rounded-[24px] border border-outline-variant/10 bg-surface-high px-4 py-4">
             <p className=" text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">

@@ -1,14 +1,14 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
+import { FormSelect } from "@/components/shared/form-select";
 
 interface ProductSortSelectProps {
     value: string;
     className?: string;
     onChangeComplete?: () => void;
+    basePath?: string;
 }
 
 const options = [
@@ -23,6 +23,7 @@ export function ProductSortSelect({
     value,
     className,
     onChangeComplete,
+    basePath = ROUTES.PRODUCTS,
 }: ProductSortSelectProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -48,25 +49,17 @@ export function ProductSortSelect({
         }
 
         params.delete("page");
-        router.push(`${ROUTES.PRODUCTS}?${params.toString()}`);
+        router.push(`${basePath}?${params.toString()}`);
         onChangeComplete?.();
     };
 
     return (
-        <div className={cn("relative", className)}>
-            <select
-                value={value}
-                onChange={(event) => updateSort(event.target.value)}
-                className="h-12 w-full appearance-none rounded-lg border border-outline-variant/20 bg-surface-low px-4 pr-10 text-sm text-on-surface outline-none transition-all duration-300 ease-fluid focus:border-primary focus:ring-2 focus:ring-primary/25"
-                aria-label="Sort products"
-            >
-                {options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-outline" />
-        </div>
+        <FormSelect
+            value={value}
+            options={options}
+            onChange={updateSort}
+            className={className}
+            ariaLabel="Sort products"
+        />
     );
 }

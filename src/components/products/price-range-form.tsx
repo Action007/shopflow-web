@@ -10,12 +10,14 @@ interface PriceRangeFormProps {
     initialMinPrice?: string;
     initialMaxPrice?: string;
     onApply?: () => void;
+    basePath?: string;
 }
 
 export function PriceRangeForm({
     initialMinPrice,
     initialMaxPrice,
     onApply,
+    basePath = ROUTES.PRODUCTS,
 }: PriceRangeFormProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -40,8 +42,8 @@ export function PriceRangeForm({
         params.delete("page");
         router.push(
             params.toString()
-                ? `${ROUTES.PRODUCTS}?${params.toString()}`
-                : ROUTES.PRODUCTS,
+                ? `${basePath}?${params.toString()}`
+                : basePath,
         );
     };
 

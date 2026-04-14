@@ -3,18 +3,31 @@
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/actions/auth";
+import { cn } from "@/lib/utils";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+    compactLabel?: string;
+    className?: string;
+}
+
+export function LogoutButton({
+    compactLabel = "Logout",
+    className,
+}: LogoutButtonProps) {
     return (
         <form action={logoutAction}>
             <Button
-                variant="ghost"
-                size="icon"
+                variant="secondary"
                 type="submit"
-                className="text-neutral-400 hover:text-blue-400"
+                className={cn(
+                    "h-10 rounded-full px-4 text-on-surface",
+                    className,
+                )}
             >
                 <LogOut className="h-5 w-5" />
-                <span className="sr-only">Logout</span>
+                <span className="text-xs font-bold uppercase tracking-widest">
+                    {compactLabel}
+                </span>
             </Button>
         </form>
     );
