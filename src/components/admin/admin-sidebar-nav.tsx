@@ -47,7 +47,7 @@ export function AdminSidebarNav({ links }: AdminSidebarNavProps) {
                 Workspace
             </p>
 
-            <div className="flex gap-3 overflow-x-auto pb-1 lg:block lg:space-y-3 lg:overflow-visible">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:block lg:space-y-3">
                 {links.map((link) => {
                     const Icon = iconMap[link.icon];
                     const isActive = isActivePath(pathname, link.href);
@@ -58,13 +58,13 @@ export function AdminSidebarNav({ links }: AdminSidebarNavProps) {
                             href={link.href}
                             aria-current={isActive ? "page" : undefined}
                             className={cn(
-                                "group block min-w-[220px] rounded-[22px] border px-4 py-4 transition-all duration-300 ease-fluid lg:min-w-0",
+                                "group block rounded-[22px] border px-4 py-4 border border-outline-variant/15 transition-all duration-300 ease-fluid",
                                 isActive
                                     ? "border-primary/20 bg-primary/10 shadow-[0_10px_30px_rgba(77,142,255,0.12)]"
-                                    : "border-transparent hover:border-outline-variant/10 hover:bg-surface-high",
+                                    : "hover:border-outline-variant/10 hover:bg-surface-high",
                             )}
                         >
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 lg:items-start">
                                 <div
                                     className={cn(
                                         "rounded-full p-2 transition-colors duration-300 ease-fluid",
@@ -79,7 +79,7 @@ export function AdminSidebarNav({ links }: AdminSidebarNavProps) {
                                 <div className="min-w-0">
                                     <p
                                         className={cn(
-                                            "font-bold",
+                                            "font-bold text-sm sm:text-base",
                                             isActive
                                                 ? "text-on-surface"
                                                 : "text-on-surface",
@@ -89,7 +89,7 @@ export function AdminSidebarNav({ links }: AdminSidebarNavProps) {
                                     </p>
                                     <p
                                         className={cn(
-                                            "text-sm leading-snug",
+                                            "hidden text-sm leading-snug lg:block",
                                             isActive
                                                 ? "text-on-surface/80"
                                                 : "text-on-surface-variant",

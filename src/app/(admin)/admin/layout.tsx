@@ -52,7 +52,7 @@ export default async function AdminLayout({
     return (
         <div className="min-h-screen bg-background">
             <header className="border-b border-outline-variant/10 bg-surface-low/80 backdrop-blur-xl">
-                <div className="site-container flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:justify-between">
+                <div className="site-container flex flex-col gap-4 py-5 flex-wrap flex-row items-center justify-between">
                     <div>
                         <Link
                             href={ROUTES.ADMIN.ROOT}

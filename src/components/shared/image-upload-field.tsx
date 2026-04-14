@@ -7,11 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteUploadAction, uploadImageAction } from "@/actions/upload";
 
-const ALLOWED_IMAGE_TYPES = new Set([
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-]);
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 export interface ImageUploadValue {
@@ -141,17 +137,17 @@ export function ImageUploadField({
                 </div>
             </div>
 
-            <div className="overflow-hidden rounded-[24px] border border-outline-variant/15 bg-surface-low">
+            <div className="flex flex-col justify-center bg-surface-highest p-4 overflow-hidden rounded-[24px] border border-outline-variant/15">
                 <div
-                    className="relative aspect-[4/3] w-full bg-surface-highest"
+                    className="relative self-center w-[180px] mb-4 border border-outline-variant/30 h-40 sm:h-36"
                 >
                     {displayUrl ? (
                         <Image
                             src={displayUrl}
                             alt={label}
                             fill
-                            sizes="(max-width: 1024px) 100vw, 420px"
-                            className="object-cover"
+                            sizes="(max-width: 640px) 100vw, 320px"
+                            className="object-contain"
                         />
                     ) : (
                         <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center text-on-surface-variant">
@@ -166,63 +162,63 @@ export function ImageUploadField({
                             </div>
                         </div>
                     )}
+                </div>
 
-                    <div className="flex flex-wrap items-center gap-3 p-4">
-                        <input
-                            ref={inputRef}
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            className="hidden"
-                            disabled={disabled || isUploading || isDeleting}
-                            onChange={(event) => {
-                                const file = event.target.files?.[0];
+                <div className="flex flex-wrap justify-center items-center gap-3 border-t border-outline-variant/10">
+                    <input
+                        ref={inputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={disabled || isUploading || isDeleting}
+                        onChange={(event) => {
+                            const file = event.target.files?.[0];
 
-                                if (file) {
-                                    void handleUpload(file);
-                                }
-                            }}
-                        />
+                            if (file) {
+                                void handleUpload(file);
+                            }
+                        }}
+                    />
 
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={disabled || isUploading || isDeleting}
+                        onClick={() => inputRef.current?.click()}
+                    >
+                        {isUploading ? (
+                            <>
+                                <LoaderCircle className="animate-spin" />
+                                Uploading...
+                            </>
+                        ) : (
+                            <>
+                                <UploadCloud />
+                                {displayUrl ? "Replace Image" : "Upload Image"}
+                            </>
+                        )}
+                    </Button>
+
+                    {value.uploadId ? (
                         <Button
                             type="button"
-                            variant="secondary"
+                            variant="outline"
                             disabled={disabled || isUploading || isDeleting}
-                            onClick={() => inputRef.current?.click()}
+                            onClick={() => void handleRemovePendingUpload()}
                         >
-                            {isUploading ? (
+                            {isDeleting ? (
                                 <>
                                     <LoaderCircle className="animate-spin" />
-                                    Uploading...
+                                    Removing...
                                 </>
                             ) : (
                                 <>
-                                    <UploadCloud />
-                                    {displayUrl ? "Replace Image" : "Upload Image"}
+                                    <Trash2 />
+                                    Remove Pending Upload
                                 </>
                             )}
                         </Button>
-
-                        {value.uploadId ? (
-                            <Button
-                                type="button"
-                                variant="outline"
-                                disabled={disabled || isUploading || isDeleting}
-                                onClick={() => void handleRemovePendingUpload()}
-                            >
-                                {isDeleting ? (
-                                    <>
-                                        <LoaderCircle className="animate-spin" />
-                                        Removing...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Trash2 />
-                                        Remove Pending Upload
-                                    </>
-                                )}
-                            </Button>
-                        ) : null}
-                    </div>
+                    ) : null}
                 </div>
             </div>
         </div>

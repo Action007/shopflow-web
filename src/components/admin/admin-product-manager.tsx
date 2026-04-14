@@ -61,7 +61,7 @@ export function AdminProductManager({
     return (
         <div className="space-y-6 xl:space-y-8">
             <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-6">
-                <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div className="flex flex-col flex-wrap justify-between gap-5 lg:flex-row lg:items-end lg:justify-between">
                     <div className="max-w-[56ch]">
                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/80">
                             Products Workspace
@@ -118,7 +118,7 @@ function StatCard({
             <p className=" text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
                 {label}
             </p>
-            <p className=" mt-2 text-2xl font-black tracking-tight text-on-surface">
+            <p className="mt-2 text-2xl font-black tracking-tight text-on-surface">
                 {value}
             </p>
         </div>
