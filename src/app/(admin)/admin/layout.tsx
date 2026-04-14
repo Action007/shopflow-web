@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Boxes, ClipboardList, Shield, Tags, Users } from "lucide-react";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { AdminSidebarNav } from "@/components/admin/admin-sidebar-nav";
 import { requireAdminUser } from "@/lib/route-guards";
 import { ROUTES } from "@/lib/constants/routes";
 
@@ -14,31 +14,31 @@ const adminLinks = [
         href: ROUTES.ADMIN.ROOT,
         label: "Overview",
         description: "Entry point for management workflows.",
-        icon: Shield,
+        icon: "overview",
     },
     {
         href: ROUTES.ADMIN.PRODUCTS,
         label: "Products",
         description: "Catalog creation and maintenance.",
-        icon: Boxes,
+        icon: "products",
     },
     {
         href: ROUTES.ADMIN.CATEGORIES,
         label: "Categories",
         description: "Organize storefront taxonomy.",
-        icon: Tags,
+        icon: "categories",
     },
     {
         href: ROUTES.ADMIN.USERS,
         label: "Users",
         description: "Review and manage customer accounts.",
-        icon: Users,
+        icon: "users",
     },
     {
         href: ROUTES.ADMIN.ORDERS,
         label: "Orders",
         description: "Track fulfillment and status updates.",
-        icon: ClipboardList,
+        icon: "orders",
     },
 ] as const;
 
@@ -83,38 +83,69 @@ export default async function AdminLayout({
                 </div>
             </header>
 
-            <div className="site-page grid gap-8 py-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-                <aside className="lg:sticky lg:top-8">
-                    <nav className="space-y-3 rounded-[28px] border border-outline-variant/15 bg-surface-low p-4">
-                        {adminLinks.map((link) => {
-                            const Icon = link.icon;
+            <div className="site-page space-y-6 py-6 sm:space-y-8 sm:py-8">
+                <section className="overflow-hidden rounded-[32px] border border-outline-variant/15 bg-surface-low">
+                    <div className="relative p-6 sm:p-8">
+                        <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
 
-                            return (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="block rounded-[20px] border border-transparent px-4 py-4 transition-colors duration-300 ease-fluid hover:border-outline-variant/10 hover:bg-surface-high"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="rounded-full bg-primary/10 p-2 text-primary">
-                                            <Icon className="h-4 w-4" />
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-on-surface">
-                                                {link.label}
-                                            </p>
-                                            <p className="text-sm text-on-surface-variant">
-                                                {link.description}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            );
-                        })}
-                    </nav>
-                </aside>
+                        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                            <div className="max-w-[56ch]">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-primary/75">
+                                    Admin Workspace
+                                </p>
+                                <h1 className="mt-3 font-headline text-3xl font-black tracking-[-0.03em] text-on-surface sm:text-4xl">
+                                    Run catalog, customer, and order operations
+                                    from one control surface.
+                                </h1>
+                                <p className="mt-4 text-sm leading-relaxed text-on-surface-variant sm:text-[15px]">
+                                    The admin area now has its own navigation and
+                                    workspace shell so each management page feels
+                                    connected instead of isolated.
+                                </p>
+                            </div>
 
-                <main>{children}</main>
+                            <div className="grid grid-cols-2 gap-3 sm:max-w-[320px] sm:grid-cols-2">
+                                <div className="rounded-[24px] border border-outline-variant/10 bg-surface-high px-4 py-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
+                                        Role
+                                    </p>
+                                    <p className="mt-2 text-lg font-black text-on-surface">
+                                        Admin
+                                    </p>
+                                </div>
+                                <div className="rounded-[24px] border border-outline-variant/10 bg-surface-high px-4 py-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
+                                        Surface
+                                    </p>
+                                    <p className="mt-2 text-lg font-black text-on-surface">
+                                        Live
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start xl:gap-8">
+                    <aside className="space-y-4 lg:sticky lg:top-8">
+                        <AdminSidebarNav links={adminLinks} />
+
+                        <section className="hidden rounded-[28px] border border-outline-variant/15 bg-surface-low p-5 lg:block">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary/75">
+                                Session
+                            </p>
+                            <h2 className="mt-2 text-xl font-black tracking-tight text-on-surface">
+                                {user.firstName} {user.lastName}
+                            </h2>
+                            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                                Use the navigation to move between products,
+                                categories, users, and order workflows.
+                            </p>
+                        </section>
+                    </aside>
+
+                    <main className="min-w-0">{children}</main>
+                </div>
             </div>
         </div>
     );
