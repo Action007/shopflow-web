@@ -1,11 +1,43 @@
-import { AdminPlaceholder } from "@/components/admin/admin-placeholder";
+import type { Metadata } from "next";
+import { apiAuthGet } from "@/lib/api-auth";
+import { buildQueryString } from "@/lib/utils";
+import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
+import { AdminUserManager } from "@/components/admin/admin-user-manager";
+import { Pagination } from "@/components/shared/pagination";
+import type { PaginatedResult } from "@/types/product";
+import type { User } from "@/types/user";
 
-export default function AdminUsersPage() {
+export const metadata: Metadata = {
+    title: "Admin Users",
+};
+
+interface AdminUsersPageProps {
+    searchParams: Promise<{
+        page?: string;
+        limit?: string;
+    }>;
+}
+
+export default async function AdminUsersPage({
+    searchParams,
+}: AdminUsersPageProps) {
+    const params = await searchParams;
+    const effectiveParams = {
+        ...params,
+        limit: params.limit ?? "10",
+    };
+    const queryString = buildQueryString(effectiveParams);
+    const users = await apiAuthGet<PaginatedResult<User>>(
+        `${API_ROUTES.USER.LIST}${queryString}`,
+    );
+
     return (
-        <AdminPlaceholder
-            eyebrow="Users"
-            title="User administration is now isolated."
-            description="This space is reserved for account oversight and user management actions so admins operate from a clear control surface instead of customer-facing screens."
-        />
+        <div className="space-y-6">
+            <AdminUserManager
+                users={users.items}
+                totalUsers={users.meta.total}
+            />
+            <Pagination meta={users.meta} basePath={ROUTES.ADMIN.USERS} />
+        </div>
     );
 }

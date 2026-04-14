@@ -31,6 +31,7 @@ export const API_ROUTES = {
     },
     CATEGORIES: "/categories",
     USER: {
+        LIST: "/users",
         ME: "/users/me",
         DETAIL: (id: string) => `/users/${id}`,
     },
