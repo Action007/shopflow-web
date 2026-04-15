@@ -70,14 +70,6 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
 
                         <Field
                             label="Password"
-                            action={
-                                <Link
-                                    href="#"
-                                    className="text-[10px] font-bold text-primary transition-colors duration-300 ease-fluid hover:text-primary-container"
-                                >
-                                    FORGOT?
-                                </Link>
-                            }
                         >
                             <Input
                                 id="password"
