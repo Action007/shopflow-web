@@ -211,7 +211,7 @@ export default async function ProfilePage() {
                                         label: "Latest Address",
                                         value:
                                             latestOrder?.shippingAddress ??
-                                            "No order-based address available yet.",
+                                            "No order-based address available yet",
                                     },
                                 ].map((row) => (
                                     <div

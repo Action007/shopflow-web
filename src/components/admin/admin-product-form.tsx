@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
@@ -89,18 +89,6 @@ export function AdminProductForm({
         previewUrl: null,
         existingUrl: initialProduct?.imageUrl ?? null,
     });
-
-    useEffect(() => {
-        const uploadId = uploadValue.uploadId;
-
-        return () => {
-            if (!uploadId || handledUploadIdsRef.current.has(uploadId)) {
-                return;
-            }
-
-            void cleanupPendingUpload(uploadId);
-        };
-    }, [uploadValue.uploadId]);
 
     const form = useForm<ProductFormValues>({
         resolver: valibotResolver(
@@ -213,6 +201,11 @@ export function AdminProductForm({
         if (uploadValue.uploadId) {
             await cleanupPendingUpload(uploadValue.uploadId);
             handledUploadIdsRef.current.add(uploadValue.uploadId);
+            setUploadValue((current) => ({
+                ...current,
+                uploadId: null,
+                previewUrl: null,
+            }));
         }
 
         onComplete?.();
@@ -240,6 +233,11 @@ export function AdminProductForm({
                         helpText="Upload first, then submit with the returned image upload id."
                         required={mode === "create"}
                         value={uploadValue}
+                        storageKey={
+                            mode === "create"
+                                ? "pending-product-upload:create"
+                                : `pending-product-upload:${initialProduct?.id ?? "edit"}`
+                        }
                         disabled={isPending}
                         onChange={(nextValue) => {
                             setUploadValue(nextValue);

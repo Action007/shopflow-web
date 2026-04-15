@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,6 @@ import {
 import { ExpandableFormShell } from "@/components/shared/expandable-form-shell";
 import { Button } from "@/components/ui/button";
 import { ERRORS } from "@/lib/constants/errors";
-import { cleanupPendingUpload } from "@/lib/upload-client";
 import {
     updateProfileSchema,
     type UpdateProfileFormValues,
@@ -35,18 +34,6 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
         previewUrl: null,
         existingUrl: user.profileImageUrl ?? null,
     });
-
-    useEffect(() => {
-        const uploadId = uploadValue.uploadId;
-
-        return () => {
-            if (!uploadId || handledUploadIdsRef.current.has(uploadId)) {
-                return;
-            }
-
-            void cleanupPendingUpload(uploadId);
-        };
-    }, [uploadValue.uploadId]);
 
     const form = useForm<UpdateProfileFormValues>({
         resolver: valibotResolver(updateProfileSchema),
@@ -122,6 +109,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
                     label="Profile Image"
                     helpText={ERRORS.PROFILE.IMAGE_HELP}
                     value={uploadValue}
+                    storageKey={`pending-profile-upload:${user.id}`}
                     disabled={isPending}
                     onChange={(nextValue) => {
                         setUploadValue(nextValue);

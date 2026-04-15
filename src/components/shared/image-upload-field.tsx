@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImagePlus, LoaderCircle, Trash2, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ interface ImageUploadFieldProps {
     label: string;
     helpText?: string;
     value: ImageUploadValue;
+    storageKey?: string;
     disabled?: boolean;
     required?: boolean;
     onChange: (value: ImageUploadValue) => void;
@@ -30,6 +31,7 @@ export function ImageUploadField({
     label,
     helpText,
     value,
+    storageKey,
     disabled,
     required,
     onChange,
@@ -37,11 +39,72 @@ export function ImageUploadField({
 }: ImageUploadFieldProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const deletingUploadIdRef = useRef<string | null>(null);
+    const restoredFromStorageRef = useRef(false);
     const [isUploading, setIsUploading] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const displayUrl = value.previewUrl ?? value.existingUrl ?? null;
     const hasPendingUpload = Boolean(value.uploadId);
+
+    useEffect(() => {
+        if (!storageKey || restoredFromStorageRef.current) {
+            return;
+        }
+
+        restoredFromStorageRef.current = true;
+
+        if (value.uploadId) {
+            return;
+        }
+
+        const savedValue = window.localStorage.getItem(storageKey);
+
+        if (!savedValue) {
+            return;
+        }
+
+        try {
+            const parsedValue = JSON.parse(savedValue) as {
+                uploadId?: string;
+                previewUrl?: string;
+            };
+
+            if (
+                typeof parsedValue.uploadId !== "string" ||
+                typeof parsedValue.previewUrl !== "string"
+            ) {
+                window.localStorage.removeItem(storageKey);
+                return;
+            }
+
+            onChange({
+                ...value,
+                uploadId: parsedValue.uploadId,
+                previewUrl: parsedValue.previewUrl,
+            });
+        } catch {
+            window.localStorage.removeItem(storageKey);
+        }
+    }, [onChange, storageKey, value]);
+
+    useEffect(() => {
+        if (!storageKey) {
+            return;
+        }
+
+        if (value.uploadId && value.previewUrl) {
+            window.localStorage.setItem(
+                storageKey,
+                JSON.stringify({
+                    uploadId: value.uploadId,
+                    previewUrl: value.previewUrl,
+                }),
+            );
+            return;
+        }
+
+        window.localStorage.removeItem(storageKey);
+    }, [storageKey, value.previewUrl, value.uploadId]);
 
     const resetFileInput = () => {
         if (inputRef.current) {
