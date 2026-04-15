@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { deleteAdminUserAction } from "@/actions/admin-user";
 import { Button } from "@/components/ui/button";
-import { shouldBypassImageOptimization } from "@/lib/image";
+import { AppImage } from "@/components/shared/app-image";
 import type { User } from "@/types/user";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminMetaBadge } from "./admin-meta-badge";
@@ -74,14 +73,11 @@ export function AdminUserList({
                         <div className="grid gap-5 p-5 xl:grid-cols-[88px_minmax(0,1fr)_auto] xl:items-start">
                             <div className="lithium-glow relative flex h-22 w-22 items-center justify-center overflow-hidden rounded-[22px] bg-surface-highest text-xl font-black text-on-primary-container">
                                 {user.profileImageUrl ? (
-                                    <Image
+                                    <AppImage
                                         src={user.profileImageUrl}
                                         alt={fullName || "User"}
                                         fill
                                         sizes="88px"
-                                        unoptimized={shouldBypassImageOptimization(
-                                            user.profileImageUrl,
-                                        )}
                                         className="object-cover"
                                     />
                                 ) : (

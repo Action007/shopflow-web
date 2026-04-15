@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
@@ -12,6 +11,7 @@ import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { toast } from "sonner";
 import { APP_CONFIG } from "@/lib/constants/app-config";
 import { ERRORS } from "@/lib/constants/errors";
+import { AppImage } from "@/components/shared/app-image";
 
 interface CartItemProps {
     item: CartItemType;
@@ -73,7 +73,7 @@ export function CartItem({ item }: CartItemProps) {
         <div className="group flex gap-4 rounded-xl bg-surface-low p-4 transition-all duration-300 ease-fluid hover:bg-surface-high">
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-highest">
                 {item.product.imageUrl ? (
-                    <Image
+                    <AppImage
                         src={item.product.imageUrl}
                         alt={item.product.name}
                         fill

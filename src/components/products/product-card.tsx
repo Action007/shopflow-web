@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { AppImage } from "@/components/shared/app-image";
 import type { Product } from "@/types/product";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
@@ -35,7 +35,7 @@ export function ProductCard({
                         )}
                     >
                         {product.imageUrl ? (
-                            <Image
+                            <AppImage
                                 src={product.imageUrl}
                                 alt={product.name}
                                 fill

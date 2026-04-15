@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppImage } from "@/components/shared/app-image";
 import { formatPrice } from "@/lib/utils";
 import type { Category, Product } from "@/types/product";
 import { AdminEmptyState } from "./admin-empty-state";
@@ -41,7 +41,7 @@ export function AdminProductList({
                     {products.map((product) => {
                         const isEditing = editingId === product.id;
                         const isDeleting = deletingId === product.id;
-                        const isLowStock = product.stockQuantity < 5;
+                        const isLowStock = product.stockQuantity < 10;
                         const isOutOfStock = product.stockQuantity === 0;
 
                         return (
@@ -51,7 +51,7 @@ export function AdminProductList({
                                 <div className="grid gap-5 p-5 xl:grid-cols-[112px_minmax(0,1fr)_auto] xl:items-start">
                                     <div className="relative h-28 w-28 overflow-hidden rounded-[22px] bg-surface-highest">
                                         {product.imageUrl ? (
-                                            <Image
+                                            <AppImage
                                                 src={product.imageUrl}
                                                 alt={product.name}
                                                 fill

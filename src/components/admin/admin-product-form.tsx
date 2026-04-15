@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,7 @@ import {
 } from "@/components/shared/image-upload-field";
 import { ExpandableFormShell } from "@/components/shared/expandable-form-shell";
 import { Button } from "@/components/ui/button";
+import { cleanupPendingUpload } from "@/lib/upload-client";
 
 interface AdminProductFormProps {
     mode: "create" | "edit";
@@ -82,11 +83,24 @@ export function AdminProductForm({
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [serverError, setServerError] = useState<string | null>(null);
+    const handledUploadIdsRef = useRef(new Set<string>());
     const [uploadValue, setUploadValue] = useState<ImageUploadValue>({
         uploadId: null,
         previewUrl: null,
         existingUrl: initialProduct?.imageUrl ?? null,
     });
+
+    useEffect(() => {
+        const uploadId = uploadValue.uploadId;
+
+        return () => {
+            if (!uploadId || handledUploadIdsRef.current.has(uploadId)) {
+                return;
+            }
+
+            void cleanupPendingUpload(uploadId);
+        };
+    }, [uploadValue.uploadId]);
 
     const form = useForm<ProductFormValues>({
         resolver: valibotResolver(
@@ -159,6 +173,10 @@ export function AdminProductForm({
                 return;
             }
 
+            if (uploadValue.uploadId) {
+                handledUploadIdsRef.current.add(uploadValue.uploadId);
+            }
+
             toast.success(
                 mode === "create" ? "Product created" : "Product updated",
             );
@@ -178,12 +196,27 @@ export function AdminProductForm({
                     existingUrl: null,
                 });
             } else {
+                setUploadValue((current) => ({
+                    uploadId: null,
+                    previewUrl: null,
+                    existingUrl:
+                        current.previewUrl ?? current.existingUrl ?? null,
+                }));
                 onComplete?.();
             }
 
             router.refresh();
         });
     });
+
+    const handleCancel = async () => {
+        if (uploadValue.uploadId) {
+            await cleanupPendingUpload(uploadValue.uploadId);
+            handledUploadIdsRef.current.add(uploadValue.uploadId);
+        }
+
+        onComplete?.();
+    };
 
     return (
         <form onSubmit={onSubmit}>
@@ -213,6 +246,9 @@ export function AdminProductForm({
                             setValue("imageUploadId", nextValue.uploadId ?? "", {
                                 shouldValidate: true,
                             });
+                        }}
+                        onPendingUploadHandled={(uploadId) => {
+                            handledUploadIdsRef.current.add(uploadId);
                         }}
                     />
 
@@ -289,7 +325,7 @@ export function AdminProductForm({
                                 type="button"
                                 variant="outline"
                                 disabled={isPending}
-                                onClick={onComplete}
+                                onClick={() => void handleCancel()}
                             >
                                 Cancel
                             </Button>

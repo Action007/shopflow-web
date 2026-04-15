@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CreditCard, Truck } from "lucide-react";
@@ -11,6 +10,7 @@ import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { CancelOrderButton } from "@/components/order/cancel-order-button";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { requireCustomerUser } from "@/lib/route-guards";
+import { AppImage } from "@/components/shared/app-image";
 
 interface OrderPageProps {
     params: Promise<{ id: string }>;
@@ -73,7 +73,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                         >
                                             <div className="relative h-16 w-16 overflow-hidden rounded-lg bg-surface-highest">
                                                 {item.product?.imageUrl ? (
-                                                    <Image
+                                                    <AppImage
                                                         src={item.product.imageUrl}
                                                         alt={
                                                             item.productNameAtPurchase

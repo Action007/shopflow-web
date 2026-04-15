@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,7 @@ import {
 import { ExpandableFormShell } from "@/components/shared/expandable-form-shell";
 import { Button } from "@/components/ui/button";
 import { ERRORS } from "@/lib/constants/errors";
+import { cleanupPendingUpload } from "@/lib/upload-client";
 import {
     updateProfileSchema,
     type UpdateProfileFormValues,
@@ -28,11 +29,24 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [serverError, setServerError] = useState<string | null>(null);
+    const handledUploadIdsRef = useRef(new Set<string>());
     const [uploadValue, setUploadValue] = useState<ImageUploadValue>({
         uploadId: null,
         previewUrl: null,
         existingUrl: user.profileImageUrl ?? null,
     });
+
+    useEffect(() => {
+        const uploadId = uploadValue.uploadId;
+
+        return () => {
+            if (!uploadId || handledUploadIdsRef.current.has(uploadId)) {
+                return;
+            }
+
+            void cleanupPendingUpload(uploadId);
+        };
+    }, [uploadValue.uploadId]);
 
     const form = useForm<UpdateProfileFormValues>({
         resolver: valibotResolver(updateProfileSchema),
@@ -82,6 +96,15 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
                 return;
             }
 
+            if (uploadValue.uploadId) {
+                handledUploadIdsRef.current.add(uploadValue.uploadId);
+            }
+
+            setUploadValue((current) => ({
+                uploadId: null,
+                previewUrl: null,
+                existingUrl: current.previewUrl ?? current.existingUrl ?? null,
+            }));
             toast.success(ERRORS.PROFILE.UPDATE_SUCCESS);
             router.refresh();
         });
@@ -105,6 +128,9 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
                         setValue("imageUploadId", nextValue.uploadId ?? "", {
                             shouldValidate: true,
                         });
+                    }}
+                    onPendingUploadHandled={(uploadId) => {
+                        handledUploadIdsRef.current.add(uploadId);
                     }}
                 />
 

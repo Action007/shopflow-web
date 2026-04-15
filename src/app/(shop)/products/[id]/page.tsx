@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { AlertCircle, Check, ChevronRight, Shield } from "lucide-react";
 import { apiGet } from "@/lib/api";
@@ -12,6 +11,7 @@ import { ROUTES } from "@/lib/constants/routes";
 import { getCurrentUser } from "@/lib/auth";
 import { isAdmin } from "@/lib/roles";
 import { getWishlistProductIds } from "@/lib/wishlist";
+import { AppImage } from "@/components/shared/app-image";
 
 interface ProductPageProps {
     params: Promise<{ id: string }>;
@@ -108,7 +108,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <div className="mb-8 lg:mb-0">
                     <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-surface-low">
                         {product.imageUrl ? (
-                            <Image
+                            <AppImage
                                 src={product.imageUrl}
                                 alt={product.name}
                                 fill

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -21,6 +20,7 @@ import type { Order } from "@/types/order";
 import { formatPrice } from "@/lib/utils";
 import { isAdmin } from "@/lib/roles";
 import { ProfileSettingsForm } from "@/components/profile/profile-settings-form";
+import { AppImage } from "@/components/shared/app-image";
 
 export const metadata: Metadata = {
     title: "Profile",
@@ -115,7 +115,7 @@ export default async function ProfilePage() {
                         <div className="flex flex-col items-center text-center">
                             <div className="lithium-glow relative mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-3xl font-black text-on-primary-container">
                                 {user.profileImageUrl ? (
-                                    <Image
+                                    <AppImage
                                         src={user.profileImageUrl}
                                         alt={`${user.firstName} ${user.lastName}`}
                                         fill

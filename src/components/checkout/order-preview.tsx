@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ROUTES } from "@/lib/constants/routes";
 import { formatPrice } from "@/lib/utils";
 import type { CartItem } from "@/types/cart";
+import { AppImage } from "@/components/shared/app-image";
 
 interface OrderPreviewProps {
     items: CartItem[];
@@ -34,7 +34,7 @@ export function OrderPreview({ items }: OrderPreviewProps) {
                                 >
                                     <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-neutral-800">
                                         {item.product.imageUrl ? (
-                                            <Image
+                                            <AppImage
                                                 src={item.product.imageUrl}
                                                 alt={item.product.name}
                                                 fill

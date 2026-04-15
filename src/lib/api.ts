@@ -83,6 +83,10 @@ export async function api<T>(
         );
     }
 
+    if (res.status === 204 || res.status === 205) {
+        return undefined as T;
+    }
+
     const body: ApiResponse<T> = await res.json();
     return body.data;
 }

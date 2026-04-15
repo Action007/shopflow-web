@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useRef, useState } from "react";
 import { ImagePlus, LoaderCircle, Trash2, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteUploadAction, uploadImageAction } from "@/actions/upload";
+import { AppImage } from "@/components/shared/app-image";
 
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -23,6 +23,7 @@ interface ImageUploadFieldProps {
     disabled?: boolean;
     required?: boolean;
     onChange: (value: ImageUploadValue) => void;
+    onPendingUploadHandled?: (uploadId: string) => void;
 }
 
 export function ImageUploadField({
@@ -32,12 +33,15 @@ export function ImageUploadField({
     disabled,
     required,
     onChange,
+    onPendingUploadHandled,
 }: ImageUploadFieldProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const deletingUploadIdRef = useRef<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const displayUrl = value.previewUrl ?? value.existingUrl ?? null;
+    const hasPendingUpload = Boolean(value.uploadId);
 
     const resetFileInput = () => {
         if (inputRef.current) {
@@ -58,6 +62,14 @@ export function ImageUploadField({
     };
 
     const handleUpload = async (file: File) => {
+        if (hasPendingUpload) {
+            toast.error(
+                "Remove the pending upload or save the form before choosing another image",
+            );
+            resetFileInput();
+            return;
+        }
+
         const validationError = validateFile(file);
 
         if (validationError) {
@@ -67,10 +79,6 @@ export function ImageUploadField({
         }
 
         setIsUploading(true);
-
-        if (value.uploadId) {
-            await deleteUploadAction(value.uploadId);
-        }
 
         const formData = new FormData();
         formData.set("file", file);
@@ -101,8 +109,16 @@ export function ImageUploadField({
             return;
         }
 
+        const uploadId = value.uploadId;
+
+        if (deletingUploadIdRef.current === uploadId) {
+            return;
+        }
+
+        deletingUploadIdRef.current = uploadId;
         setIsDeleting(true);
-        const result = await deleteUploadAction(value.uploadId);
+        const result = await deleteUploadAction(uploadId);
+        deletingUploadIdRef.current = null;
         setIsDeleting(false);
 
         if (!result.success) {
@@ -112,6 +128,7 @@ export function ImageUploadField({
             return;
         }
 
+        onPendingUploadHandled?.(uploadId);
         onChange({
             ...value,
             uploadId: null,
@@ -142,7 +159,7 @@ export function ImageUploadField({
                     className="relative self-center w-[180px] mb-4 border border-outline-variant/30 h-40 sm:h-36"
                 >
                     {displayUrl ? (
-                        <Image
+                        <AppImage
                             src={displayUrl}
                             alt={label}
                             fill
@@ -170,7 +187,12 @@ export function ImageUploadField({
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
                         className="hidden"
-                        disabled={disabled || isUploading || isDeleting}
+                        disabled={
+                            disabled ||
+                            isUploading ||
+                            isDeleting ||
+                            hasPendingUpload
+                        }
                         onChange={(event) => {
                             const file = event.target.files?.[0];
 
@@ -183,7 +205,12 @@ export function ImageUploadField({
                     <Button
                         type="button"
                         variant="secondary"
-                        disabled={disabled || isUploading || isDeleting}
+                        disabled={
+                            disabled ||
+                            isUploading ||
+                            isDeleting ||
+                            hasPendingUpload
+                        }
                         onClick={() => inputRef.current?.click()}
                     >
                         {isUploading ? (
@@ -194,7 +221,7 @@ export function ImageUploadField({
                         ) : (
                             <>
                                 <UploadCloud />
-                                {displayUrl ? "Replace Image" : "Upload Image"}
+                                Upload Image
                             </>
                         )}
                     </Button>
@@ -214,12 +241,19 @@ export function ImageUploadField({
                             ) : (
                                 <>
                                     <Trash2 />
-                                    Remove Pending Upload
+                                    Remove Upload
                                 </>
                             )}
                         </Button>
                     ) : null}
                 </div>
+
+                {hasPendingUpload ? (
+                    <p className="mt-3 text-center text-xs text-on-surface-variant">
+                        Save this form to keep the uploaded image, or remove the
+                        pending upload before choosing a different file.
+                    </p>
+                ) : null}
             </div>
         </div>
     );

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { ChevronDown, LoaderCircle, Package, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { updateAdminOrderStatusAction } from "@/actions/admin-order";
@@ -11,11 +10,11 @@ import { FormSelect } from "@/components/shared/form-select";
 import { Button } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { NEXT_ORDER_STATUS_OPTIONS } from "@/lib/admin-order";
-import { shouldBypassImageOptimization } from "@/lib/image";
 import { formatOrderStatusLabel, normalizeOrderStatus } from "@/lib/order";
 import { ROUTES } from "@/lib/constants/routes";
 import { formatPrice } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/types/order";
+import { AppImage } from "@/components/shared/app-image";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminMetaBadge } from "./admin-meta-badge";
 import { AdminRecordShell } from "./admin-record-shell";
@@ -222,14 +221,11 @@ function AdminOrderCard({
                                         className="relative block h-14 w-14 overflow-hidden rounded-xl bg-surface-highest transition-opacity duration-300 hover:opacity-85"
                                     >
                                         {item.product?.imageUrl ? (
-                                            <Image
+                                            <AppImage
                                                 src={item.product.imageUrl}
                                                 alt={item.productNameAtPurchase}
                                                 fill
                                                 sizes="56px"
-                                                unoptimized={shouldBypassImageOptimization(
-                                                    item.product.imageUrl,
-                                                )}
                                                 className="object-cover"
                                             />
                                         ) : (
