@@ -6,6 +6,7 @@ import { apiAuthGet } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import type { Order } from "@/types/order";
 import { formatPrice } from "@/lib/utils";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { CancelOrderButton } from "@/components/order/cancel-order-button";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
@@ -30,7 +31,9 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
 
     let order: Order;
     try {
-        order = await apiAuthGet<Order>(`${API_ROUTES.ORDERS}/${id}`, { tags: ["orders"] });
+        order = await apiAuthGet<Order>(API_ROUTES.ORDERS.DETAIL(id), {
+            tags: [CACHE_TAGS.ORDERS],
+        });
     } catch (error) {
         if (error instanceof ApiClientError && error.statusCode === 404) {
             notFound();
@@ -68,7 +71,9 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                 <div className="flex gap-4">
                                     <div>
                                         <Link
-                                            href={`${ROUTES.PRODUCTS}/${item.productId}`}
+                                            href={ROUTES.PRODUCT_DETAIL(
+                                                item.productId,
+                                            )}
                                             className="block"
                                         >
                                             <div className="relative h-16 w-16 overflow-hidden rounded-lg bg-surface-highest">
@@ -88,7 +93,9 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                                     </div>
                                     <div>
                                         <Link
-                                            href={`${ROUTES.PRODUCTS}/${item.productId}`}
+                                            href={ROUTES.PRODUCT_DETAIL(
+                                                item.productId,
+                                            )}
                                             className="block"
                                         >
                                             <h3 className="font-bold text-on-surface transition-colors duration-300 ease-fluid hover:text-primary">

@@ -4,6 +4,8 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import * as v from "valibot";
 import { ApiClientError } from "@/lib/api";
 import { apiAuthDelete, apiAuthPatch, apiAuthPost } from "@/lib/api-auth";
+import { CACHE_TAGS, getProductTag } from "@/lib/constants/cache";
+import { ERRORS } from "@/lib/constants/errors";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import {
     createProductSchema,
@@ -21,12 +23,12 @@ export interface AdminProductActionResult {
 }
 
 function invalidateProductAdminCaches(productId?: string) {
-    revalidateTag("products", "max");
+    revalidateTag(CACHE_TAGS.PRODUCTS, "max");
     revalidatePath(ROUTES.PRODUCTS);
     revalidatePath(ROUTES.ADMIN.PRODUCTS);
 
     if (productId) {
-        revalidateTag(`product-${productId}`, "max");
+        revalidateTag(getProductTag(productId), "max");
         revalidatePath(`${ROUTES.PRODUCTS}/${productId}`);
     }
 }
@@ -63,7 +65,7 @@ export async function createAdminProductAction(
 
         return {
             success: false,
-            message: "Failed to create product",
+            message: ERRORS.ADMIN.PRODUCT_CREATE_FAILED,
         };
     }
 }
@@ -103,7 +105,7 @@ export async function updateAdminProductAction(
 
         return {
             success: false,
-            message: "Failed to update product",
+            message: ERRORS.ADMIN.PRODUCT_UPDATE_FAILED,
         };
     }
 }
@@ -126,7 +128,7 @@ export async function deleteAdminProductAction(
 
         return {
             success: false,
-            message: "Failed to delete product",
+            message: ERRORS.ADMIN.PRODUCT_DELETE_FAILED,
         };
     }
 }

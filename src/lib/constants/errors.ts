@@ -23,6 +23,20 @@ export const ERRORS = {
         LAST_NAME: {
             REQUIRED: "Last name is required",
         },
+        PRODUCT: {
+            NAME_REQUIRED: "Name is required",
+            IMAGE_REQUIRED: "Product image is required",
+            PRICE_INVALID: 'Price must be a valid decimal like "29.99"',
+            STOCK_INTEGER: "Stock quantity must be a whole number",
+            STOCK_NON_NEGATIVE: "Stock quantity cannot be negative",
+            CATEGORY_REQUIRED: "Category is required",
+        },
+        CATEGORY: {
+            NAME_REQUIRED: "Category name is required",
+        },
+        ORDER: {
+            STATUS_INVALID: "Select a valid order status",
+        },
     },
 
     CART: {
@@ -40,6 +54,12 @@ export const ERRORS = {
         UPDATE_SUCCESS: "Profile updated",
         IMAGE_HELP:
             "Upload a profile image first, then save your account changes.",
+    },
+
+    UPLOAD: {
+        FILE_REQUIRED: "Image file is required",
+        UPLOAD_FAILED: "Image upload failed",
+        DELETE_FAILED: "Failed to delete upload",
     },
 
     WISHLIST: {
@@ -64,6 +84,17 @@ export const ERRORS = {
         NOT_FOUND: "Order not found",
     },
 
+    ADMIN: {
+        PRODUCT_CREATE_FAILED: "Failed to create product",
+        PRODUCT_UPDATE_FAILED: "Failed to update product",
+        PRODUCT_DELETE_FAILED: "Failed to delete product",
+        CATEGORY_CREATE_FAILED: "Failed to create category",
+        CATEGORY_UPDATE_FAILED: "Failed to update category",
+        CATEGORY_DELETE_FAILED: "Failed to delete category",
+        ORDER_STATUS_UPDATE_FAILED: "Failed to update order status",
+        USER_UPDATE_FAILED: "Failed to update user",
+    },
+
     PAGES: {
         AUTH: "Something went wrong with authentication.",
         SHOP: "We couldn't load this page. The server might be down.",
@@ -75,5 +106,6 @@ export const ERRORS = {
         SOMETHING_WRONG: "Something went wrong",
         UNEXPECTED: "An unexpected error occurred",
         TRY_AGAIN: "Please try again.",
+        REQUEST_FAILED: "Request failed",
     },
 } as const;

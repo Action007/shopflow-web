@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { ERRORS } from "@/lib/constants/errors";
 import type { OrderStatus } from "@/types/order";
 
 const orderStatuses: [OrderStatus, ...OrderStatus[]] = [
@@ -10,5 +11,5 @@ const orderStatuses: [OrderStatus, ...OrderStatus[]] = [
 ];
 
 export const updateOrderStatusSchema = v.object({
-    status: v.picklist(orderStatuses, "Select a valid order status"),
+    status: v.picklist(orderStatuses, ERRORS.VALIDATION.ORDER.STATUS_INVALID),
 });

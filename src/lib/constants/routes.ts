@@ -3,12 +3,14 @@ export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     PRODUCTS: "/products",
+    PRODUCT_DETAIL: (id: string) => `/products/${id}`,
     SUPPORT: "/support",
     PROFILE: "/profile",
     WISHLIST: "/wishlist",
     CART: "/cart",
     CHECKOUT: "/checkout",
     ORDERS: "/orders",
+    ORDER_DETAIL: (id: string) => `/orders/${id}`,
     ADMIN: {
         ROOT: "/admin",
         PRODUCTS: "/admin/products",
@@ -29,7 +31,10 @@ export const API_ROUTES = {
         LIST: "/products",
         DETAIL: (id: string) => `/products/${id}`,
     },
-    CATEGORIES: "/categories",
+    CATEGORIES: {
+        LIST: "/categories",
+        DETAIL: (id: string) => `/categories/${id}`,
+    },
     USER: {
         LIST: "/users",
         ME: "/users/me",
@@ -40,11 +45,17 @@ export const API_ROUTES = {
         DETAIL: (id: string) => `/uploads/${id}`,
     },
     WISHLIST: "/wishlist",
-    CART: "/cart",
+    CART: {
+        ROOT: "/cart",
+        ITEM: (productId: string) => `/cart/${productId}`,
+    },
     CHECKOUT: "/checkout",
-    ORDERS: "/orders",
-    ORDER_STATUS: (id: string) => `/orders/${id}/status`,
-    CANCEL: "/cancel"
+    ORDERS: {
+        LIST: "/orders",
+        DETAIL: (id: string) => `/orders/${id}`,
+        CANCEL: (id: string) => `/orders/${id}/cancel`,
+        STATUS: (id: string) => `/orders/${id}/status`,
+    },
 } as const;
 
 export const PROTECTED_ROUTES = [

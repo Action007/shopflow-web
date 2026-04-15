@@ -11,6 +11,7 @@ import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { toast } from "sonner";
 import { APP_CONFIG } from "@/lib/constants/app-config";
 import { ERRORS } from "@/lib/constants/errors";
+import { ROUTES } from "@/lib/constants/routes";
 import { AppImage } from "@/components/shared/app-image";
 
 interface CartItemProps {
@@ -91,7 +92,7 @@ export function CartItem({ item }: CartItemProps) {
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <Link
-                            href={`/products/${item.productId}`}
+                            href={ROUTES.PRODUCT_DETAIL(item.productId)}
                             className="font-bold leading-none text-on-surface"
                         >
                             {item.product.name}

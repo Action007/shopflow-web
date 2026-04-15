@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { apiAuthGet } from "@/lib/api-auth";
 import { getCurrentUser } from "@/lib/auth";
 import { buildQueryString } from "@/lib/utils";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { AdminUserManager } from "@/components/admin/admin-user-manager";
 import { Pagination } from "@/components/shared/pagination";
@@ -31,6 +32,7 @@ export default async function AdminUsersPage({
     const queryString = buildQueryString(effectiveParams);
     const users = await apiAuthGet<PaginatedResult<User>>(
         `${API_ROUTES.USER.LIST}${queryString}`,
+        { tags: [CACHE_TAGS.USERS] },
     );
 
     return (

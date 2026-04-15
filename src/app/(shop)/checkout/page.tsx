@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { apiAuthGet } from "@/lib/api-auth";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import type { Cart } from "@/types/cart";
 import { CheckoutForm } from "@/components/checkout/checkout-form";
 import { OrderPreview } from "@/components/checkout/order-preview";
@@ -16,7 +17,9 @@ export default async function CheckoutPage() {
 
     let cart: Cart | null = null;
     try {
-        cart = await apiAuthGet<Cart>(API_ROUTES.CART, { tags: ["cart"] });
+        cart = await apiAuthGet<Cart>(API_ROUTES.CART.ROOT, {
+            tags: [CACHE_TAGS.CART],
+        });
     } catch {
     }
 

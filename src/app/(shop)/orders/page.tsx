@@ -5,6 +5,7 @@ import { apiAuthGet } from "@/lib/api-auth";
 import type { Order } from "@/types/order";
 import type { PaginatedResult } from "@/types/product";
 import { formatPrice } from "@/lib/utils";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
 export default async function OrdersPage() {
     await requireCustomerUser(ROUTES.ORDERS);
 
-    const result = await apiAuthGet<PaginatedResult<Order>>(API_ROUTES.ORDERS, {
-        tags: ["orders"],
+    const result = await apiAuthGet<PaginatedResult<Order>>(API_ROUTES.ORDERS.LIST, {
+        tags: [CACHE_TAGS.ORDERS],
     });
 
     return (
@@ -34,7 +35,7 @@ export default async function OrdersPage() {
             </div>
 
             {result.items.length === 0 ? (
-                <section className="flex flex-col items-center rounded-3xl border border-outline-variant/10 py-12 text-center">
+                <section className="flex flex-col items-center rounded-3xl py-12 text-center">
                     <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-surface-high">
                         <Package className="h-8 w-8 text-neutral-500" />
                     </div>
@@ -57,7 +58,7 @@ export default async function OrdersPage() {
                     {result.items.map((order) => (
                         <Link
                             key={order.id}
-                            href={`${ROUTES.ORDERS}/${order.id}`}
+                            href={ROUTES.ORDER_DETAIL(order.id)}
                             className={cn(
                                 "group flex items-center justify-between rounded-[12px] bg-[#18181b] p-5 transition-all duration-300 ease-fluid hover:bg-surface-high",
                                 order.status === "CANCELLED" && "opacity-70",

@@ -15,6 +15,7 @@ import { apiAuthGet } from "@/lib/api-auth";
 import { Button } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import type { PaginatedResult } from "@/types/product";
 import type { Order } from "@/types/order";
 import { formatPrice } from "@/lib/utils";
@@ -78,8 +79,8 @@ export default async function ProfilePage() {
               },
           }
         : await apiAuthGet<PaginatedResult<Order>>(
-              `${API_ROUTES.ORDERS}?limit=3`,
-              { tags: ["orders"] },
+              `${API_ROUTES.ORDERS.LIST}?limit=3`,
+              { tags: [CACHE_TAGS.ORDERS] },
           );
 
     const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`;

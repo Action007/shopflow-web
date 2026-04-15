@@ -4,6 +4,8 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import * as v from "valibot";
 import { ApiClientError } from "@/lib/api";
 import { apiAuthDelete, apiAuthPatch, apiAuthPost } from "@/lib/api-auth";
+import { CACHE_TAGS } from "@/lib/constants/cache";
+import { ERRORS } from "@/lib/constants/errors";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import {
     createCategorySchema,
@@ -21,7 +23,8 @@ export interface AdminCategoryActionResult {
 }
 
 function invalidateCategoryAdminCaches() {
-    revalidateTag("products", "max");
+    revalidateTag(CACHE_TAGS.PRODUCTS, "max");
+    revalidateTag(CACHE_TAGS.CATEGORIES, "max");
     revalidatePath(ROUTES.PRODUCTS);
     revalidatePath(ROUTES.ADMIN.PRODUCTS);
     revalidatePath(ROUTES.ADMIN.CATEGORIES);
@@ -42,7 +45,10 @@ export async function createAdminCategoryAction(
     }
 
     try {
-        await apiAuthPost(API_ROUTES.CATEGORIES, normalizeCategoryPayload(parsed.output));
+        await apiAuthPost(
+            API_ROUTES.CATEGORIES.LIST,
+            normalizeCategoryPayload(parsed.output),
+        );
         invalidateCategoryAdminCaches();
         return { success: true };
     } catch (error) {
@@ -56,7 +62,7 @@ export async function createAdminCategoryAction(
 
         return {
             success: false,
-            message: "Failed to create category",
+            message: ERRORS.ADMIN.CATEGORY_CREATE_FAILED,
         };
     }
 }
@@ -77,7 +83,7 @@ export async function updateAdminCategoryAction(
 
     try {
         await apiAuthPatch(
-            `${API_ROUTES.CATEGORIES}/${categoryId}`,
+            API_ROUTES.CATEGORIES.DETAIL(categoryId),
             normalizeCategoryPayload(parsed.output),
         );
         invalidateCategoryAdminCaches();
@@ -93,7 +99,7 @@ export async function updateAdminCategoryAction(
 
         return {
             success: false,
-            message: "Failed to update category",
+            message: ERRORS.ADMIN.CATEGORY_UPDATE_FAILED,
         };
     }
 }
@@ -102,7 +108,7 @@ export async function deleteAdminCategoryAction(
     categoryId: string,
 ): Promise<AdminCategoryActionResult> {
     try {
-        await apiAuthDelete(`${API_ROUTES.CATEGORIES}/${categoryId}`);
+        await apiAuthDelete(API_ROUTES.CATEGORIES.DETAIL(categoryId));
         invalidateCategoryAdminCaches();
         return { success: true };
     } catch (error) {
@@ -115,7 +121,7 @@ export async function deleteAdminCategoryAction(
 
         return {
             success: false,
-            message: "Failed to delete category",
+            message: ERRORS.ADMIN.CATEGORY_DELETE_FAILED,
         };
     }
 }

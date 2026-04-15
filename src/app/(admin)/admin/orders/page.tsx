@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { apiAuthGet } from "@/lib/api-auth";
 import { buildQueryString } from "@/lib/utils";
 import { normalizeOrderStatus } from "@/lib/order";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { AdminOrderManager } from "@/components/admin/admin-order-manager";
 import { Pagination } from "@/components/shared/pagination";
@@ -31,8 +32,8 @@ export default async function AdminOrdersPage({
     };
     const queryString = buildQueryString(effectiveParams);
     const orders = await apiAuthGet<PaginatedResult<Order>>(
-        `${API_ROUTES.ORDERS}${queryString}`,
-        { tags: ["orders"] },
+        `${API_ROUTES.ORDERS.LIST}${queryString}`,
+        { tags: [CACHE_TAGS.ORDERS] },
     );
 
     const normalizedFilterStatus = normalizeOrderStatus(params.status);

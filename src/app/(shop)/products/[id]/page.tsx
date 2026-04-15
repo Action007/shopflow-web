@@ -8,6 +8,12 @@ import type { Product, PaginatedResult } from "@/types/product";
 import { formatPrice } from "@/lib/utils";
 import { ProductPurchasePanel } from "@/components/products/product-purchase-panel";
 import { ROUTES } from "@/lib/constants/routes";
+import { API_ROUTES } from "@/lib/constants/routes";
+import {
+    CACHE_CONFIG,
+    CACHE_TAGS,
+    getProductTag,
+} from "@/lib/constants/cache";
 import { getCurrentUser } from "@/lib/auth";
 import { isAdmin } from "@/lib/roles";
 import { getWishlistProductIds } from "@/lib/wishlist";
@@ -23,9 +29,9 @@ export async function generateMetadata({
     const { id } = await params;
 
     try {
-        const product = await apiGet<Product>(`/products/${id}`, {
-            revalidate: 300,
-            tags: [`product-${id}`],
+        const product = await apiGet<Product>(API_ROUTES.PRODUCTS.DETAIL(id), {
+            revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+            tags: [CACHE_TAGS.PRODUCTS, getProductTag(id)],
         });
         return {
             title: product.name,
@@ -45,8 +51,8 @@ export async function generateMetadata({
 export async function generateStaticParams() {
     try {
         const result = await apiGet<PaginatedResult<Product>>(
-            "/products?limit=50",
-            { tags: ["products"] },
+            `${API_ROUTES.PRODUCTS.LIST}?limit=${CACHE_CONFIG.STATIC_PRODUCT_PARAMS_LIMIT}`,
+            { tags: [CACHE_TAGS.PRODUCTS] },
         );
         return result.items.map((product) => ({ id: product.id }));
     } catch {
@@ -62,9 +68,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
     let product: Product;
     try {
-        product = await apiGet<Product>(`/products/${id}`, {
-            revalidate: 300,
-            tags: [`product-${id}`],
+        product = await apiGet<Product>(API_ROUTES.PRODUCTS.DETAIL(id), {
+            revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+            tags: [CACHE_TAGS.PRODUCTS, getProductTag(id)],
         });
     } catch (error) {
         if (error instanceof ApiClientError && error.statusCode === 404) {

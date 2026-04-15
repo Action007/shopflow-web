@@ -5,6 +5,7 @@ import * as v from "valibot";
 import { ApiClientError } from "@/lib/api";
 import { apiAuthPatch } from "@/lib/api-auth";
 import { NEXT_ORDER_STATUS_OPTIONS } from "@/lib/admin-order";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { updateOrderStatusSchema } from "@/lib/validations/order";
 import type { OrderStatus, UpdateOrderStatusInput } from "@/types/order";
@@ -16,7 +17,7 @@ export interface AdminOrderActionResult {
 }
 
 function invalidateOrderAdminCaches(orderId?: string) {
-    revalidateTag("orders", "max");
+    revalidateTag(CACHE_TAGS.ORDERS, "max");
     revalidatePath(ROUTES.ORDERS);
     revalidatePath(ROUTES.ADMIN.ORDERS);
 
@@ -40,7 +41,7 @@ export async function updateAdminOrderStatusAction(
     }
 
     try {
-        await apiAuthPatch(API_ROUTES.ORDER_STATUS(orderId), parsed.output);
+        await apiAuthPatch(API_ROUTES.ORDERS.STATUS(orderId), parsed.output);
         invalidateOrderAdminCaches(orderId);
 
         return { success: true };

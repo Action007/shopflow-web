@@ -7,6 +7,7 @@ import {
     ACTION_RESULT_CODES,
     type ActionResultCode,
 } from "@/lib/constants/action-result-codes";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { ERRORS } from "@/lib/constants/errors";
 import { API_ROUTES } from "@/lib/constants/routes";
 import type { Cart } from "@/types/cart";
@@ -24,11 +25,11 @@ export async function addToCartAction(
 ): Promise<CartActionResult> {
     try {
         const cart = await apiAuthPost<Cart>(
-            API_ROUTES.CART,
+            API_ROUTES.CART.ROOT,
             { productId, quantity },
             { redirectOn401: false },
         );
-        updateTag("cart");
+        updateTag(CACHE_TAGS.CART);
         return { success: true, cart };
     } catch (error) {
         if (error instanceof ApiClientError) {
@@ -55,13 +56,13 @@ export async function adjustCartItemAction(
 ): Promise<CartActionResult> {
     try {
         const cart = await apiAuthPatch<Cart>(
-            `${API_ROUTES.CART}/${productId}`,
+            API_ROUTES.CART.ITEM(productId),
             {
                 quantity,
             },
             { redirectOn401: false },
         );
-        updateTag("cart");
+        updateTag(CACHE_TAGS.CART);
         return { success: true, cart };
     } catch (error) {
         if (error instanceof ApiClientError) {
@@ -87,10 +88,10 @@ export async function removeCartItemAction(
 ): Promise<CartActionResult> {
     try {
         const cart = await apiAuthDelete<Cart>(
-            `${API_ROUTES.CART}/${productId}`,
+            API_ROUTES.CART.ITEM(productId),
             { redirectOn401: false },
         );
-        updateTag("cart");
+        updateTag(CACHE_TAGS.CART);
         return { success: true, cart };
     } catch (error) {
         if (error instanceof ApiClientError) {

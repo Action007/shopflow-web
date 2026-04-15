@@ -50,11 +50,7 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!token) return null;
 
     try {
-        // apiAuthGet automatically:
-        // - Adds Authorization header
-        // - Sets redirectOn401: true → redirects to /login on invalid token
-        // - Sets cache: "no-store" for fresh data
-        return await apiAuthGet<User>(API_ROUTES.USER.ME, {tags: ["order"]});
+        return await apiAuthGet<User>(API_ROUTES.USER.ME);
     } catch {
         return null;
     }

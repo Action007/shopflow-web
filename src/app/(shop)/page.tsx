@@ -12,8 +12,9 @@ import {
     Watch,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CACHE_CONFIG, CACHE_TAGS } from "@/lib/constants/cache";
 import { apiGet } from "@/lib/api";
-import { ROUTES } from "@/lib/constants/routes";
+import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import type { PaginatedResult, Product, Category } from "@/types/product";
 import { ProductGrid } from "@/components/products/product-grid";
 import { getCurrentUser } from "@/lib/auth";
@@ -47,13 +48,16 @@ export default async function HomePage() {
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const [productsResult, categories, wishlistProductIds] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
-            "/products?limit=4&sortBy=createdAt&sortOrder=desc",
+            `${API_ROUTES.PRODUCTS.LIST}?limit=4&sortBy=createdAt&sortOrder=desc`,
             {
-                revalidate: 300,
-                tags: ["products"],
+                revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+                tags: [CACHE_TAGS.PRODUCTS],
             },
         ),
-        apiGet<Category[]>("/categories", { revalidate: 300 }),
+        apiGet<Category[]>(API_ROUTES.CATEGORIES.LIST, {
+            revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+            tags: [CACHE_TAGS.CATEGORIES],
+        }),
         getWishlistProductIds(currentUser),
     ]);
 

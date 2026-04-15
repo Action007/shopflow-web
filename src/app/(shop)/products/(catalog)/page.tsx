@@ -17,6 +17,7 @@ import { ProductGridSkeleton } from "@/components/products/product-grid-skeleton
 import { ProductsToolbarSkeleton } from "@/components/products/products-toolbar-skeleton";
 import { Button } from "@/components/ui/button";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
+import { CACHE_CONFIG, CACHE_TAGS } from "@/lib/constants/cache";
 import { ERRORS } from "@/lib/constants/errors";
 import { getCurrentUser } from "@/lib/auth";
 import { canAccessShopperFeatures } from "@/lib/roles";
@@ -38,8 +39,9 @@ export default async function ProductsPage({
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const wishlistProductIds = await getWishlistProductIds(currentUser);
     const params = await searchParams;
-    const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES, {
-        revalidate: 300,
+    const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES.LIST, {
+        revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+        tags: [CACHE_TAGS.CATEGORIES],
     });
 
     return (
@@ -157,7 +159,10 @@ async function getProductsState(params: ProductSearchParams) {
 
         const result = await apiGet<PaginatedResult<Product>>(
             `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
-            { revalidate: 300, tags: ["products"] },
+            {
+                revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+                tags: [CACHE_TAGS.PRODUCTS],
+            },
         );
 
         return { result, error: null } as const;

@@ -1,9 +1,10 @@
 import * as v from "valibot";
+import { ERRORS } from "@/lib/constants/errors";
 
 const categoryNameSchema = v.pipe(
     v.string(),
     v.trim(),
-    v.minLength(1, "Category name is required"),
+    v.minLength(1, ERRORS.VALIDATION.CATEGORY.NAME_REQUIRED),
 );
 
 const categoryDescriptionSchema = v.optional(

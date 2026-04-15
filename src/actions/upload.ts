@@ -3,6 +3,7 @@
 import { apiAuthDelete, apiAuthPostForm } from "@/lib/api-auth";
 import { ApiClientError } from "@/lib/api";
 import { API_ROUTES } from "@/lib/constants/routes";
+import { ERRORS } from "@/lib/constants/errors";
 import type { UploadResource } from "@/types/upload";
 
 export interface UploadActionResult {
@@ -20,7 +21,7 @@ export async function uploadImageAction(
     if (!(file instanceof File) || file.size === 0) {
         return {
             success: false,
-            message: "Image file is required",
+            message: ERRORS.UPLOAD.FILE_REQUIRED,
         };
     }
 
@@ -45,7 +46,7 @@ export async function uploadImageAction(
 
         return {
             success: false,
-            message: "Image upload failed",
+            message: ERRORS.UPLOAD.UPLOAD_FAILED,
         };
     }
 }
@@ -69,7 +70,7 @@ export async function deleteUploadAction(
 
         return {
             success: false,
-            message: "Failed to delete upload",
+            message: ERRORS.UPLOAD.DELETE_FAILED,
         };
     }
 }

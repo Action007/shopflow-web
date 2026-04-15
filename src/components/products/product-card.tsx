@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/utils";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { WishlistToggleButton } from "@/components/wishlist/wishlist-toggle-button";
 import { cn } from "@/lib/utils";
-import { API_ROUTES } from "@/lib/constants/routes";
+import { ROUTES } from "@/lib/constants/routes";
 
 interface ProductCardProps {
     product: Product;
@@ -21,7 +21,7 @@ export function ProductCard({
     isWishlisted = false,
 }: ProductCardProps) {
     const inStock = product.stockQuantity > 0;
-    const productHref = API_ROUTES.PRODUCTS.DETAIL(product.id);
+    const productHref = ROUTES.PRODUCT_DETAIL(product.id);
     const stockLabel = inStock ? "In Stock" : "Out of Stock";
 
     return (

@@ -1,9 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import * as v from "valibot";
 import { ApiClientError } from "@/lib/api";
 import { apiAuthPatch } from "@/lib/api-auth";
+import { CACHE_TAGS } from "@/lib/constants/cache";
+import { ERRORS } from "@/lib/constants/errors";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { updateProfileSchema } from "@/lib/validations/user";
 import type { UpdateProfileInput } from "@/types/user";
@@ -33,6 +35,7 @@ export async function updateProfileAction(
 
     try {
         await apiAuthPatch(API_ROUTES.USER.DETAIL(userId), payload);
+        revalidateTag(CACHE_TAGS.USERS, "max");
         revalidatePath(ROUTES.PROFILE);
         revalidatePath(ROUTES.HOME, "layout");
 
@@ -48,7 +51,7 @@ export async function updateProfileAction(
 
         return {
             success: false,
-            message: "Failed to update profile",
+            message: ERRORS.PROFILE.UPDATE_FAILED,
         };
     }
 }

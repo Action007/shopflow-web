@@ -6,9 +6,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteUploadAction, uploadImageAction } from "@/actions/upload";
 import { AppImage } from "@/components/shared/app-image";
+import { APP_CONFIG } from "@/lib/constants/app-config";
 
-const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
-const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set<string>(APP_CONFIG.UPLOAD.ALLOWED_IMAGE_TYPES);
+const MAX_IMAGE_SIZE_BYTES = APP_CONFIG.UPLOAD.MAX_IMAGE_SIZE_BYTES;
 
 export interface ImageUploadValue {
     uploadId: string | null;

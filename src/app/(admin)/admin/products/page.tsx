@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { apiGet } from "@/lib/api";
 import { buildQueryString } from "@/lib/utils";
+import { CACHE_CONFIG, CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { AdminProductManager } from "@/components/admin/admin-product-manager";
 import { Pagination } from "@/components/shared/pagination";
@@ -27,9 +28,15 @@ export default async function AdminProductsPage({
     const [products, categories] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
             `${API_ROUTES.PRODUCTS.LIST}${queryString}`,
-            { revalidate: 300, tags: ["products"] },
+            {
+                revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+                tags: [CACHE_TAGS.PRODUCTS],
+            },
         ),
-        apiGet<Category[]>(API_ROUTES.CATEGORIES, { revalidate: 300 }),
+        apiGet<Category[]>(API_ROUTES.CATEGORIES.LIST, {
+            revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
+            tags: [CACHE_TAGS.CATEGORIES],
+        }),
     ]);
 
     const sortValue =

@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import * as v from "valibot";
 import { ApiClientError } from "@/lib/api";
 import { apiAuthDelete, apiAuthPatch } from "@/lib/api-auth";
+import { CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { updateProfileSchema } from "@/lib/validations/user";
 import type { UpdateProfileInput } from "@/types/user";
@@ -15,14 +16,12 @@ export interface AdminUserActionResult {
 }
 
 function invalidateAdminUserCaches(userId?: string) {
+    revalidateTag(CACHE_TAGS.USERS, "max");
     revalidatePath(ROUTES.ADMIN.USERS);
     revalidatePath(ROUTES.ADMIN.ROOT);
     revalidatePath(ROUTES.PROFILE);
     revalidatePath(ROUTES.HOME, "layout");
-
-    if (userId) {
-        revalidateTag(`user-${userId}`, "max");
-    }
+    void userId;
 }
 
 export async function updateAdminUserAction(

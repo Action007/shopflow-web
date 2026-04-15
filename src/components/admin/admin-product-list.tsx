@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppImage } from "@/components/shared/app-image";
 import { formatPrice } from "@/lib/utils";
+import { ROUTES } from "@/lib/constants/routes";
 import type { Category, Product } from "@/types/product";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminMetaBadge } from "./admin-meta-badge";
@@ -50,28 +52,38 @@ export function AdminProductList({
                             >
                                 <div className="grid gap-5 p-5 xl:grid-cols-[112px_minmax(0,1fr)_auto] xl:items-start">
                                     <div className="relative h-28 w-28 overflow-hidden rounded-[22px] bg-surface-highest">
-                                        {product.imageUrl ? (
-                                            <AppImage
-                                                src={product.imageUrl}
-                                                alt={product.name}
-                                                fill
-                                                sizes="112px"
-                                                className="object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-xs text-on-surface-variant">
-                                                No image
-                                            </div>
-                                        )}
+                                        <Link
+                                            href={ROUTES.PRODUCT_DETAIL(product.id)}
+                                            className="block h-full"
+                                        >
+                                            {product.imageUrl ? (
+                                                <AppImage
+                                                    src={product.imageUrl}
+                                                    alt={product.name}
+                                                    fill
+                                                    sizes="112px"
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex h-full items-center justify-center text-xs text-on-surface-variant">
+                                                    No image
+                                                </div>
+                                            )}
+                                        </Link>
                                     </div>
 
                                     <div className="space-y-3">
                                         <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
                                             <div className="space-y-2">
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    <h3 className="font-headline text-2xl font-bold tracking-[-0.02em] text-on-surface">
-                                                        {product.name}
-                                                    </h3>
+                                                    <Link
+                                                        href={ROUTES.PRODUCT_DETAIL(product.id)}
+                                                        className="transition-colors hover:text-primary"
+                                                    >
+                                                        <h3 className="font-headline text-2xl font-bold tracking-[-0.02em] text-on-surface">
+                                                            {product.name}
+                                                        </h3>
+                                                    </Link>
                                                     <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
                                                         {product.category?.name ??
                                                             "Category"}
