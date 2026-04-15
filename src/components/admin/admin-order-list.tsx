@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -12,6 +13,7 @@ import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { NEXT_ORDER_STATUS_OPTIONS } from "@/lib/admin-order";
 import { shouldBypassImageOptimization } from "@/lib/image";
 import { formatOrderStatusLabel, normalizeOrderStatus } from "@/lib/order";
+import { ROUTES } from "@/lib/constants/routes";
 import { formatPrice } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/types/order";
 import { AdminEmptyState } from "./admin-empty-state";
@@ -215,7 +217,10 @@ function AdminOrderCard({
                                     key={item.id}
                                     className="flex items-center gap-3 rounded-[20px] border border-outline-variant/10 bg-background/60 p-3"
                                 >
-                                    <div className="relative h-14 w-14 overflow-hidden rounded-xl bg-surface-highest">
+                                    <Link
+                                        href={`${ROUTES.PRODUCTS}/${item.productId}`}
+                                        className="relative block h-14 w-14 overflow-hidden rounded-xl bg-surface-highest transition-opacity duration-300 hover:opacity-85"
+                                    >
                                         {item.product?.imageUrl ? (
                                             <Image
                                                 src={item.product.imageUrl}
@@ -232,11 +237,14 @@ function AdminOrderCard({
                                                 No image
                                             </div>
                                         )}
-                                    </div>
+                                    </Link>
                                     <div className="min-w-0 flex-1">
-                                        <p className="font-semibold text-on-surface">
+                                        <Link
+                                            href={`${ROUTES.PRODUCTS}/${item.productId}`}
+                                            className="font-semibold text-on-surface transition-colors duration-300 hover:text-primary"
+                                        >
                                             {item.productNameAtPurchase}
-                                        </p>
+                                        </Link>
                                         <p className="mt-1 text-xs text-on-surface-variant">
                                             Qty: {item.quantity}
                                         </p>

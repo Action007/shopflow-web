@@ -8,11 +8,13 @@ import { AdminUserList } from "./admin-user-list";
 interface AdminUserManagerProps {
     users: User[];
     totalUsers: number;
+    currentAdminId: string | null;
 }
 
 export function AdminUserManager({
     users,
     totalUsers,
+    currentAdminId,
 }: AdminUserManagerProps) {
     const adminCount = users.filter((user) => user.role === "ADMIN").length;
     const customerCount = users.filter((user) => user.role === "CUSTOMER").length;
@@ -36,7 +38,7 @@ export function AdminUserManager({
                 description={`${totalUsers} account${totalUsers === 1 ? "" : "s"} available in the current admin view.`}
             />
 
-            <AdminUserList users={users} />
+            <AdminUserList users={users} currentAdminId={currentAdminId} />
         </div>
     );
 }

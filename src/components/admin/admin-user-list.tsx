@@ -15,9 +15,13 @@ import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminUserListProps {
     users: User[];
+    currentAdminId: string | null;
 }
 
-export function AdminUserList({ users }: AdminUserListProps) {
+export function AdminUserList({
+    users,
+    currentAdminId,
+}: AdminUserListProps) {
     const router = useRouter();
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -60,13 +64,15 @@ export function AdminUserList({ users }: AdminUserListProps) {
                 const isDeleting = deletingId === user.id;
                 const fullName = `${user.firstName} ${user.lastName}`.trim();
                 const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`;
+                const canDelete =
+                    user.role !== "ADMIN" || user.id === currentAdminId;
 
                 return (
                     <AdminRecordShell
                         key={user.id}
                     >
                         <div className="grid gap-5 p-5 xl:grid-cols-[88px_minmax(0,1fr)_auto] xl:items-start">
-                            <div className="relative flex h-22 w-22 items-center justify-center overflow-hidden rounded-[22px] bg-surface-highest text-xl font-black text-on-primary-container">
+                            <div className="lithium-glow relative flex h-22 w-22 items-center justify-center overflow-hidden rounded-[22px] bg-surface-highest text-xl font-black text-on-primary-container">
                                 {user.profileImageUrl ? (
                                     <Image
                                         src={user.profileImageUrl}
@@ -99,17 +105,19 @@ export function AdminUserList({ users }: AdminUserListProps) {
                                         </p>
                                     </div>
 
-                                    <div className="flex gap-2 xl:hidden">
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            disabled={isDeleting}
-                                            onClick={() => void handleDelete(user)}
-                                        >
-                                            <Trash2 />
-                                            {isDeleting ? "Deleting..." : "Delete"}
-                                        </Button>
-                                    </div>
+                                    {canDelete ? (
+                                        <div className="flex gap-2 xl:hidden">
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                disabled={isDeleting}
+                                                onClick={() => void handleDelete(user)}
+                                            >
+                                                <Trash2 />
+                                                {isDeleting ? "Deleting..." : "Delete"}
+                                            </Button>
+                                        </div>
+                                    ) : null}
                                 </div>
 
                                 <div className="flex flex-wrap gap-2">
@@ -125,15 +133,17 @@ export function AdminUserList({ users }: AdminUserListProps) {
                             </div>
 
                             <div className="hidden gap-3 xl:flex xl:flex-col">
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    disabled={isDeleting}
-                                    onClick={() => void handleDelete(user)}
-                                >
-                                    <Trash2 />
-                                    {isDeleting ? "Deleting..." : "Delete"}
-                                </Button>
+                                {canDelete ? (
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        disabled={isDeleting}
+                                        onClick={() => void handleDelete(user)}
+                                    >
+                                        <Trash2 />
+                                        {isDeleting ? "Deleting..." : "Delete"}
+                                    </Button>
+                                ) : null}
                             </div>
                         </div>
                     </AdminRecordShell>

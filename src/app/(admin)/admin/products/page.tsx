@@ -22,8 +22,6 @@ export default async function AdminProductsPage({
     const effectiveParams = {
         ...params,
         limit: params.limit ?? "12",
-        sortBy: params.sortBy ?? "createdAt",
-        sortOrder: params.sortOrder ?? "desc",
     };
     const queryString = buildQueryString(effectiveParams);
     const [products, categories] = await Promise.all([
@@ -35,14 +33,14 @@ export default async function AdminProductsPage({
     ]);
 
     const sortValue =
-        effectiveParams.sortBy === "price" && effectiveParams.sortOrder === "asc"
+        params.sortBy === "price" && params.sortOrder === "asc"
             ? "price-asc"
-            : effectiveParams.sortBy === "price" &&
-                effectiveParams.sortOrder === "desc"
+            : params.sortBy === "price" &&
+                params.sortOrder === "desc"
               ? "price-desc"
-              : effectiveParams.sortBy === "name"
+              : params.sortBy === "name"
                 ? "name-asc"
-                : effectiveParams.sortBy === "createdAt"
+                : params.sortBy === "createdAt"
                   ? "newest"
                   : "featured";
 
@@ -53,7 +51,7 @@ export default async function AdminProductsPage({
                 categories={categories}
                 totalProducts={products.meta.total}
                 sortValue={sortValue}
-                currentCategory={effectiveParams.categoryId}
+                currentCategory={params.categoryId}
             />
 
             <Pagination

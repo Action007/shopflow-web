@@ -28,13 +28,7 @@ export function AdminProductManager({
     const router = useRouter();
     const [editingId, setEditingId] = useState<string | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
-
-    const sortedProducts = [...products].sort(
-        (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-
-    const visibleProducts = sortedProducts.length;
+    const visibleProducts = products.length;
 
     const handleDelete = async (product: Product) => {
         const confirmed = window.confirm(
@@ -85,7 +79,7 @@ export function AdminProductManager({
             />
 
             <AdminProductList
-                products={sortedProducts}
+                products={products}
                 categories={categories}
                 editingId={editingId}
                 deletingId={deletingId}

@@ -13,5 +13,24 @@ export default async function AdminCategoriesPage() {
         revalidate: 300,
     });
 
-    return <AdminCategoryManager categories={categories} />;
+    return <AdminCategoryManager categories={flattenCategories(categories)} />;
+}
+
+function flattenCategories(categories: Category[]) {
+    const flattened = new Map<string, Category>();
+
+    const visit = (category: Category) => {
+        flattened.set(category.id, {
+            ...category,
+            children: category.children?.map((child) => ({
+                ...child,
+                children: child.children ?? [],
+            })),
+        });
+
+        category.children?.forEach(visit);
+    };
+
+    categories.forEach(visit);
+    return [...flattened.values()];
 }
