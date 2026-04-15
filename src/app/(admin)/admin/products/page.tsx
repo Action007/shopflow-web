@@ -9,7 +9,6 @@ import { normalizePaginationParams } from "@/lib/pagination-params";
 import { getProductSortValue } from "@/lib/product-sort";
 import type { Category, PaginatedResult, Product } from "@/types/product";
 import type { ProductSearchParams } from "@/types/product";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Admin Products",
@@ -23,13 +22,7 @@ export default async function AdminProductsPage({
     searchParams,
 }: AdminProductsPageProps) {
     const params = await searchParams;
-    const paginationState = normalizePaginationParams(params);
-
-    if (paginationState.needsRedirect) {
-        redirect(`${ROUTES.ADMIN.PRODUCTS}${paginationState.queryString}`);
-    }
-
-    const effectiveParams = paginationState.effectiveParams;
+    const { effectiveParams } = normalizePaginationParams(params);
     const queryString = buildQueryString(effectiveParams);
     const [products, categories] = await Promise.all([
         apiGet<PaginatedResult<Product>>(

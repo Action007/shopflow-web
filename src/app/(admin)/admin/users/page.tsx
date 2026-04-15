@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { ApiClientError } from "@/lib/api";
 import { apiAuthGet } from "@/lib/api-auth";
 import { buildQueryString } from "@/lib/utils";
@@ -28,14 +27,8 @@ export default async function AdminUsersPage({
     searchParams,
 }: AdminUsersPageProps) {
     const params = await searchParams;
-    const paginationState = normalizePaginationParams(params);
-
-    if (paginationState.needsRedirect) {
-        redirect(`${ROUTES.ADMIN.USERS}${paginationState.queryString}`);
-    }
-
     const currentUser = await requireAdminUser(ROUTES.ADMIN.USERS);
-    const effectiveParams = paginationState.effectiveParams;
+    const { effectiveParams } = normalizePaginationParams(params);
     const queryString = buildQueryString(effectiveParams);
     let users: PaginatedResult<User>;
 

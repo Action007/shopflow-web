@@ -9,7 +9,6 @@ import { Pagination } from "@/components/shared/pagination";
 import { normalizePaginationParams } from "@/lib/pagination-params";
 import type { Order } from "@/types/order";
 import type { PaginatedResult } from "@/types/product";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Admin Orders",
@@ -28,13 +27,7 @@ export default async function AdminOrdersPage({
     searchParams,
 }: AdminOrdersPageProps) {
     const params = await searchParams;
-    const paginationState = normalizePaginationParams(params);
-
-    if (paginationState.needsRedirect) {
-        redirect(`${ROUTES.ADMIN.ORDERS}${paginationState.queryString}`);
-    }
-
-    const effectiveParams = paginationState.effectiveParams;
+    const { effectiveParams } = normalizePaginationParams(params);
     const queryString = buildQueryString(effectiveParams);
     const orders = await apiAuthGet<PaginatedResult<Order>>(
         `${API_ROUTES.ORDERS.LIST}${queryString}`,

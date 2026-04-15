@@ -1,7 +1,6 @@
 import { Suspense, cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ApiClientError, apiGet } from "@/lib/api";
 import { buildQueryString } from "@/lib/utils";
 import type {
@@ -41,13 +40,7 @@ export default async function ProductsPage({
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const wishlistProductIds = await getWishlistProductIds(currentUser);
     const params = await searchParams;
-    const paginationState = normalizePaginationParams(params);
-
-    if (paginationState.needsRedirect) {
-        redirect(`${ROUTES.PRODUCTS}${paginationState.queryString}`);
-    }
-
-    const effectiveParams = paginationState.effectiveParams;
+    const { effectiveParams } = normalizePaginationParams(params);
     const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES.LIST, {
         revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.CATEGORIES],
