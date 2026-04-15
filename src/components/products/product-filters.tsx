@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Filter, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, Filter, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -15,7 +15,6 @@ import { PriceRangeForm } from "@/components/products/price-range-form";
 import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
-import { flattenCategoryTree } from "@/lib/category-tree";
 import type { Category } from "@/types/product";
 
 interface ProductFiltersProps {
@@ -27,6 +26,96 @@ interface ProductFiltersProps {
     maxPrice?: string;
     basePath?: string;
     desktopLayout?: "sidebar" | "inline";
+}
+
+function categoryContainsId(category: Category, targetId?: string): boolean {
+    if (!targetId) return false;
+    if (category.id === targetId) return true;
+
+    return (category.children ?? []).some((child) =>
+        categoryContainsId(child, targetId),
+    );
+}
+
+function CategoryAccordionItem({
+    category,
+    currentCategory,
+    depth = 0,
+    path,
+    onSelect,
+}: {
+    category: Category;
+    currentCategory?: string;
+    depth?: number;
+    path: string;
+    onSelect: (categoryId?: string) => void;
+}) {
+    const hasChildren = (category.children?.length ?? 0) > 0;
+    const isActive = currentCategory === category.id;
+    const isInActiveBranch = categoryContainsId(category, currentCategory);
+    const [isExpanded, setIsExpanded] = useState(isInActiveBranch);
+
+    return (
+        <div className="space-y-1">
+            <div
+                className="flex items-center gap-1"
+                style={{ paddingLeft: `${depth * 14}px` }}
+            >
+                {hasChildren ? (
+                    <button
+                        type="button"
+                        onClick={() => setIsExpanded((open) => !open)}
+                        className="flex h-5 w-5 items-center justify-center rounded-full text-on-surface/50 transition-colors duration-300 ease-fluid hover:bg-surface-high hover:text-on-surface"
+                        aria-label={`${isExpanded ? "Collapse" : "Expand"} ${category.name}`}
+                        aria-expanded={isExpanded}
+                    >
+                        <ChevronRight
+                            className={cn(
+                                "h-3.5 w-3.5 transition-transform duration-300 ease-fluid",
+                                isExpanded && "rotate-90",
+                            )}
+                        />
+                    </button>
+                ) : (
+                    <span
+                        aria-hidden="true"
+                        className="inline-flex h-5 w-5 items-center justify-center"
+                    >
+                        <span className="h-1.5 w-1.5 rounded-full bg-outline-variant/50" />
+                    </span>
+                )}
+
+                <button
+                    type="button"
+                    onClick={() => onSelect(category.id)}
+                    className={cn(
+                        "min-h-8 flex-1 rounded-xl px-3 py-2 text-left text-sm transition-colors duration-300 ease-fluid",
+                        isActive
+                            ? "bg-primary/10 font-semibold text-primary"
+                            : "text-on-surface/70 hover:bg-surface-high hover:text-on-surface",
+                    )}
+                    title={path}
+                >
+                    {category.name}
+                </button>
+            </div>
+
+            {hasChildren && isExpanded ? (
+                <div className="space-y-1">
+                    {category.children?.map((child) => (
+                        <CategoryAccordionItem
+                            key={child.id}
+                            category={child}
+                            currentCategory={currentCategory}
+                            depth={depth + 1}
+                            path={`${path} / ${child.name}`}
+                            onSelect={onSelect}
+                        />
+                    ))}
+                </div>
+            ) : null}
+        </div>
+    );
 }
 
 export function ProductFilters({
@@ -92,32 +181,14 @@ export function ProductFilters({
                     >
                         All Products
                     </button>
-                    {flattenCategoryTree(categories).map(({ category, depth, path }) => (
-                        <button
+                    {categories.map((category) => (
+                        <CategoryAccordionItem
                             key={category.id}
-                            type="button"
-                            onClick={() => updateCategory(category.id)}
-                            className={cn(
-                                "relative flex min-h-8 items-center py-1 text-left text-sm transition-colors duration-300 ease-fluid",
-                                currentCategory === category.id
-                                    ? "font-semibold text-primary"
-                                    : "text-on-surface/70 hover:text-on-surface",
-                            )}
-                            style={{ paddingLeft: `${depth * 16}px` }}
-                            title={path}
-                        >
-                            {depth > 0 ? (
-                                <span
-                                    aria-hidden="true"
-                                    className="pointer-events-none absolute inset-y-0 left-0"
-                                    style={{ width: `${depth * 16}px` }}
-                                >
-                                    <span className="absolute bottom-1/2 left-2 top-0 w-px bg-outline-variant/30" />
-                                    <span className="absolute left-2 top-1/2 h-px w-3 bg-outline-variant/30" />
-                                </span>
-                            ) : null}
-                            {category.name}
-                        </button>
+                            category={category}
+                            currentCategory={currentCategory}
+                            path={category.name}
+                            onSelect={updateCategory}
+                        />
                     ))}
                 </div>
             </section>
@@ -174,7 +245,7 @@ export function ProductFilters({
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
                         <Button
-                            variant="secondary"
+                            variant="card"
                             className="rounded-full px-6 py-3"
                         >
                             <Filter className="h-4 w-4" />
