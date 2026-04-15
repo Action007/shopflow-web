@@ -15,6 +15,7 @@ import { PriceRangeForm } from "@/components/products/price-range-form";
 import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
+import { flattenCategoryTree } from "@/lib/category-tree";
 import type { Category } from "@/types/product";
 
 interface ProductFiltersProps {
@@ -91,18 +92,30 @@ export function ProductFilters({
                     >
                         All Products
                     </button>
-                    {categories.map((category) => (
+                    {flattenCategoryTree(categories).map(({ category, depth, path }) => (
                         <button
                             key={category.id}
                             type="button"
                             onClick={() => updateCategory(category.id)}
                             className={cn(
-                                "block py-1 text-left text-sm transition-colors duration-300 ease-fluid",
+                                "relative flex min-h-8 items-center py-1 text-left text-sm transition-colors duration-300 ease-fluid",
                                 currentCategory === category.id
                                     ? "font-semibold text-primary"
                                     : "text-on-surface/70 hover:text-on-surface",
                             )}
+                            style={{ paddingLeft: `${depth * 16}px` }}
+                            title={path}
                         >
+                            {depth > 0 ? (
+                                <span
+                                    aria-hidden="true"
+                                    className="pointer-events-none absolute inset-y-0 left-0"
+                                    style={{ width: `${depth * 16}px` }}
+                                >
+                                    <span className="absolute bottom-1/2 left-2 top-0 w-px bg-outline-variant/30" />
+                                    <span className="absolute left-2 top-1/2 h-px w-3 bg-outline-variant/30" />
+                                </span>
+                            ) : null}
                             {category.name}
                         </button>
                     ))}

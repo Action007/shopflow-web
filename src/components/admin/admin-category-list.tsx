@@ -2,6 +2,7 @@
 
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { findCategoryPath } from "@/lib/category-tree";
 import type { Category } from "@/types/product";
 import { AdminCategoryForm } from "./admin-category-form";
 import { AdminEmptyState } from "./admin-empty-state";
@@ -25,8 +26,6 @@ export function AdminCategoryList({
     onDelete,
     onEditComplete,
 }: AdminCategoryListProps) {
-    const tree = buildCategoryTree(categories);
-
     if (categories.length === 0) {
         return (
             <AdminEmptyState
@@ -38,11 +37,12 @@ export function AdminCategoryList({
 
     return (
         <section className="space-y-4">
-            {tree.map((node) => (
+            {categories.map((category) => (
                 <CategoryBranch
-                    key={node.category.id}
-                    node={node}
+                    key={category.id}
+                    category={category}
                     allCategories={categories}
+                    depth={0}
                     editingId={editingId}
                     deletingId={deletingId}
                     onEditToggle={onEditToggle}
@@ -54,35 +54,31 @@ export function AdminCategoryList({
     );
 }
 
-interface CategoryTreeNode {
-    category: Category;
-    children: CategoryTreeNode[];
-}
-
 function CategoryBranch({
-    node,
+    category,
     allCategories,
+    depth,
     editingId,
     deletingId,
     onEditToggle,
     onDelete,
     onEditComplete,
 }: {
-    node: CategoryTreeNode;
+    category: Category;
     allCategories: Category[];
+    depth: number;
     editingId: string | null;
     deletingId: string | null;
     onEditToggle: (categoryId: string) => void;
     onDelete: (category: Category) => void;
     onEditComplete: () => void;
 }) {
-    const category = node.category;
     const isEditing = editingId === category.id;
     const isDeleting = deletingId === category.id;
-    const depth = getCategoryDepth(allCategories, category.id);
+    const children = category.children ?? [];
 
     return (
-        <AdminRecordShell>
+        <AdminRecordShell className={depth > 0 ? "bg-surface-high/30" : undefined}>
             <div className="space-y-4 p-5">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
@@ -110,11 +106,11 @@ function CategoryBranch({
                         <div className="flex flex-wrap gap-2">
                             <AdminMetaBadge
                                 label="Path"
-                                value={buildCategoryPath(allCategories, category.id)}
+                                value={findCategoryPath(allCategories, category.id)}
                             />
                             <AdminMetaBadge
                                 label="Children"
-                                value={String(node.children.length)}
+                                value={String(children.length)}
                             />
                         </div>
                     </div>
@@ -140,21 +136,24 @@ function CategoryBranch({
                     </div>
                 </div>
 
-                {node.children.length > 0 ? (
+                {children.length > 0 ? (
                     <div className="rounded-[24px] border border-outline-variant/10 bg-surface-high/50 p-4">
                         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-on-surface-variant">
                             Child Categories
                         </p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            {node.children.map((child) => (
-                                <button
-                                    key={child.category.id}
-                                    type="button"
-                                    onClick={() => onEditToggle(child.category.id)}
-                                    className="rounded-full border border-outline-variant/15 bg-background/70 px-3 py-2 text-sm font-medium text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-highest"
-                                >
-                                    {child.category.name}
-                                </button>
+                        <div className="mt-4 space-y-3">
+                            {children.map((child) => (
+                                <CategoryBranch
+                                    key={child.id}
+                                    category={child}
+                                    allCategories={allCategories}
+                                    depth={depth + 1}
+                                    editingId={editingId}
+                                    deletingId={deletingId}
+                                    onEditToggle={onEditToggle}
+                                    onDelete={onDelete}
+                                    onEditComplete={onEditComplete}
+                                />
                             ))}
                         </div>
                     </div>
@@ -173,62 +172,4 @@ function CategoryBranch({
             ) : null}
         </AdminRecordShell>
     );
-}
-
-function buildCategoryTree(categories: Category[]) {
-    const nodeMap = new Map<string, CategoryTreeNode>();
-
-    for (const category of categories) {
-        nodeMap.set(category.id, { category, children: [] });
-    }
-
-    const roots: CategoryTreeNode[] = [];
-
-    for (const category of categories) {
-        const node = nodeMap.get(category.id)!;
-
-        if (category.parentId && nodeMap.has(category.parentId)) {
-            nodeMap.get(category.parentId)!.children.push(node);
-        } else {
-            roots.push(node);
-        }
-    }
-
-    const sortTree = (nodes: CategoryTreeNode[]) => {
-        nodes.sort((a, b) => a.category.name.localeCompare(b.category.name));
-        nodes.forEach((node) => sortTree(node.children));
-    };
-
-    sortTree(roots);
-    return roots;
-}
-
-function buildCategoryPath(categories: Category[], categoryId: string) {
-    const map = new Map(categories.map((category) => [category.id, category]));
-    const segments: string[] = [];
-    let current = map.get(categoryId);
-    let guard = 0;
-
-    while (current && guard < categories.length) {
-        segments.unshift(current.name);
-        current = current.parentId ? map.get(current.parentId) : undefined;
-        guard += 1;
-    }
-
-    return segments.join(" / ");
-}
-
-function getCategoryDepth(categories: Category[], categoryId: string) {
-    const map = new Map(categories.map((category) => [category.id, category]));
-    let depth = 0;
-    let current = map.get(categoryId);
-    let guard = 0;
-
-    while (current?.parentId && guard < categories.length) {
-        depth += 1;
-        current = map.get(current.parentId);
-        guard += 1;
-    }
-
-    return depth;
 }

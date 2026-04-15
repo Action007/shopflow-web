@@ -14,6 +14,11 @@ import {
     createCategorySchema,
     updateCategorySchema,
 } from "@/lib/validations/category";
+import {
+    findCategoryPath,
+    flattenCategoryTree,
+    getDescendantIdsFromTree,
+} from "@/lib/category-tree";
 import type {
     Category,
     CreateCategoryInput,
@@ -246,54 +251,22 @@ function buildParentOptions(
     initialCategory?: Category,
 ) {
     const blockedIds = initialCategory
-        ? getDescendantIds(categories, initialCategory.id)
+        ? getDescendantIdsFromTree(categories, initialCategory.id)
         : new Set<string>();
 
     if (initialCategory) {
         blockedIds.add(initialCategory.id);
     }
 
+    const availableParents = flattenCategoryTree(categories)
+        .filter(({ category, depth }) => depth < 2 && !blockedIds.has(category.id))
+        .sort((a, b) => a.path.localeCompare(b.path));
+
     return [
         { value: "", label: "No parent (top level)" },
-        ...categories
-            .filter((category) => !blockedIds.has(category.id))
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((category) => ({
-                value: category.id,
-                label: buildCategoryPath(categories, category.id),
-            })),
+        ...availableParents.map(({ category }) => ({
+            value: category.id,
+            label: findCategoryPath(categories, category.id),
+        })),
     ];
-}
-
-function getDescendantIds(categories: Category[], parentId: string) {
-    const descendants = new Set<string>();
-    const stack = [parentId];
-
-    while (stack.length > 0) {
-        const currentId = stack.pop()!;
-
-        for (const category of categories) {
-            if (category.parentId === currentId && !descendants.has(category.id)) {
-                descendants.add(category.id);
-                stack.push(category.id);
-            }
-        }
-    }
-
-    return descendants;
-}
-
-function buildCategoryPath(categories: Category[], categoryId: string) {
-    const map = new Map(categories.map((category) => [category.id, category]));
-    const segments: string[] = [];
-    let current = map.get(categoryId);
-    let guard = 0;
-
-    while (current && guard < categories.length) {
-        segments.unshift(current.name);
-        current = current.parentId ? map.get(current.parentId) : undefined;
-        guard += 1;
-    }
-
-    return segments.join(" / ");
 }
