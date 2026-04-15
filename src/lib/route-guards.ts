@@ -7,7 +7,7 @@ function getLoginRedirectUrl(callbackUrl: string) {
     return `${ROUTES.LOGIN}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 }
 
-export async function requireAdminUser(callbackUrl = ROUTES.ADMIN.ROOT) {
+export async function requireAdminUser(callbackUrl: string = ROUTES.ADMIN.ROOT) {
     const user = await getCurrentUser();
 
     if (!user) {

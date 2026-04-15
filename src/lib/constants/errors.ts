@@ -1,4 +1,14 @@
 export const ERRORS = {
+    API: {
+        SESSION_REQUIRED_TITLE: "Session required",
+        SESSION_REQUIRED_DESCRIPTION:
+            "Your session is missing or expired for this request. Sign in again and retry.",
+        ACCESS_RESTRICTED_TITLE: "Access restricted",
+        ACCESS_RESTRICTED_DESCRIPTION:
+            "Your account is authenticated, but this action is not allowed for the current role or backend permission set.",
+        REQUEST_INCOMPLETE: "We could not complete this request.",
+    },
+
     AUTH: {
         INVALID_CREDENTIALS: "Invalid email or password",
         EMAIL_ALREADY_EXISTS: "An account with this email already exists",

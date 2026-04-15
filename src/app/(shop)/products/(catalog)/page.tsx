@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -23,6 +23,7 @@ import { ERRORS } from "@/lib/constants/errors";
 import { getCurrentUser } from "@/lib/auth";
 import { canAccessShopperFeatures } from "@/lib/roles";
 import { getWishlistProductIds } from "@/lib/wishlist";
+import { normalizePaginationParams } from "@/lib/pagination-params";
 
 export const metadata: Metadata = {
     title: "Products",
@@ -40,28 +41,13 @@ export default async function ProductsPage({
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const wishlistProductIds = await getWishlistProductIds(currentUser);
     const params = await searchParams;
+    const paginationState = normalizePaginationParams(params);
 
-    if (!params.page || !params.limit) {
-        const normalizedParams = new URLSearchParams();
-        normalizedParams.set("page", params.page ?? "1");
-        normalizedParams.set("limit", params.limit ?? "10");
-
-        for (const [key, value] of Object.entries(params)) {
-            if (!value || key === "page" || key === "limit") {
-                continue;
-            }
-
-            normalizedParams.set(key, value);
-        }
-
-        redirect(`${ROUTES.PRODUCTS}?${normalizedParams.toString()}`);
+    if (paginationState.needsRedirect) {
+        redirect(`${ROUTES.PRODUCTS}${paginationState.queryString}`);
     }
 
-    const effectiveParams = {
-        ...params,
-        page: params.page ?? "1",
-        limit: params.limit ?? "10",
-    };
+    const effectiveParams = paginationState.effectiveParams;
     const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES.LIST, {
         revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.CATEGORIES],
@@ -176,7 +162,7 @@ async function ProductsResults({
     );
 }
 
-async function getProductsState(params: ProductSearchParams) {
+const getProductsState = cache(async (params: ProductSearchParams) => {
     try {
         const queryString = buildQueryString(params);
 
@@ -196,4 +182,4 @@ async function getProductsState(params: ProductSearchParams) {
 
         throw error;
     }
-}
+});

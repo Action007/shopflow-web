@@ -5,8 +5,11 @@ import { CACHE_CONFIG, CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { AdminProductManager } from "@/components/admin/admin-product-manager";
 import { Pagination } from "@/components/shared/pagination";
+import { normalizePaginationParams } from "@/lib/pagination-params";
+import { getProductSortValue } from "@/lib/product-sort";
 import type { Category, PaginatedResult, Product } from "@/types/product";
 import type { ProductSearchParams } from "@/types/product";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Admin Products",
@@ -20,10 +23,13 @@ export default async function AdminProductsPage({
     searchParams,
 }: AdminProductsPageProps) {
     const params = await searchParams;
-    const effectiveParams = {
-        ...params,
-        limit: params.limit ?? "12",
-    };
+    const paginationState = normalizePaginationParams(params);
+
+    if (paginationState.needsRedirect) {
+        redirect(`${ROUTES.ADMIN.PRODUCTS}${paginationState.queryString}`);
+    }
+
+    const effectiveParams = paginationState.effectiveParams;
     const queryString = buildQueryString(effectiveParams);
     const [products, categories] = await Promise.all([
         apiGet<PaginatedResult<Product>>(
@@ -39,17 +45,10 @@ export default async function AdminProductsPage({
         }),
     ]);
 
-    const sortValue =
-        params.sortBy === "price" && params.sortOrder === "asc"
-            ? "price-asc"
-            : params.sortBy === "price" &&
-                params.sortOrder === "desc"
-              ? "price-desc"
-              : params.sortBy === "name"
-                ? "name-asc"
-                : params.sortBy === "createdAt"
-                  ? "newest"
-                  : "featured";
+    const sortValue = getProductSortValue(
+        effectiveParams.sortBy,
+        effectiveParams.sortOrder,
+    );
 
     return (
         <div className="space-y-6">
@@ -58,7 +57,7 @@ export default async function AdminProductsPage({
                 categories={categories}
                 totalProducts={products.meta.total}
                 sortValue={sortValue}
-                currentCategory={params.categoryId}
+                currentCategory={effectiveParams.categoryId}
             />
 
             <Pagination

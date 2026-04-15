@@ -15,6 +15,7 @@ import { PriceRangeForm } from "@/components/products/price-range-form";
 import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
+import { getProductSortValue } from "@/lib/product-sort";
 import type { Category } from "@/types/product";
 
 interface ProductFiltersProps {
@@ -151,16 +152,7 @@ export function ProductFilters({
         setOpen(false);
     };
 
-    const sortValue =
-        currentSort === "price" && currentOrder === "asc"
-            ? "price-asc"
-            : currentSort === "price" && currentOrder === "desc"
-              ? "price-desc"
-              : currentSort === "name"
-                ? "name-asc"
-                : currentSort === "createdAt"
-                  ? "newest"
-                  : "featured";
+    const sortValue = getProductSortValue(currentSort, currentOrder);
 
     const filterPanel = (
         <div className="space-y-8">

@@ -6,8 +6,10 @@ import { CACHE_TAGS } from "@/lib/constants/cache";
 import { API_ROUTES, ROUTES } from "@/lib/constants/routes";
 import { AdminOrderManager } from "@/components/admin/admin-order-manager";
 import { Pagination } from "@/components/shared/pagination";
+import { normalizePaginationParams } from "@/lib/pagination-params";
 import type { Order } from "@/types/order";
 import type { PaginatedResult } from "@/types/product";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Admin Orders",
@@ -26,28 +28,25 @@ export default async function AdminOrdersPage({
     searchParams,
 }: AdminOrdersPageProps) {
     const params = await searchParams;
-    const effectiveParams = {
-        ...params,
-        limit: params.limit ?? "10",
-    };
+    const paginationState = normalizePaginationParams(params);
+
+    if (paginationState.needsRedirect) {
+        redirect(`${ROUTES.ADMIN.ORDERS}${paginationState.queryString}`);
+    }
+
+    const effectiveParams = paginationState.effectiveParams;
     const queryString = buildQueryString(effectiveParams);
     const orders = await apiAuthGet<PaginatedResult<Order>>(
         `${API_ROUTES.ORDERS.LIST}${queryString}`,
         { tags: [CACHE_TAGS.ORDERS] },
     );
 
-    const normalizedFilterStatus = normalizeOrderStatus(params.status);
-    const visibleOrders = normalizedFilterStatus
-        ? orders.items.filter(
-              (order) =>
-                  normalizeOrderStatus(order.status) === normalizedFilterStatus,
-          )
-        : orders.items;
+    const normalizedFilterStatus = normalizeOrderStatus(effectiveParams.status);
 
     return (
         <div className="space-y-6">
             <AdminOrderManager
-                orders={visibleOrders}
+                orders={orders.items}
                 totalOrders={orders.meta.total}
                 currentStatus={normalizedFilterStatus ?? undefined}
             />
