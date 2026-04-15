@@ -19,37 +19,45 @@ export const metadata: Metadata = {
 export default async function OrdersPage() {
     await requireCustomerUser(ROUTES.ORDERS);
 
-    const result = await apiAuthGet<PaginatedResult<Order>>(API_ROUTES.ORDERS.LIST, {
-        tags: [CACHE_TAGS.ORDERS],
-    });
+    const result = await apiAuthGet<PaginatedResult<Order>>(
+        API_ROUTES.ORDERS.LIST,
+        {
+            tags: [CACHE_TAGS.ORDERS],
+        },
+    );
 
     return (
         <div className="site-page pb-16 sm:pb-32">
-            <div className="mb-8">
-                <h1 className="mb-2 text-3xl font-black tracking-tighter text-neutral-50">
-                    Order History
-                </h1>
-                <p className="text-sm text-neutral-500">
-                    Review your past digital acquisitions and shipments.
+            <section className="flex flex-col items-center text-center mb-8 rounded-[28px] border border-outline-variant/15 bg-surface-low px-6 py-8 sm:px-8">
+                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Package className="h-8 w-8" />
+                </div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary">
+                    Purchase timeline
                 </p>
-            </div>
+                <h1 className="mt-3 text-3xl font-black tracking-tighter text-on-surface sm:text-4xl">
+                    Order history
+                </h1>
+                <p className="mt-4 max-w-[48ch] text-sm leading-relaxed text-on-surface-variant sm:text-[15px]">
+                    Review your past purchases, check statuses, and revisit
+                    order details whenever you need them.
+                </p>
+            </section>
 
             {result.items.length === 0 ? (
-                <section className="flex flex-col items-center rounded-3xl py-12 text-center">
-                    <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-surface-high">
-                        <Package className="h-8 w-8 text-neutral-500" />
+                <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low px-6 py-12 text-center">
+                    <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Package className="h-8 w-8" />
                     </div>
-                    <h3 className="mb-2 text-xl font-bold tracking-tight">
+                    <h2 className="text-3xl font-black tracking-tighter text-on-surface">
                         No orders yet
-                    </h3>
-                    <p className="mb-8 max-w-[220px] text-sm text-neutral-400">
-                        Your transaction history is currently a blank canvas.
+                    </h2>
+                    <p className="mx-auto mt-4 max-w-[44ch] text-sm leading-relaxed text-on-surface-variant">
+                        When you place your first order, it will show up here
+                        with status updates, totals, and a quick path back to
+                        the details.
                     </p>
-                    <Button
-                        variant="outline"
-                        asChild
-                        className="rounded-full px-8 py-3 text-xs uppercase tracking-widest text-primary"
-                    >
+                    <Button asChild className="mt-6">
                         <Link href={ROUTES.PRODUCTS}>Start Shopping</Link>
                     </Button>
                 </section>
@@ -88,23 +96,6 @@ export default async function OrdersPage() {
                     ))}
                 </div>
             )}
-
-            <div className="mt-12 rounded-[12px] border border-outline-variant/10 bg-gradient-to-br from-primary-container/20 to-transparent p-6">
-                <h3 className="mb-2 text-lg font-black text-neutral-50">
-                    Need help?
-                </h3>
-                <p className="mb-4 text-sm text-neutral-400">
-                    Our Concierge is available 24/7 for order inquiries or
-                    returns.
-                </p>
-                <Button
-                    variant="secondary"
-                    asChild
-                    className="w-full bg-primary text-on-primary hover:scale-[1.02]"
-                >
-                    <Link href={ROUTES.SUPPORT}>Contact Support</Link>
-                </Button>
-            </div>
         </div>
     );
 }

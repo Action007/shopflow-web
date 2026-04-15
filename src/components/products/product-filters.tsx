@@ -161,7 +161,7 @@ export function ProductFilters({
     return (
         <>
             {desktopLayout === "sidebar" ? (
-                <aside className="hidden lg:block lg:w-60 lg:shrink-0 lg:self-start lg:rounded-xl lg:bg-surface-low lg:p-6 lg:sticky lg:top-24">
+                <aside className="hidden lg:block lg:w-60 lg:shrink-0 lg:self-start lg:rounded-xl lg:bg-surface-low lg:p-6">
                     {filterPanel}
                 </aside>
             ) : (

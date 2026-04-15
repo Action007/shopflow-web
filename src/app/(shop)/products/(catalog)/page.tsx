@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ApiClientError, apiGet } from "@/lib/api";
 import { buildQueryString } from "@/lib/utils";
 import type {
@@ -39,6 +40,28 @@ export default async function ProductsPage({
     const showPurchaseActions = canAccessShopperFeatures(currentUser);
     const wishlistProductIds = await getWishlistProductIds(currentUser);
     const params = await searchParams;
+
+    if (!params.page || !params.limit) {
+        const normalizedParams = new URLSearchParams();
+        normalizedParams.set("page", params.page ?? "1");
+        normalizedParams.set("limit", params.limit ?? "10");
+
+        for (const [key, value] of Object.entries(params)) {
+            if (!value || key === "page" || key === "limit") {
+                continue;
+            }
+
+            normalizedParams.set(key, value);
+        }
+
+        redirect(`${ROUTES.PRODUCTS}?${normalizedParams.toString()}`);
+    }
+
+    const effectiveParams = {
+        ...params,
+        page: params.page ?? "1",
+        limit: params.limit ?? "10",
+    };
     const categories = await apiGet<Category[]>(API_ROUTES.CATEGORIES.LIST, {
         revalidate: CACHE_CONFIG.CATALOG_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.CATEGORIES],
@@ -57,18 +80,18 @@ export default async function ProductsPage({
 
             <div className="mx-full w-full sm:max-w-none lg:flex-1">
                 <Suspense
-                    key={`toolbar-${JSON.stringify(params)}`}
+                    key={`toolbar-${JSON.stringify(effectiveParams)}`}
                     fallback={<ProductsToolbarSkeleton />}
                 >
-                    <ProductsToolbarData params={params} />
+                    <ProductsToolbarData params={effectiveParams} />
                 </Suspense>
 
                 <Suspense
-                    key={`results-${JSON.stringify(params)}`}
+                    key={`results-${JSON.stringify(effectiveParams)}`}
                     fallback={<ProductGridSkeleton />}
                 >
                     <ProductsResults
-                        params={params}
+                        params={effectiveParams}
                         showPurchaseActions={showPurchaseActions}
                         wishlistProductIds={wishlistProductIds}
                     />
