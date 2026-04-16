@@ -9,34 +9,37 @@ interface AdminOrderManagerProps {
     orders: Order[];
     totalOrders: number;
     currentStatus?: string;
+    currentSortOrder?: string;
+    currentUserId?: string;
+    currentDateFrom?: string;
+    currentDateTo?: string;
 }
 
 export function AdminOrderManager({
     orders,
     totalOrders,
     currentStatus,
+    currentSortOrder,
+    currentUserId,
+    currentDateFrom,
+    currentDateTo,
 }: AdminOrderManagerProps) {
-    const processingCount = orders.filter(
-        (order) => order.status === "PROCESSING",
-    ).length;
-    const pendingCount = orders.filter((order) => order.status === "PENDING").length;
-
     return (
         <div className="space-y-6 xl:space-y-8">
             <AdminWorkspaceHeader
                 eyebrow="Orders Workspace"
                 title="Track operations, review details, and move orders through fulfillment."
                 description="This workspace is for operational flow, not content management. Review customer context, inspect items and shipping details, then apply only valid next statuses."
-                stats={[
-                    { label: "Orders", value: String(totalOrders) },
-                    { label: "Pending", value: String(pendingCount) },
-                    { label: "Processing", value: String(processingCount) },
-                ]}
+                stats={[{ label: "Orders", value: String(totalOrders) }]}
             />
 
             <AdminOrdersToolbar
                 total={totalOrders}
                 currentStatus={currentStatus}
+                currentSortOrder={currentSortOrder}
+                currentUserId={currentUserId}
+                currentDateFrom={currentDateFrom}
+                currentDateTo={currentDateTo}
             />
 
             <AdminOrderList orders={orders} />

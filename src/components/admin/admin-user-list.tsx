@@ -10,6 +10,7 @@ import { AppImage } from "@/components/shared/app-image";
 import type { User } from "@/types/user";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminMetaBadge } from "./admin-meta-badge";
+import { CopyableAdminMetaBadge } from "./copyable-admin-meta-badge";
 import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminUserListProps {
@@ -120,9 +121,11 @@ export function AdminUserList({
                                         label="Created"
                                         value={new Date(user.createdAt).toLocaleDateString()}
                                     />
-                                    <AdminMetaBadge
+                                    <CopyableAdminMetaBadge
                                         label="User ID"
-                                        value={user.id.slice(0, 8)}
+                                        value={user.id}
+                                        displayValue={user.id.slice(0, 6)}
+                                        copiedLabel="Copied"
                                     />
                                 </div>
                             </div>

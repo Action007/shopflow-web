@@ -4,23 +4,34 @@ import { ArrowRight, Package } from "lucide-react";
 import { apiAuthGet } from "@/lib/api-auth";
 import type { Order } from "@/types/order";
 import type { PaginatedResult } from "@/types/product";
-import { formatPrice } from "@/lib/utils";
+import { buildQueryString, cn, formatPrice } from "@/lib/utils";
 import { CACHE_TAGS } from "@/lib/constants/cache";
 import { ROUTES, API_ROUTES } from "@/lib/constants/routes";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
+import { Pagination } from "@/components/shared/pagination";
 import { requireCustomerUser } from "@/lib/route-guards";
+import { normalizePaginationParams } from "@/lib/pagination-params";
+
+interface OrdersPageProps {
+    searchParams: Promise<{
+        page?: string;
+        limit?: string;
+    }>;
+}
 
 export const metadata: Metadata = {
     title: "Orders",
 };
 
-export default async function OrdersPage() {
+export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     await requireCustomerUser(ROUTES.ORDERS);
+    const params = await searchParams;
+    const { effectiveParams } = normalizePaginationParams(params);
+    const queryString = buildQueryString(effectiveParams);
 
     const result = await apiAuthGet<PaginatedResult<Order>>(
-        API_ROUTES.ORDERS.LIST,
+        `${API_ROUTES.ORDERS.LIST}${queryString}`,
         {
             tags: [CACHE_TAGS.ORDERS],
         },
@@ -62,38 +73,42 @@ export default async function OrdersPage() {
                     </Button>
                 </section>
             ) : (
-                <div className="flex flex-col gap-2">
-                    {result.items.map((order) => (
-                        <Link
-                            key={order.id}
-                            href={ROUTES.ORDER_DETAIL(order.id)}
-                            className={cn(
-                                "group flex items-center justify-between rounded-[12px] bg-[#18181b] p-5 transition-all duration-300 ease-fluid hover:bg-surface-high",
-                                order.status === "CANCELLED" && "opacity-70",
-                            )}
-                        >
-                            <div className="flex flex-col gap-2">
-                                <div className="flex flex-wrap items-center gap-3">
-                                    <span className="font-bold tracking-tight text-neutral-50">
-                                        Order #{order.orderNumber}
-                                    </span>
-                                    <OrderStatusBadge status={order.status} />
+                <div className="space-y-6">
+                    <div className="flex flex-col gap-2">
+                        {result.items.map((order) => (
+                            <Link
+                                key={order.id}
+                                href={ROUTES.ORDER_DETAIL(order.id)}
+                                className={cn(
+                                    "group flex items-center justify-between rounded-[12px] bg-[#18181b] p-5 transition-all duration-300 ease-fluid hover:bg-surface-high",
+                                    order.status === "CANCELLED" && "opacity-70",
+                                )}
+                            >
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        <span className="font-bold tracking-tight text-neutral-50">
+                                            Order #{order.orderNumber}
+                                        </span>
+                                        <OrderStatusBadge status={order.status} />
+                                    </div>
+                                    <div className="flex items-center gap-4 text-xs text-neutral-500">
+                                        <span>
+                                            {new Date(
+                                                order.createdAt,
+                                            ).toLocaleDateString()}
+                                        </span>
+                                        <span className="font-bold text-blue-400">
+                                            {formatPrice(order.totalAmount)}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-4 text-xs text-neutral-500">
-                                    <span>
-                                        {new Date(
-                                            order.createdAt,
-                                        ).toLocaleDateString()}
-                                    </span>
-                                    <span className="font-bold text-blue-400">
-                                        {formatPrice(order.totalAmount)}
-                                    </span>
-                                </div>
-                            </div>
 
-                            <ArrowRight className="h-4 w-4 text-neutral-600 transition-colors duration-300 ease-fluid group-hover:text-primary" />
-                        </Link>
-                    ))}
+                                <ArrowRight className="h-4 w-4 text-neutral-600 transition-colors duration-300 ease-fluid group-hover:text-primary" />
+                            </Link>
+                        ))}
+                    </div>
+
+                    <Pagination meta={result.meta} basePath={ROUTES.ORDERS} />
                 </div>
             )}
         </div>

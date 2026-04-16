@@ -17,6 +17,7 @@ import type { Order, OrderStatus } from "@/types/order";
 import { AppImage } from "@/components/shared/app-image";
 import { AdminEmptyState } from "./admin-empty-state";
 import { AdminMetaBadge } from "./admin-meta-badge";
+import { CopyableAdminMetaBadge } from "./copyable-admin-meta-badge";
 import { AdminRecordShell } from "./admin-record-shell";
 
 interface AdminOrderListProps {
@@ -144,6 +145,14 @@ function AdminOrderCard({
                                 label="Created"
                                 value={new Date(order.createdAt).toLocaleDateString()}
                             />
+                            {order.userId ? (
+                                <CopyableAdminMetaBadge
+                                    label="User ID"
+                                    value={order.userId}
+                                    displayValue={order.userId.slice(0, 6)}
+                                    copiedLabel="Copied"
+                                />
+                            ) : null}
                         </div>
                     </div>
 
