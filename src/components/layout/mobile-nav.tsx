@@ -28,6 +28,13 @@ import { ROUTES } from "@/lib/constants/routes";
 import { useCartStore, selectItemCount } from "@/stores/cart-store";
 import { canAccessShopperFeatures, isAdmin } from "@/lib/roles";
 
+interface NavLink {
+    href: string;
+    label: string;
+    icon: React.ElementType;
+    withBadge?: boolean;
+}
+
 interface MobileNavProps {
     user: User | null;
 }
@@ -35,9 +42,9 @@ interface MobileNavProps {
 export function MobileNav({ user }: MobileNavProps) {
     const [open, setOpen] = useState(false);
     const itemCount = useCartStore(selectItemCount);
-    const shopperMode = canAccessShopperFeatures(user);
     const adminMode = isAdmin(user);
-    const links = adminMode
+
+    const links: NavLink[] = adminMode
         ? [
               { href: ROUTES.PRODUCTS, label: "Products", icon: Store },
               { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
@@ -49,34 +56,21 @@ export function MobileNav({ user }: MobileNavProps) {
               { href: ROUTES.WISHLIST, label: "Wishlist", icon: Heart },
               { href: ROUTES.ORDERS, label: "Orders", icon: Package },
               { href: ROUTES.SUPPORT, label: "Support", icon: Headphones },
-              {
-                  href: ROUTES.CART,
-                  label: "Cart",
-                  icon: ShoppingCart,
-                  withBadge: true,
-              },
+              { href: ROUTES.CART, label: "Cart", icon: ShoppingCart, withBadge: true },
+              { href: ROUTES.PROFILE, label: "Profile", icon: UserIcon },
           ];
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="md:hidden text-on-surface"
-                >
+                <Button variant="ghost" size="icon" className="md:hidden text-on-surface">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent
-                side="left"
-                className="w-[88vw] max-w-sm border-outline-variant/15 bg-background/90"
-            >
+            <SheetContent side="left" className="w-[88vw] max-w-sm border-outline-variant/15 bg-background/90">
                 <SheetHeader className="border-b border-outline-variant/10 pb-6">
-                    <SheetTitle className="text-[22px] tracking-tighter">
-                        ShopFlow
-                    </SheetTitle>
+                    <SheetTitle className="text-[22px] tracking-tighter">ShopFlow</SheetTitle>
                 </SheetHeader>
 
                 <nav className="flex flex-1 flex-col gap-8 px-6 pb-6">
@@ -92,48 +86,25 @@ export function MobileNav({ user }: MobileNavProps) {
                                     <link.icon className="h-4 w-4 text-primary" />
                                     <span>{link.label}</span>
                                 </div>
-                                {"withBadge" in link && link.withBadge && itemCount > 0 ? (
+                                {link.withBadge && itemCount > 0 && (
                                     <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-bold text-on-primary">
                                         {itemCount > 99 ? "99+" : itemCount}
                                     </span>
-                                ) : null}
+                                )}
                             </Link>
                         ))}
-
-                        {user && shopperMode && (
-                            <>
-                                <Link
-                                    href={ROUTES.PROFILE}
-                                    onClick={() => setOpen(false)}
-                                    className="flex items-center justify-between rounded-xl bg-surface-low px-4 py-4 text-sm font-bold tracking-tight text-on-surface transition-colors duration-300 ease-fluid hover:bg-surface-high"
-                                >
-                                    <span>Profile</span>
-                                    <UserIcon className="h-4 w-4 text-primary" />
-                                </Link>
-                            </>
-                        )}
                     </div>
 
                     <div className="mt-auto space-y-4 rounded-xl bg-surface-low p-4">
                         {user ? (
                             <>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-                                        Signed In
-                                    </p>
-                                    <p className="font-bold text-on-surface">
-                                        {user.firstName} {user.lastName}
-                                    </p>
-                                    <p className="text-xs font-bold uppercase tracking-widest text-primary">
-                                        {user.role}
-                                    </p>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Signed In</p>
+                                    <p className="font-bold text-on-surface">{user.firstName} {user.lastName}</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-primary">{user.role}</p>
                                 </div>
                                 <form action={logoutAction}>
-                                    <Button
-                                        type="submit"
-                                        variant="outline"
-                                        className="w-full justify-center"
-                                    >
+                                    <Button type="submit" variant="outline" className="w-full justify-center">
                                         <LogOut className="h-4 w-4" />
                                         Logout
                                     </Button>
@@ -141,14 +112,9 @@ export function MobileNav({ user }: MobileNavProps) {
                             </>
                         ) : (
                             <Link href={ROUTES.LOGIN} onClick={() => setOpen(false)}>
-                                <Button
-                                    variant="secondary"
-                                    className="h-10 w-full justify-center rounded-full px-4 text-on-surface"
-                                >
+                                <Button variant="secondary" className="h-10 w-full justify-center rounded-full px-4 text-on-surface">
                                     <LogIn className="h-4 w-4" />
-                                    <span className="text-xs font-bold uppercase tracking-widest">
-                                        Login
-                                    </span>
+                                    <span className="text-xs font-bold uppercase tracking-widest">Login</span>
                                 </Button>
                             </Link>
                         )}

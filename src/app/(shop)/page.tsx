@@ -64,9 +64,9 @@ export default async function HomePage() {
 
     return (
         <div className="lg:pb-0">
-            <section className="dot-grid relative overflow-hidden lg:grid lg:min-h-[700px] lg:grid-cols-2 lg:items-center">
-                <div className="relative z-10 px-4 sm:px-6 py-20 flex flex-col justify-center md:py-30 lg:min-h-0 lg:pr-12">
-                    <h1 className="mb-4 max-w-[12ch] text-[56px] font-black leading-[1.1] tracking-[-0.02em] text-on-surface lg:max-w-none">
+            <section className="site-container dot-grid relative overflow-hidden lg:grid lg:min-h-[700px] lg:grid-cols-2 lg:items-center">
+                <div className="relative z-10 pt-25 pb-15 flex flex-col justify-center md:py-30 lg:min-h-0 lg:pr-12">
+                    <h1 className="mb-4 max-w-[12ch] text-[48px] sm:text-[56px] font-black leading-[1.1] tracking-[-0.02em] text-on-surface lg:max-w-none">
                         The best tech, delivered.
                     </h1>
                     <p className="mb-8 max-w-[280px] text-base text-zinc-400 lg:max-w-[480px] lg:text-lg">
@@ -85,7 +85,7 @@ export default async function HomePage() {
 
                 <div className="absolute -right-20 top-1/3 h-90 w-90 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl lg:hidden" />
 
-                <div className="absolute bottom-30 right-5 h-80 w-70 rotate-6 overflow-hidden rounded-2xl shadow-2xl lg:relative md:bottom-40 lg:bottom-auto lg:right-0 lg:h-[700px] lg:w-full lg:rotate-0 lg:self-stretch">
+                <div className="absolute bottom-25 right-5 h-80 w-70 rotate-6 overflow-hidden rounded-2xl shadow-2xl lg:relative md:bottom-40 lg:bottom-auto lg:right-0 lg:h-[700px] lg:w-full lg:rotate-0 lg:self-stretch">
                     <Image
                         src={"/main-img.jpg"}
                         alt={"Featured product"}
@@ -98,7 +98,7 @@ export default async function HomePage() {
             </section>
 
             <section className="mb-12 mt-8">
-                <div className="no-scrollbar flex gap-3 overflow-x-auto px-6 lg:justify-center lg:overflow-visible lg:px-12">
+                <div className="site-container no-scrollbar flex gap-3 overflow-x-auto md:justify-center lg:overflow-visibles">
                     {displayCategories.map((category, index) => {
                         const Icon = categoryIcons[index] ?? Smartphone;
                         return (
@@ -117,7 +117,7 @@ export default async function HomePage() {
                 </div>
             </section>
 
-            <section className="mb-16 px-4 sm:px-6">
+            <section className="site-container mb-16 sm:mb-24">
                 <div className="mb-8 flex justify-end">
                     <Link
                         href={ROUTES.PRODUCTS}
@@ -133,7 +133,7 @@ export default async function HomePage() {
                 />
             </section>
 
-            <section className="mb-16 px-4 sm:px-6">
+            <section className="site-container mb-16 sm:mb-24">
                 <div className="rounded-[28px] border border-outline-variant/15 bg-surface-low p-6 lg:p-8">
                     <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                         <div className="space-y-3">
@@ -176,7 +176,7 @@ export default async function HomePage() {
                 </div>
             </section>
 
-            <section className="mb-16 px-4 sm:px-6 sm:mb-30">
+            <section className="site-container mb-16 sm:mb-24">
                 <div className="space-y-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8 lg:space-y-0">
                     <div className="space-y-4">
                         <h2 className="text-3xl font-black tracking-tighter lg:text-5xl">
@@ -240,7 +240,7 @@ export default async function HomePage() {
                 </div>
             </section>
 
-            <section className="mb-20 px-4 sm:px-6 sm:mb-32">
+            <section className="site-container mb-20 sm:mb-32">
                 <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
                     <div className="rounded-[28px] border border-primary/15 bg-primary-container/10 p-6 lg:p-8">
                         <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-primary/80">
