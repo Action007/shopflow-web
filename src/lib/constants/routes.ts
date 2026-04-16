@@ -1,5 +1,6 @@
 export const ROUTES = {
     HOME: "/",
+    SESSION_EXPIRED: "/session-expired",
     LOGIN: "/login",
     REGISTER: "/register",
     PRODUCTS: "/products",

@@ -141,9 +141,14 @@ export function MobileNav({ user }: MobileNavProps) {
                             </>
                         ) : (
                             <Link href={ROUTES.LOGIN} onClick={() => setOpen(false)}>
-                                <Button className="w-full justify-center">
+                                <Button
+                                    variant="secondary"
+                                    className="h-10 w-full justify-center rounded-full px-4 text-on-surface"
+                                >
                                     <LogIn className="h-4 w-4" />
-                                    Login
+                                    <span className="text-xs font-bold uppercase tracking-widest">
+                                        Login
+                                    </span>
                                 </Button>
                             </Link>
                         )}

@@ -43,7 +43,7 @@ describe("api helpers", () => {
         });
     });
 
-    it("api redirects on 401 when redirectOn401 is true", async () => {
+    it("api redirects to session-expired on 401 when redirectOn401 is true", async () => {
         vi.resetModules();
         vi.stubGlobal(
             "fetch",
@@ -66,7 +66,9 @@ describe("api helpers", () => {
         await expect(
             apiGet("/me", { redirectOn401: true }),
         ).rejects.toThrow("Unauthorized");
-        expect(redirectMock).toHaveBeenCalledWith("/login");
+        expect(redirectMock).toHaveBeenCalledWith(
+            "/session-expired?reason=session-expired",
+        );
     });
 
     it("api throws ApiClientError for non-ok responses", async () => {

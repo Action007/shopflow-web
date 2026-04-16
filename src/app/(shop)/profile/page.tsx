@@ -10,7 +10,7 @@ import {
     ShoppingBag,
     UserRound,
 } from "lucide-react";
-import { getCurrentUser } from "@/lib/auth";
+import { getAccessToken, getCurrentUser } from "@/lib/auth";
 import { apiAuthGet } from "@/lib/api-auth";
 import { Button } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
@@ -22,6 +22,10 @@ import { formatPrice } from "@/lib/utils";
 import { isAdmin } from "@/lib/roles";
 import { ProfileSettingsForm } from "@/components/profile/profile-settings-form";
 import { AppImage } from "@/components/shared/app-image";
+import {
+    getLoginRedirectUrl,
+    getSessionExpiredRedirectUrl,
+} from "@/lib/auth-redirect";
 
 export const metadata: Metadata = {
     title: "Profile",
@@ -63,7 +67,14 @@ function formatMemberSince(date: string) {
 
 export default async function ProfilePage() {
     const user = await getCurrentUser();
-    if (!user) redirect(`${ROUTES.LOGIN}?callbackUrl=${ROUTES.PROFILE}`);
+    if (!user) {
+        const accessToken = await getAccessToken();
+        redirect(
+            accessToken
+                ? getSessionExpiredRedirectUrl(ROUTES.PROFILE)
+                : getLoginRedirectUrl(ROUTES.PROFILE),
+        );
+    }
     const adminMode = isAdmin(user);
 
     const orders: PaginatedResult<Order> = adminMode
@@ -285,7 +296,7 @@ export default async function ProfilePage() {
                             ) : (
                                 <div>
                                     <div className="space-y-4">
-                                        {orders.items.slice(0, 3).map((order) => (
+                                        {orders.items.map((order) => (
                                             <Link
                                                 key={order.id}
                                                 href={`${ROUTES.ORDERS}/${order.id}`}

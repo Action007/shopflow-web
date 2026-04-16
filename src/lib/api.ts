@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ROUTES } from "@/lib/constants/routes";
+import { getSessionExpiredRedirectUrl } from "@/lib/auth-redirect";
 
 const API_URL = process.env.API_URL;
 
@@ -73,7 +73,7 @@ export async function api<T>(
         }));
 
         if (errorBody.statusCode === 401 && redirectOn401) {
-            redirect(ROUTES.LOGIN);
+            redirect(getSessionExpiredRedirectUrl());
         }
 
         throw new ApiClientError(

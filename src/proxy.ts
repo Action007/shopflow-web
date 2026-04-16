@@ -7,36 +7,14 @@ import {
 } from "@/lib/constants/routes";
 import {
     COOKIE_NAMES,
-    COOKIE_CONFIG,
-    TOKEN_EXPIRY,
     ENV_VARS,
 } from "@/lib/constants/auth";
+import { writeAuthCookies } from "@/lib/auth-cookies";
 
 const protectedRoutes = PROTECTED_ROUTES;
 const authRoutes = AUTH_ROUTES;
 
 const API_URL = ENV_VARS.API_URL;
-
-function setAuthCookies(
-    response: NextResponse,
-    accessToken: string,
-    refreshToken: string,
-): void {
-    response.cookies.set(COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
-        httpOnly: COOKIE_CONFIG.HTTPONLY,
-        secure: COOKIE_CONFIG.SECURE,
-        sameSite: COOKIE_CONFIG.SAME_SITE,
-        path: COOKIE_CONFIG.PATH_ROOT,
-        maxAge: TOKEN_EXPIRY.ACCESS_TOKEN,
-    });
-    response.cookies.set(COOKIE_NAMES.REFRESH_TOKEN, refreshToken, {
-        httpOnly: COOKIE_CONFIG.HTTPONLY,
-        secure: COOKIE_CONFIG.SECURE,
-        sameSite: COOKIE_CONFIG.SAME_SITE,
-        path: COOKIE_CONFIG.PATH_AUTH,
-        maxAge: TOKEN_EXPIRY.REFRESH_TOKEN,
-    });
-}
 
 async function tryRefreshTokens(
     refreshToken: string,
@@ -105,8 +83,8 @@ export async function proxy(request: NextRequest) {
             new URL(ROUTES.HOME, request.url),
         );
         if (newTokens) {
-            setAuthCookies(
-                response,
+            writeAuthCookies(
+                response.cookies,
                 newTokens.accessToken,
                 newTokens.refreshToken,
             );
@@ -116,7 +94,11 @@ export async function proxy(request: NextRequest) {
 
     const response = NextResponse.next();
     if (newTokens) {
-        setAuthCookies(response, newTokens.accessToken, newTokens.refreshToken);
+        writeAuthCookies(
+            response.cookies,
+            newTokens.accessToken,
+            newTokens.refreshToken,
+        );
     }
     return response;
 }

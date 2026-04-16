@@ -1,17 +1,22 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { getAccessToken, getCurrentUser } from "@/lib/auth";
+import {
+    getLoginRedirectUrl,
+    getSessionExpiredRedirectUrl,
+} from "@/lib/auth-redirect";
 import { ROUTES } from "@/lib/constants/routes";
 import { canAccessShopperFeatures, isAdmin } from "@/lib/roles";
-
-function getLoginRedirectUrl(callbackUrl: string) {
-    return `${ROUTES.LOGIN}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
-}
 
 export async function requireAdminUser(callbackUrl: string = ROUTES.ADMIN.ROOT) {
     const user = await getCurrentUser();
 
     if (!user) {
-        redirect(getLoginRedirectUrl(callbackUrl));
+        const accessToken = await getAccessToken();
+        redirect(
+            accessToken
+                ? getSessionExpiredRedirectUrl(callbackUrl)
+                : getLoginRedirectUrl(callbackUrl),
+        );
     }
 
     if (!isAdmin(user)) {
@@ -25,7 +30,12 @@ export async function requireCustomerUser(callbackUrl: string) {
     const user = await getCurrentUser();
 
     if (!user) {
-        redirect(getLoginRedirectUrl(callbackUrl));
+        const accessToken = await getAccessToken();
+        redirect(
+            accessToken
+                ? getSessionExpiredRedirectUrl(callbackUrl)
+                : getLoginRedirectUrl(callbackUrl),
+        );
     }
 
     if (!canAccessShopperFeatures(user)) {

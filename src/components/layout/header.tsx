@@ -8,6 +8,9 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { ROUTES } from "@/lib/constants/routes";
 import { canAccessShopperFeatures, isAdmin } from "@/lib/roles";
 
+const authButtonClassName =
+    "h-10 rounded-full px-4 text-on-surface";
+
 export async function Header() {
     const user = await getCurrentUser();
     const shopperMode = canAccessShopperFeatures(user);
@@ -83,10 +86,16 @@ export async function Header() {
                                     </div>
                                 </>
                             ) : (
-                                <Button variant="ghost" asChild className="px-3">
+                                <Button
+                                    variant="secondary"
+                                    asChild
+                                    className={authButtonClassName}
+                                >
                                     <Link href={ROUTES.LOGIN}>
                                         <LogIn className="h-4 w-4" />
-                                        Login
+                                        <span className="text-xs font-bold uppercase tracking-widest">
+                                            Login
+                                        </span>
                                     </Link>
                                 </Button>
                             )}
@@ -98,11 +107,16 @@ export async function Header() {
                             </div>
                         ) : (
                             <Button
-                                variant="ghost"
+                                variant="secondary"
                                 asChild
-                                className="px-0 text-neutral-400 hover:bg-transparent hover:text-blue-400 lg:hidden"
+                                className={`${authButtonClassName} lg:hidden`}
                             >
-                                <Link href={ROUTES.LOGIN}>Login</Link>
+                                <Link href={ROUTES.LOGIN}>
+                                    <LogIn className="h-4 w-4" />
+                                    <span className="text-xs font-bold uppercase tracking-widest">
+                                        Login
+                                    </span>
+                                </Link>
                             </Button>
                         )}
                     </div>
