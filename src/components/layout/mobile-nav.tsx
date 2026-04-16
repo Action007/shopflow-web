@@ -63,7 +63,7 @@ export function MobileNav({ user }: MobileNavProps) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden text-on-surface">
+                <Button variant="outline" size="icon" className="md:hidden text-on-surface">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Open menu</span>
                 </Button>

@@ -8,8 +8,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { ROUTES } from "@/lib/constants/routes";
 import { canAccessShopperFeatures, isAdmin } from "@/lib/roles";
 
-const authButtonClassName =
-    "h-10 rounded-full px-4 text-on-surface";
+const authButtonClassName = "h-10 rounded-full px-4 text-on-surface";
 
 export async function Header() {
     const user = await getCurrentUser();
@@ -30,86 +29,62 @@ export async function Header() {
 
     return (
         <header className="glass-header fixed inset-x-0 top-0 z-50">
-                <div className="site-container flex w-full items-center justify-between py-2">
-                    <div className="flex items-center gap-4">
-                        <MobileNav user={user} />
+            <div className="site-container flex w-full items-center justify-between py-2">
+                <div className="flex items-center gap-4">
+                    <MobileNav user={user} />
+                    <Link
+                        href={ROUTES.HOME}
+                        className="text-[22px] font-black tracking-tighter text-neutral-50"
+                    >
+                        ShopFlow
+                    </Link>
+                </div>
+
+                <nav className="hidden items-center gap-8 md:flex">
+                    {navItems.map((item) => (
                         <Link
-                            href={ROUTES.HOME}
-                            className="text-[22px] font-black tracking-tighter text-neutral-50"
+                            key={item.href}
+                            href={item.href}
+                            className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
                         >
-                            ShopFlow
+                            {item.label}
                         </Link>
-                    </div>
+                    ))}
+                </nav>
 
-                    <nav className="hidden items-center gap-8 lg:flex">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="text-md font-bold text-on-surface-variant transition-colors duration-300 ease-fluid hover:text-primary"
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
-                    </nav>
-
-                    <div className="flex items-center gap-2">
-                        <div className="hidden items-center gap-2 lg:flex">
-                            {shopperMode && <CartBadge />}
-
-                            {user ? (
-                                <>
-                                    {adminMode && (
-                                        <Button variant="ghost" size="icon" asChild>
-                                            <Link
-                                                href={ROUTES.ADMIN.ROOT}
-                                                aria-label="Admin"
-                                            >
-                                                <Shield className="h-5 w-5" />
-                                            </Link>
-                                        </Button>
-                                    )}
-                                    <div className="flex items-center gap-1">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            asChild
-                                        >
-                                            <Link
-                                                href={ROUTES.PROFILE}
-                                                aria-label="Profile"
-                                            >
-                                                <User className="h-5 w-5" />
-                                            </Link>
-                                        </Button>
-                                        <LogoutButton />
-                                    </div>
-                                </>
-                            ) : (
-                                <Button
-                                    variant="secondary"
-                                    asChild
-                                    className={authButtonClassName}
-                                >
-                                    <Link href={ROUTES.LOGIN}>
-                                        <LogIn className="h-4 w-4" />
-                                        <span className="text-xs font-bold uppercase tracking-widest">
-                                            Login
-                                        </span>
-                                    </Link>
-                                </Button>
-                            )}
-                        </div>
+                <div className="flex items-center gap-2">
+                    <div className="hidden items-center gap-2 md:flex">
+                        {shopperMode && <CartBadge />}
 
                         {user ? (
-                            <div className="lg:hidden">
-                                <LogoutButton />
-                            </div>
+                            <>
+                                {adminMode && (
+                                    <Button variant="ghost" size="icon" asChild>
+                                        <Link
+                                            href={ROUTES.ADMIN.ROOT}
+                                            aria-label="Admin"
+                                        >
+                                            <Shield className="h-5 w-5" />
+                                        </Link>
+                                    </Button>
+                                )}
+                                <div className="flex items-center gap-1">
+                                    <Button variant="ghost" size="icon" asChild>
+                                        <Link
+                                            href={ROUTES.PROFILE}
+                                            aria-label="Profile"
+                                        >
+                                            <User className="h-5 w-5" />
+                                        </Link>
+                                    </Button>
+                                    <LogoutButton />
+                                </div>
+                            </>
                         ) : (
                             <Button
                                 variant="secondary"
                                 asChild
-                                className={`${authButtonClassName} lg:hidden`}
+                                className={authButtonClassName}
                             >
                                 <Link href={ROUTES.LOGIN}>
                                     <LogIn className="h-4 w-4" />
@@ -120,7 +95,22 @@ export async function Header() {
                             </Button>
                         )}
                     </div>
+
+                    {adminMode ? (
+                        <div className="md:hidden items-center gap-2 flex">
+                            <Button variant="ghost" size="icon" asChild>
+                                <Link
+                                    href={ROUTES.ADMIN.ROOT}
+                                    aria-label="Admin"
+                                >
+                                    <Shield className="h-5 w-5" />
+                                </Link>
+                            </Button>
+                            <LogoutButton />
+                        </div>
+                    ) : null}
                 </div>
+            </div>
         </header>
     );
 }

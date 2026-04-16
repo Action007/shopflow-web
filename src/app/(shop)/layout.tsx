@@ -32,7 +32,6 @@ export default async function ShopLayout({
                 <Header />
                 <main className="flex-1 pt-14">{children}</main>
                 <Footer />
-                <BottomNav user={user} />
             </div>
         </CartProvider>
     );

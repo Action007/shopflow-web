@@ -2,6 +2,9 @@
 
 ShopFlow Web is a Next.js 16 storefront for browsing products, managing a cart, checking out, and reviewing orders.
 
+- Swagger: https://shopflow-api-1fl0.onrender.com/api/docs
+- Demo frontend: https://shopflow-web-pi.vercel.app/
+
 It is built with:
 
 - Next.js App Router

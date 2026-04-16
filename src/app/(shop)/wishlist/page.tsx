@@ -21,24 +21,6 @@ export default async function WishlistPage() {
 
     return (
         <div className="site-page pb-16 sm:pb-32">
-            <section className="mb-8 overflow-hidden rounded-[32px] border border-outline-variant/15 bg-surface-low">
-                <div className="flex px-6 py-8 flex-col items-center sm:px-8 sm:py-10 text-center">
-                    <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary shadow-[0_12px_30px_-18px_rgba(0,0,0,0.8)]">
-                        <Heart className="h-8 w-8" />
-                    </div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary">
-                        Saved for later
-                    </p>
-                    <h1 className="mt-3 text-3xl font-black tracking-tighter text-on-surface sm:text-4xl">
-                        Your wishlist
-                    </h1>
-                    <p className="mt-4 max-w-[48ch] text-sm leading-relaxed text-on-surface-variant sm:text-[15px]">
-                        Keep products you want to revisit, compare, or buy next
-                        without losing track of them.
-                    </p>
-                </div>
-            </section>
-
             {products.length === 0 ? (
                 <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low px-6 py-12 text-center">
                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">

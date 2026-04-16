@@ -233,11 +233,11 @@ export function ProductFilters({
                 </section>
             )}
 
-            <div className="fixed bottom-16 left-1/2 z-40 -translate-x-1/2 lg:hidden">
+            <div className="fixed bottom-5 left-1/2 z-40 -translate-x-1/2 lg:hidden">
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
                         <Button
-                            variant="card"
+                            variant="default"
                             className="rounded-full px-6 py-3"
                         >
                             <Filter className="h-4 w-4" />
