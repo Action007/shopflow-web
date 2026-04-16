@@ -53,8 +53,10 @@ export default async function ProductsPage({
                 currentCategory={params.categoryId}
                 currentSort={params.sortBy}
                 currentOrder={params.sortOrder}
+                currentSearch={params.search}
                 minPrice={params.minPrice}
                 maxPrice={params.maxPrice}
+                mobileTriggerVariant="hidden"
             />
 
             <div className="mx-full w-full sm:max-w-none lg:flex-1">
@@ -62,7 +64,10 @@ export default async function ProductsPage({
                     key={`toolbar-${JSON.stringify(effectiveParams)}`}
                     fallback={<ProductsToolbarSkeleton />}
                 >
-                    <ProductsToolbarData params={effectiveParams} />
+                    <ProductsToolbarData
+                        params={effectiveParams}
+                        categories={categories}
+                    />
                 </Suspense>
 
                 <Suspense
@@ -82,12 +87,25 @@ export default async function ProductsPage({
 
 async function ProductsToolbarData({
     params,
+    categories,
 }: {
     params: ProductSearchParams;
+    categories: Category[];
 }) {
     const state = await getProductsState(params);
 
-    return <ProductsToolbar total={state.result?.meta.total} />;
+    return (
+        <ProductsToolbar
+            total={state.result?.meta.total}
+            categories={categories}
+            currentCategory={params.categoryId}
+            currentSort={params.sortBy}
+            currentOrder={params.sortOrder}
+            currentSearch={params.search}
+            minPrice={params.minPrice}
+            maxPrice={params.maxPrice}
+        />
+    );
 }
 
 async function ProductsResults({

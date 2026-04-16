@@ -23,10 +23,50 @@ interface ProductFiltersProps {
     currentCategory?: string;
     currentSort?: string;
     currentOrder?: string;
+    currentSearch?: string;
     minPrice?: string;
     maxPrice?: string;
     basePath?: string;
-    desktopLayout?: "sidebar" | "inline";
+    desktopLayout?: "sidebar" | "inline" | "hidden";
+    mobileTriggerVariant?: "floating" | "toolbar" | "hidden";
+}
+
+function buildProductQueryParams(currentSearch?: string) {
+    const params = new URLSearchParams();
+
+    if (currentSearch?.trim()) {
+        params.set("search", currentSearch.trim());
+    }
+
+    return params;
+}
+
+export function getProductFilterState({
+    currentCategory,
+    currentSort,
+    currentOrder,
+    minPrice,
+    maxPrice,
+}: Pick<
+    ProductFiltersProps,
+    "currentCategory" | "currentSort" | "currentOrder" | "minPrice" | "maxPrice"
+>) {
+    const sortValue = getProductSortValue(currentSort, currentOrder);
+    const hasPriceFilter = Boolean(minPrice || maxPrice);
+    const hasSortFilter = sortValue !== DEFAULT_PRODUCT_SORT;
+    const hasActiveFilters = Boolean(
+        currentCategory || hasPriceFilter || hasSortFilter,
+    );
+    const activeFilterCount =
+        (currentCategory ? 1 : 0) +
+        (hasPriceFilter ? 1 : 0) +
+        (hasSortFilter ? 1 : 0);
+
+    return {
+        sortValue,
+        hasActiveFilters,
+        activeFilterCount,
+    };
 }
 
 function categoryContainsId(category: Category, targetId?: string): boolean {
@@ -124,16 +164,18 @@ export function ProductFilters({
     currentCategory,
     currentSort,
     currentOrder,
+    currentSearch,
     minPrice,
     maxPrice,
     basePath = ROUTES.PRODUCTS,
     desktopLayout = "sidebar",
+    mobileTriggerVariant = "floating",
 }: ProductFiltersProps) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
 
     const updateCategory = (categoryId?: string) => {
-        const params = new URLSearchParams();
+        const params = buildProductQueryParams(currentSearch);
 
         if (categoryId) {
             params.set("categoryId", categoryId);
@@ -146,22 +188,24 @@ export function ProductFilters({
     };
 
     const clearAllFilters = () => {
-        router.push(basePath);
+        const params = buildProductQueryParams(currentSearch);
+
         setOpen(false);
+        router.push(
+            params.toString() ? `${basePath}?${params.toString()}` : basePath,
+        );
     };
 
-    const sortValue = getProductSortValue(currentSort, currentOrder);
-    const hasPriceFilter = Boolean(minPrice || maxPrice);
-    const hasSortFilter = sortValue !== DEFAULT_PRODUCT_SORT;
-    const hasActiveFilters = Boolean(
-        currentCategory || hasPriceFilter || hasSortFilter,
-    );
-    const activeFilterCount =
-        (currentCategory ? 1 : 0) +
-        (hasPriceFilter ? 1 : 0) +
-        (hasSortFilter ? 1 : 0);
+    const { sortValue, hasActiveFilters, activeFilterCount } =
+        getProductFilterState({
+            currentCategory,
+            currentSort,
+            currentOrder,
+            minPrice,
+            maxPrice,
+        });
 
-    const filterPanel = (
+    const renderFilterPanel = () => (
         <div className="space-y-8">
             <section>
                 <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-outline">
@@ -232,26 +276,40 @@ export function ProductFilters({
         <>
             {desktopLayout === "sidebar" ? (
                 <aside className="hidden lg:block lg:w-60 lg:shrink-0 lg:self-start lg:rounded-xl lg:bg-surface-low lg:p-6">
-                    {filterPanel}
+                    {renderFilterPanel()}
                 </aside>
-            ) : (
+            ) : desktopLayout === "inline" ? (
                 <section className="hidden rounded-[28px] border border-outline-variant/15 bg-surface-low p-5 lg:block">
-                    {filterPanel}
+                    {renderFilterPanel()}
                 </section>
-            )}
-
-            <div className="fixed bottom-5 left-1/2 z-40 -translate-x-1/2 lg:hidden">
+            ) : null}
+            {mobileTriggerVariant !== "hidden" ? (
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
                         <Button
-                            variant={hasActiveFilters ? "secondary" : "default"}
+                            type="button"
+                            variant={
+                                hasActiveFilters
+                                    ? "secondary"
+                                    : mobileTriggerVariant === "floating"
+                                      ? "default"
+                                      : "card"
+                            }
                             className={cn(
-                                "rounded-full px-6 py-3",
+                                mobileTriggerVariant === "floating"
+                                    ? "fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full px-6 py-3 lg:hidden"
+                                    : "h-9 rounded-full px-4 text-xs font-bold uppercase tracking-widest lg:hidden",
                                 hasActiveFilters &&
                                     "border border-primary/20 bg-primary/10 text-primary hover:bg-primary/15",
                             )}
                         >
-                            <Filter className="h-4 w-4" />
+                            <Filter
+                                className={
+                                    mobileTriggerVariant === "floating"
+                                        ? "h-4 w-4"
+                                        : "h-3.5 w-3.5"
+                                }
+                            />
                             {hasActiveFilters
                                 ? `Filters (${activeFilterCount})`
                                 : "Filters"}
@@ -268,11 +326,11 @@ export function ProductFilters({
                             </SheetTitle>
                         </SheetHeader>
                         <div className="overflow-y-auto px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-                            {filterPanel}
+                            {open ? renderFilterPanel() : null}
                         </div>
                     </SheetContent>
                 </Sheet>
-            </div>
+            ) : null}
         </>
     );
 }
