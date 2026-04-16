@@ -7,6 +7,8 @@ export type ProductSortValue =
     | "price-desc"
     | "name-asc";
 
+export const DEFAULT_PRODUCT_SORT: ProductSortValue = "featured";
+
 const PRODUCT_SORT_VALUES: ProductSortValue[] = [
     "featured",
     "newest",
@@ -39,14 +41,14 @@ export function getProductSortValue(
         return "newest";
     }
 
-    return "featured";
+    return DEFAULT_PRODUCT_SORT;
 }
 
 export function applyProductSortValue(
     params: URLSearchParams,
     sortValue: ProductSortValue,
 ) {
-    if (sortValue === "featured") {
+    if (sortValue === DEFAULT_PRODUCT_SORT) {
         params.delete("sortBy");
         params.delete("sortOrder");
         return;

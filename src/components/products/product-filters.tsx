@@ -15,7 +15,7 @@ import { PriceRangeForm } from "@/components/products/price-range-form";
 import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants/routes";
-import { getProductSortValue } from "@/lib/product-sort";
+import { DEFAULT_PRODUCT_SORT, getProductSortValue } from "@/lib/product-sort";
 import type { Category } from "@/types/product";
 
 interface ProductFiltersProps {
@@ -141,9 +141,7 @@ export function ProductFilters({
 
         setOpen(false);
         router.push(
-            params.toString()
-                ? `${basePath}?${params.toString()}`
-                : basePath,
+            params.toString() ? `${basePath}?${params.toString()}` : basePath,
         );
     };
 
@@ -153,14 +151,15 @@ export function ProductFilters({
     };
 
     const sortValue = getProductSortValue(currentSort, currentOrder);
+    const hasPriceFilter = Boolean(minPrice || maxPrice);
+    const hasSortFilter = sortValue !== DEFAULT_PRODUCT_SORT;
     const hasActiveFilters = Boolean(
-        currentCategory || minPrice || maxPrice || sortValue !== "newest",
+        currentCategory || hasPriceFilter || hasSortFilter,
     );
-    const activeFilterCount = [
-        currentCategory ? 1 : 0,
-        minPrice || maxPrice ? 1 : 0,
-        sortValue !== "newest" ? 1 : 0,
-    ].reduce((sum, count) => sum + count, 0);
+    const activeFilterCount =
+        (currentCategory ? 1 : 0) +
+        (hasPriceFilter ? 1 : 0) +
+        (hasSortFilter ? 1 : 0);
 
     const filterPanel = (
         <div className="space-y-8">
@@ -224,7 +223,7 @@ export function ProductFilters({
                 onClick={clearAllFilters}
                 className="w-full justify-center bg-surface-high text-on-surface hover:bg-surface-highest"
             >
-                Clear Filters
+                Reset Filters
             </Button>
         </div>
     );
