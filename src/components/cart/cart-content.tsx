@@ -20,18 +20,18 @@ export function CartContent() {
 
     if (!cart || cart.items.length === 0) {
         return (
-            <section className="rounded-3xl bg-surface-low px-6 py-12 text-center">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-highest">
-                    <ShoppingBag className="h-8 w-8 text-neutral-500" />
+            <section className="rounded-[28px] border border-outline-variant/15 bg-surface-low px-6 py-12 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <ShoppingBag className="h-8 w-8" />
                 </div>
                 <h3 className="mb-2 text-xl font-bold tracking-tight">
                     Your cart is empty
                 </h3>
-                <p className="mx-auto mb-8 max-w-[200px] text-sm text-neutral-400">
+                <p className="mx-auto mt-4 max-w-[44ch] text-sm leading-relaxed text-on-surface-variant">
                     Looks like you haven&apos;t added any obsidian treasures
                     yet.
                 </p>
-                <Button asChild className="w-full">
+                <Button asChild className="mt-6">
                     <Link href={ROUTES.PRODUCTS}>Browse Products</Link>
                 </Button>
             </section>

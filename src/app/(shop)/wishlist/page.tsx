@@ -26,7 +26,7 @@ export default async function WishlistPage() {
                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                         <Heart className="h-8 w-8" />
                     </div>
-                    <h2 className="text-3xl font-black tracking-tighter text-on-surface">
+                    <h2 className="mb-2 text-xl font-bold tracking-tight text-on-surface">
                         {ERRORS.WISHLIST.EMPTY}
                     </h2>
                     <p className="mx-auto mt-4 max-w-[44ch] text-sm leading-relaxed text-on-surface-variant">

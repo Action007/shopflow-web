@@ -153,6 +153,14 @@ export function ProductFilters({
     };
 
     const sortValue = getProductSortValue(currentSort, currentOrder);
+    const hasActiveFilters = Boolean(
+        currentCategory || minPrice || maxPrice || sortValue !== "newest",
+    );
+    const activeFilterCount = [
+        currentCategory ? 1 : 0,
+        minPrice || maxPrice ? 1 : 0,
+        sortValue !== "newest" ? 1 : 0,
+    ].reduce((sum, count) => sum + count, 0);
 
     const filterPanel = (
         <div className="space-y-8">
@@ -237,11 +245,17 @@ export function ProductFilters({
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
                         <Button
-                            variant="default"
-                            className="rounded-full px-6 py-3"
+                            variant={hasActiveFilters ? "secondary" : "default"}
+                            className={cn(
+                                "rounded-full px-6 py-3",
+                                hasActiveFilters &&
+                                    "border border-primary/20 bg-primary/10 text-primary hover:bg-primary/15",
+                            )}
                         >
                             <Filter className="h-4 w-4" />
-                            Filters
+                            {hasActiveFilters
+                                ? `Filters (${activeFilterCount})`
+                                : "Filters"}
                         </Button>
                     </SheetTrigger>
                     <SheetContent

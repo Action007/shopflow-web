@@ -6,6 +6,7 @@ import { ProductSortSelect } from "@/components/products/product-sort-select";
 import { FormSelect } from "@/components/shared/form-select";
 import type { Category } from "@/types/product";
 import { ROUTES } from "@/lib/constants/routes";
+import { findCategoryPath, flattenCategoryTree } from "@/lib/category-tree";
 import { AdminToolbarShell } from "./admin-toolbar-shell";
 
 interface AdminProductsToolbarProps {
@@ -43,9 +44,11 @@ export function AdminProductsToolbar({
 
     const categoryOptions = [
         { value: "", label: "All categories" },
-        ...categories.map((category) => ({
+        ...flattenCategoryTree(categories)
+            .sort((a, b) => a.path.localeCompare(b.path))
+            .map(({ category }) => ({
             value: category.id,
-            label: category.name,
+            label: findCategoryPath(categories, category.id),
         })),
     ];
 

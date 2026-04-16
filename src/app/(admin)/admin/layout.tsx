@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { CircleUserRound, Store } from "lucide-react";
-import { LogoutButton } from "@/components/auth/logout-button";
+import { CircleUserRound, DoorOpen, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminSidebarNav } from "@/components/admin/admin-sidebar-nav";
 import { requireAdminUser } from "@/lib/route-guards";
@@ -95,7 +94,18 @@ export default async function AdminLayout({
                                 </span>
                             </Link>
                         </Button>
-                        <LogoutButton compactLabel="Exit" />
+                        <Button
+                            asChild
+                            variant="secondary"
+                            className="h-10 rounded-full px-4 text-on-surface"
+                        >
+                            <Link href={ROUTES.HOME}>
+                                <DoorOpen className="h-4 w-4" />
+                                <span className="text-xs font-bold uppercase tracking-widest">
+                                    Exit
+                                </span>
+                            </Link>
+                        </Button>
                     </div>
                 </div>
             </header>

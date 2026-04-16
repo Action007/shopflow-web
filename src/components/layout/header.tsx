@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogIn, Shield, User } from "lucide-react";
+import { Heart, LogIn, Shield, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -23,7 +23,6 @@ export async function Header() {
         : [
               { href: ROUTES.PRODUCTS, label: "Products" },
               { href: ROUTES.ORDERS, label: "Orders" },
-              { href: ROUTES.WISHLIST, label: "Wishlist" },
               { href: ROUTES.SUPPORT, label: "Support" },
           ];
 
@@ -54,7 +53,19 @@ export async function Header() {
 
                 <div className="flex items-center gap-2">
                     <div className="hidden items-center gap-2 md:flex">
-                        {shopperMode && <CartBadge />}
+                        {shopperMode ? (
+                            <>
+                                <Button variant="ghost" size="icon" asChild>
+                                    <Link
+                                        href={ROUTES.WISHLIST}
+                                        aria-label="Wishlist"
+                                    >
+                                        <Heart className="h-5 w-5" />
+                                    </Link>
+                                </Button>
+                                <CartBadge />
+                            </>
+                        ) : null}
 
                         {user ? (
                             <>
