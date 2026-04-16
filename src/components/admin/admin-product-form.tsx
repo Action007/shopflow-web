@@ -27,6 +27,7 @@ import {
 import { ExpandableFormShell } from "@/components/shared/expandable-form-shell";
 import { Button } from "@/components/ui/button";
 import { cleanupPendingUpload } from "@/lib/upload-client";
+import { findCategoryPath, flattenCategoryTree } from "@/lib/category-tree";
 
 interface AdminProductFormProps {
     mode: "create" | "edit";
@@ -111,6 +112,7 @@ export function AdminProductForm({
         reset,
         formState: { errors },
     } = form;
+    const categoryOptions = buildCategoryOptions(categories);
 
     const submitLabel =
         mode === "create" ? "Create Product" : "Save Product Changes";
@@ -260,14 +262,11 @@ export function AdminProductForm({
                         </Field>
 
                         <Field label="Category" error={errors.categoryId?.message}>
-                            <select
-                                className={inputClassName}
-                                {...register("categoryId")}
-                            >
+                            <select className={inputClassName} {...register("categoryId")}>
                                 <option value="">Select category</option>
-                                {categories.map((category) => (
-                                    <option key={category.id} value={category.id}>
-                                        {category.name}
+                                {categoryOptions.map((category) => (
+                                    <option key={category.value} value={category.value}>
+                                        {category.label}
                                     </option>
                                 ))}
                             </select>
@@ -332,4 +331,13 @@ export function AdminProductForm({
             </ExpandableFormShell>
         </form>
     );
+}
+
+function buildCategoryOptions(categories: Category[]) {
+    return flattenCategoryTree(categories)
+        .sort((a, b) => a.path.localeCompare(b.path))
+        .map(({ category }) => ({
+            value: category.id,
+            label: findCategoryPath(categories, category.id),
+        }));
 }

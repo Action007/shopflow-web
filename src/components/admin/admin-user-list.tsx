@@ -63,8 +63,7 @@ export function AdminUserList({
                 const isDeleting = deletingId === user.id;
                 const fullName = `${user.firstName} ${user.lastName}`.trim();
                 const initials = `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`;
-                const canDelete =
-                    user.role !== "ADMIN" || user.id === currentAdminId;
+                const canDelete = user.role !== "ADMIN";
 
                 return (
                     <AdminRecordShell

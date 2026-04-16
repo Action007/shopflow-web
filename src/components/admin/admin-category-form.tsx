@@ -183,7 +183,7 @@ export function AdminCategoryForm({
                 defaultExpanded={mode !== "create"}
                 collapsible={mode === "create"}
             >
-                <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_260px]">
+                <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_350px]">
                     <Field label="Category Name" error={errors.name?.message}>
                         <input
                             className={inputClassName}
@@ -259,7 +259,7 @@ function buildParentOptions(
     }
 
     const availableParents = flattenCategoryTree(categories)
-        .filter(({ category, depth }) => depth < 2 && !blockedIds.has(category.id))
+        .filter(({ category }) => !blockedIds.has(category.id))
         .sort((a, b) => a.path.localeCompare(b.path));
 
     return [
